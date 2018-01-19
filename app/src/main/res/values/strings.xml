@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Kustomer</string>
     <string name="processing">Processing…</string>
+    <string name="start_chat">Start Chat</string>
 </resources>
