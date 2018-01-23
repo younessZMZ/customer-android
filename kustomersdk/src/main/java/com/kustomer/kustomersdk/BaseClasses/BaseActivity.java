@@ -74,8 +74,10 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     private void setupToolbar(String title, int toolbarId, boolean enabled) {
         toolbar = findViewById(toolbarId);
         setSupportActionBar(toolbar);
-        if (!title.isEmpty())
+        if (title != null && !title.isEmpty())
             setTitle(title);
+        else
+            setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

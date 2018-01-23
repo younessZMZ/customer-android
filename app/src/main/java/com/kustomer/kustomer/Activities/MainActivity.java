@@ -8,6 +8,7 @@ import android.widget.Button;
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
 import com.kustomer.kustomersdk.Activities.KUSChatActivity;
+import com.kustomer.kustomersdk.Kustomer;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -39,12 +40,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region Click Listener
     @Override
     public void onClick(View view) {
-
         switch (view.getId()){
             case R.id.btnStartChat:
-                Intent intent = new Intent(MainActivity.this, KUSChatActivity.class);
-                startActivity(intent);
-                break;
+                Kustomer.showSupport(this);
         }
     }
     //endregion
