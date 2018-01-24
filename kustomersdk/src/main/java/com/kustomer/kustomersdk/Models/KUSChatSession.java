@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.kustomer.kustomersdk.Utils.JsonHelper.dateFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+
 /**
  * Created by Junaid on 1/20/2018.
  */

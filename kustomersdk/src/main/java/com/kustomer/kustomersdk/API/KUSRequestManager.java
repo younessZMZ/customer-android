@@ -12,7 +12,9 @@ import com.kustomer.kustomersdk.Kustomer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,8 +25,10 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -53,17 +57,17 @@ public class KUSRequestManager {
         baseUrlString = String.format("https://%s.api.%s",userSession.orgName, Kustomer.hostDomain());
         genericHTTPHeaderValues = new HashMap<String, String>(){
             {
-//                put("X-Kustomer","kustomer");
-//                put("Accept-Language",KUSAcceptLanguageHeaderValue());
-//                put("User_Agent",KUSUserAgentHeaderValue());
-//                put("x-kustomer-client","android");
-//                put("x-kustomer-version", Kustomer.sdkVersion());
-
                 put("X-Kustomer","kustomer");
-                put("Accept-Language","en-PK;q=1");
-                put("User_Agent","KustomerExample/1.0 (iPhone; iOS 11.2.2; Scale/2.00)");
-                put("x-kustomer-client","iOS");
-                put("x-kustomer-version", "0.1.1");
+                put("Accept-Language",KUSAcceptLanguageHeaderValue());
+                put("User_Agent",KUSUserAgentHeaderValue());
+                put("x-kustomer-client","android");
+                put("x-kustomer-version", Kustomer.sdkVersion());
+
+//                put("X-Kustomer","kustomer");
+//                put("Accept-Language","en-PK;q=1");
+//                put("User_Agent","KustomerExample/1.0 (iPhone; iOS 11.2.2; Scale/2.00)");
+//                put("x-kustomer-client","iOS");
+//                put("x-kustomer-version", "0.1.1");
             }
         };
 
@@ -169,7 +173,7 @@ public class KUSRequestManager {
                                                  HashMap additionalHeaders,
                                                  final KUSRequestCompletionListener completionListener){
 
-        //TODO: Incomplete for other requests
+        //TODO: Incomplete for requests other than GET & POST
 
         OkHttpClient client = new OkHttpClient();
         HttpUrl httpUrl = HttpUrl.parse(url.toString());
@@ -201,6 +205,30 @@ public class KUSRequestManager {
                 for (Object key : additionalHeaders.keySet()) {
                     String keyString = String.valueOf(key);
                     requestBuilder.addHeader(keyString, String.valueOf(additionalHeaders.get(keyString)));
+                }
+            }
+
+            if(type == KUSRequestType.KUS_REQUEST_TYPE_POST){
+                if(bodyData != null){
+                    //TODO: incomplete
+                }else{
+                    if(params != null){
+
+                        //TODO: Need to improve
+                        JSONObject jsonObject = new JSONObject();
+                        for (String key: params.keySet()) {
+                            try {
+                                jsonObject.put(key, params.get(key));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        byte []bytes = jsonObject.toString().getBytes();
+
+                        requestBuilder.post(RequestBody.create(MediaType.parse("application/json"), bytes));
+                        requestBuilder.addHeader("Content-Length", String.valueOf(bytes.length));
+                        requestBuilder.addHeader("Content-Type", "application/json");
+                    }
                 }
             }
 

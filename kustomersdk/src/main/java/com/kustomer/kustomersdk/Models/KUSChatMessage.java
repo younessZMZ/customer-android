@@ -16,6 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.kustomer.kustomersdk.Utils.JsonHelper.arrayListFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.JsonHelper.dateFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+
 /**
  * Created by Junaid on 1/20/2018.
  */
@@ -115,6 +119,10 @@ public class KUSChatMessage extends KUSModel {
 
     public List<KUSModel> objectsWithJSON(JSONObject jsonObject)
     {
+
+        if(jsonObject == null)
+            return null;
+
         //Not Implemented yet
         KUSChatMessage standardChatMessage = null;
         standardChatMessage = new KUSChatMessage();
@@ -181,7 +189,8 @@ public class KUSChatMessage extends KUSModel {
     @Override
     public int compareTo(@NonNull KUSModel kusModel) {
         KUSChatMessage message = (KUSChatMessage) kusModel;
+        int date = message.createdAt.compareTo(this.createdAt);
         int parent = super.compareTo(kusModel);
-        return parent == 0 ? this.createdAt.compareTo(message.createdAt) : parent;
+        return date == 0 ? parent : date;
     }
 }

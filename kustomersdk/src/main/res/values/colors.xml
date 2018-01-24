@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="color_red_semi">#aacc0000</color>
-    <color name="color_light_grey">#33000000</color>
+    <color name="color_light_grey">#11000000</color>
+    <color name="color_blue_message">#2962FF</color>
 </resources>

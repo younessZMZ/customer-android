@@ -21,6 +21,7 @@
         </activity>
 
         <activity android:name="com.kustomer.kustomersdk.Activities.KUSChatActivity"
+            android:configChanges="orientation"
             android:theme="@style/AppTheme"/>
     </application>
 

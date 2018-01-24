@@ -148,7 +148,6 @@ public class KUSPaginatedDataSource {
                             KUSPaginatedResponse pageResponse = new KUSPaginatedResponse();
                             pageResponse.initWithJSON(response, model);
 
-
                             if(requestMarker != instance.requestMarker  )
                                 return;
 
@@ -240,7 +239,7 @@ public class KUSPaginatedDataSource {
         fetched = true;
         fetchedAll = (fetchedAll || response.nextPath == null);
 
-        upsetObjects(response.objects);
+        upsertObjects(response.objects);
         notifyAnnouncersOnLoad();
     }
 
@@ -259,7 +258,7 @@ public class KUSPaginatedDataSource {
         fetched = true;
         fetchedAll = (fetchedAll || response.nextPath == null);
 
-        upsetObjects(response.objects);
+        upsertObjects(response.objects);
         notifyAnnouncersOnLoad();
     }
 
@@ -267,8 +266,8 @@ public class KUSPaginatedDataSource {
         Collections.sort(fetchedModels);
     }
 
-    public void removeObject(List<KUSModel> objects) {
-        if (objects.size() == 0) {
+    public void removeObjects(List<KUSModel> objects) {
+        if (objects == null || objects.size() == 0) {
             return;
         }
 
@@ -287,8 +286,8 @@ public class KUSPaginatedDataSource {
         }
     }
 
-    public void upsetObjects(List<KUSModel> objects) {
-        if (objects.size() == 0) {
+    public void upsertObjects(List<KUSModel> objects) {
+        if (objects == null || objects.size() == 0) {
             return;
         }
 
@@ -301,14 +300,12 @@ public class KUSPaginatedDataSource {
                     didChange = true;
                 }
 
-                if (didChange) {
-                    int existingIndex = indexOfObject(curObj);
-                    if (existingIndex != -1) {
-                        fetchedModels.remove(existingIndex);
-                    }
-                    fetchedModels.add(obj);
-                    fetchedModelsById.put(obj.oid, obj);
+                int existingIndex = indexOfObject(curObj);
+                if (existingIndex != -1) {
+                    fetchedModels.remove(existingIndex);
                 }
+                fetchedModels.add(obj);
+                fetchedModelsById.put(obj.oid, obj);
             }
             else {
                 didChange = true;

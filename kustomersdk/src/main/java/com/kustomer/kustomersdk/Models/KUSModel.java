@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+
 /**
  * Created by Junaid on 1/20/2018.
  */
@@ -101,101 +103,9 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
 
     // Helper Methods
 
-    protected URL urlFromKeyPath(JSONObject jsonObject, String keyPath) throws JSONException {
-        String value = stringFromKeyPath(jsonObject, keyPath);
-
-        if (value != null)
-            try {
-                return new URL(value);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-
-        return null;
-    }
-
-    protected String stringFromKeyPath(JSONObject jsonObject, String keyPath){
-        try {
-            String[] keys = keyPath.split("[.]");
-            for (int i = 0; i < keys.length - 1; i++) {
-                jsonObject = jsonObject.getJSONObject(keys[i]);
-            }
-            return keys.length > 0 ? jsonObject.getString(keys[keys.length - 1]) : jsonObject.getString(keyPath);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    protected JSONArray arrayFromKeyPath(JSONObject jsonObject, String keyPath) {
-        try {
-            String[] keys = keyPath.split("[.]");
-            for (int i = 0; i < keys.length - 1; i++) {
-                jsonObject = jsonObject.getJSONObject(keys[i]);
-            }
-            return keys.length > 0 ? jsonObject.getJSONArray(keys[keys.length - 1]) : jsonObject.getJSONArray(keyPath);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    protected ArrayList arrayListFromKeyPath(JSONObject jsonObject, String keyPath) {
-        try {
-            Gson googleJson = new Gson();
-            String[] keys = keyPath.split("[.]");
-            for (int i = 0; i < keys.length - 1; i++) {
-                jsonObject = jsonObject.getJSONObject(keys[i]);
-            }
-            JSONArray jsonArray = keys.length > 0 ? jsonObject.getJSONArray(keys[keys.length - 1]) : jsonObject.getJSONArray(keyPath);
-            return googleJson.fromJson(jsonArray.toString(), ArrayList.class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    protected Boolean boolFromKeyPath(JSONObject jsonObject, String keyPath) {
-        try {
-            String[] keys = keyPath.split("[.]");
-            for (int i = 0; i < keys.length - 1; i++) {
-                jsonObject = jsonObject.getJSONObject(keys[i]);
-            }
-            return keys.length > 0 ? jsonObject.getBoolean(keys[keys.length - 1]) : jsonObject.getBoolean(keyPath);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    protected Integer integerFromKeyPath(JSONObject jsonObject, String keyPath) {
-        try {
-            String[] keys = keyPath.split("[.]");
-            for (int i = 0; i < keys.length - 1; i++) {
-                jsonObject = jsonObject.getJSONObject(keys[i]);
-            }
-            return keys.length > 0 ? jsonObject.getInt(keys[keys.length - 1]) : jsonObject.getInt(keyPath);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    protected Date dateFromKeyPath(JSONObject jsonObject, String keyPath) {
-
-        try {
-            String[] keys = keyPath.split("[.]");
-            for (int i = 0; i < keys.length - 1; i++) {
-                jsonObject = jsonObject.getJSONObject(keys[i]);
-            }
-            String value = keys.length > 0 ? jsonObject.getString(keys[keys.length - 1]) : jsonObject.getString(keyPath);
-            if (value != null)
-                return KUSDate.dateFromString(value);
-            return null;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     @Override
     public int compareTo(@NonNull KUSModel kusModel) {
-        return this.oid.compareTo(kusModel.oid);
+        return kusModel.oid.compareTo(this.oid);
     }
 
     @Override

@@ -5,6 +5,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static com.kustomer.kustomersdk.Utils.JsonHelper.boolFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+
 /**
  * Created by Junaid on 1/20/2018.
  */
@@ -13,7 +16,7 @@ public class KUSTrackingToken extends KUSModel {
 
     public String trackingId;
     public String token;
-    public boolean verified;
+    public Boolean verified;
 
 
     public boolean initWithJSON(JSONObject json)  {
