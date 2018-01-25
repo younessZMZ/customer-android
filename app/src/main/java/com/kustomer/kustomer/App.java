@@ -19,7 +19,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Kustomer.initializeWithAPIKey(K_KUSTOMER_API_KEY);
+        Kustomer.init(getAppContext(),K_KUSTOMER_API_KEY);
     }
 
     public static App getApplication() {

@@ -91,9 +91,9 @@ public class KUSChatMessage extends KUSModel {
 
         int startingIndex = 0;
         for(int i = 0; i<string.length(); i++){
-            String character = string.substring(i,1);
+            String character = string.substring(i,i+1);
             if(character.equals("\\")){
-                String lastString = string.substring(startingIndex, i-startingIndex);
+                String lastString = string.substring(startingIndex, i);
                 mutableString = mutableString.concat(lastString);
 
                 i++;
@@ -123,7 +123,6 @@ public class KUSChatMessage extends KUSModel {
         if(jsonObject == null)
             return null;
 
-        //Not Implemented yet
         KUSChatMessage standardChatMessage = null;
         standardChatMessage = new KUSChatMessage();
         standardChatMessage.initWithJSON(jsonObject);
@@ -132,7 +131,8 @@ public class KUSChatMessage extends KUSModel {
         if(standardChatMessage == null)
             return new ArrayList<>();
 
-        String body = standardChatMessage.body;
+        String body = KUSUnescapeBackslashesFromString(standardChatMessage.body);
+        standardChatMessage.body = body;
 
         //The markdown url pattern we want to detect
         String imagePattern = "!\\[.*\\]\\(.*\\)";

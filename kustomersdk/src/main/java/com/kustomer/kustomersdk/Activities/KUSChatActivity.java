@@ -49,12 +49,19 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         chatSessionId = kusChatSession.oid;
         chatMessagesDataSource = kusUserSession.chatMessageDataSourceForSessionId(chatSessionId);
 
+        kusUserSession.getPushClient().setSupportScreenShown(true);
         chatMessagesDataSource.addListener(this);
 
         progressDialog.show();
         chatMessagesDataSource.fetchLatest();
 
         setupAdapter();
+    }
+
+    @Override
+    protected void onDestroy() {
+        kusUserSession.getPushClient().setSupportScreenShown(false);
+        super.onDestroy();
     }
     //endregion
 
@@ -64,14 +71,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         rvMessages.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,true);
-        layoutManager.setStackFromEnd(true);
         rvMessages.setLayoutManager(layoutManager);
 
         adapter.notifyDataSetChanged();
     }
     //endregion
 
-    //region Click Listener
+    //region Listeners
     @OnClick(R2.id.fabSendMessage)
     void fabSendMessageClick(){
         chatMessagesDataSource.sendMessageWithText(etTypeMessage.getText().toString(),null);

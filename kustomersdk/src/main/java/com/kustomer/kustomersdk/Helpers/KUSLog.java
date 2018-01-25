@@ -5,7 +5,7 @@ package com.kustomer.kustomersdk.Helpers;
  */
 
 public class KUSLog {
-
+    //TODO: Not Implemented
     //region Properties
 
     //endregion

@@ -5,7 +5,7 @@ package com.kustomer.kustomersdk.Helpers;
  */
 
 public class KUSPermission {
-
+    //TODO: Not Implemented
     //region Properties
 
     //endregion

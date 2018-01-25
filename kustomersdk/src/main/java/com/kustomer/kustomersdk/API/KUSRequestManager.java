@@ -8,13 +8,12 @@ import android.util.Log;
 import com.kustomer.kustomersdk.BuildConfig;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,10 +40,8 @@ public class KUSRequestManager {
 
 
     //region Properties
-    public static final String K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY = "x-kustomer-tracking-token";
-
-    String baseUrlString;
-    KUSUserSession userSession;
+    private String baseUrlString;
+    private KUSUserSession userSession;
 
     HashMap<String, String> genericHTTPHeaderValues = null;
     ArrayList<KUSTrackingTokenListener> pendingTrackingTokenListeners = null;
@@ -62,17 +59,8 @@ public class KUSRequestManager {
                 put("User_Agent",KUSUserAgentHeaderValue());
                 put("x-kustomer-client","android");
                 put("x-kustomer-version", Kustomer.sdkVersion());
-
-//                put("X-Kustomer","kustomer");
-//                put("Accept-Language","en-PK;q=1");
-//                put("User_Agent","KustomerExample/1.0 (iPhone; iOS 11.2.2; Scale/2.00)");
-//                put("x-kustomer-client","iOS");
-//                put("x-kustomer-version", "0.1.1");
             }
         };
-
-
-
     }
     //endregion
 
@@ -122,11 +110,11 @@ public class KUSRequestManager {
 
     }
 
-    public void performRequestType(KUSRequestType type, URL url,
-                                   HashMap<String, Object> params,
-                                   boolean authenticated,
-                                   HashMap additionalHeaders,
-                                   KUSRequestCompletionListener listener){
+    private void performRequestType(KUSRequestType type, URL url,
+                                    HashMap<String, Object> params,
+                                    boolean authenticated,
+                                    HashMap additionalHeaders,
+                                    KUSRequestCompletionListener listener){
         performRequestType(type,
                 url,
                 params,
@@ -137,13 +125,13 @@ public class KUSRequestManager {
 
     }
 
-    public void performRequestType(final KUSRequestType type,
-                                   final URL url,
-                                   final HashMap<String, Object> params,
-                                   final byte[] bodyData,
-                                   final boolean authenticated,
-                                   final HashMap additionalHeaders,
-                                   final KUSRequestCompletionListener completionListener){
+    private void performRequestType(final KUSRequestType type,
+                                    final URL url,
+                                    final HashMap<String, Object> params,
+                                    final byte[] bodyData,
+                                    final boolean authenticated,
+                                    final HashMap additionalHeaders,
+                                    final KUSRequestCompletionListener completionListener){
 
         if(authenticated){
             dispenseTrackingToken(new KUSTrackingTokenListener() {
@@ -214,7 +202,7 @@ public class KUSRequestManager {
                 }else{
                     if(params != null){
 
-                        //TODO: Need to improve
+                        //TODO: Need to enhance
                         JSONObject jsonObject = new JSONObject();
                         for (String key: params.keySet()) {
                             try {
@@ -233,7 +221,7 @@ public class KUSRequestManager {
             }
 
             if(authenticated && trackingToken != null)
-                requestBuilder.addHeader(K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY,trackingToken);
+                requestBuilder.addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY,trackingToken);
 
 
             request = requestBuilder.build();
@@ -249,10 +237,8 @@ public class KUSRequestManager {
                     if(response.body() != null) {
                         String body = response.body().string();
 
-                        Log.d("API", body);
                         try {
                             JSONObject jsonObject = new JSONObject(body);
-                            Log.d("API", body);
                             completionListener.onCompletion(null, jsonObject);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -268,12 +254,12 @@ public class KUSRequestManager {
 
     private void dispenseTrackingToken(KUSTrackingTokenListener listener){
         //TODO:
-        listener.onCompletion(null,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhNjJlNTU5YTY0YTFkMDAxMGIyY2VkNSIsIm9yZyI6IjVhNWY2Y2EzYjU3M2ZkMDAwMWFmNzNkZCIsImV4cCI6MTUxOTAyMjY4MSwiYXVkIjoidXJuOmNvbnN1bWVyIiwiaXNzIjoidXJuOmFwaSJ9.qjTqfCcAFwk8OlK0rWbalcp1i667-vFLPcgudnIRcK4");
+        listener.onCompletion(null,KUSConstants.MockedData.TRACKING_TOKEN);
     }
 
 
     private static String KUSAcceptLanguageHeaderValue(){
-        //to be changed Later
+        //TODO: To be changed Later
         return "en-us";
     }
 
@@ -287,17 +273,6 @@ public class KUSRequestManager {
                 Build.VERSION.RELEASE);
     }
     //endregion
-
-    public static String KUSRequestTypeToString(KUSRequestType type) {
-        switch (type) {
-            case KUS_REQUEST_TYPE_GET: return "get";
-            case KUS_REQUEST_TYPE_PUT: return "put";
-            case KUS_REQUEST_TYPE_POST: return "post";
-            case KUS_REQUEST_TYPE_PATCH: return "patch";
-            default: return "delete";
-        }
-    }
-
 
     //region Request Completion Interface
     public interface KUSRequestCompletionListener{

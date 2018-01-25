@@ -23,19 +23,15 @@ import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
  */
 
 public class KUSModel implements Comparable<KUSModel>, Serializable {
+
+    //region Properties
     public String oid;
     public String orgId;
     public String customerId;
     public String sessionId;
+    //endregion
 
-    public String modelType() {
-        return null;
-    }
-
-    protected boolean enforcesModelType() {
-        return true;
-    }
-
+    //region Initializer
     public boolean initWithJSON(JSONObject json) {
         //Reject any objects  where the model type doesn't match, if enforced
         String type = stringFromKeyPath(json,"type");
@@ -55,6 +51,16 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         this.customerId = stringFromKeyPath(json, "relationships.customer.data.id");
         this.sessionId = stringFromKeyPath(json, "relationships.session.data.id");
 
+        return true;
+    }
+    //endregion
+
+    //region Methods
+    public String modelType() {
+        return null;
+    }
+
+    protected boolean enforcesModelType() {
         return true;
     }
 
@@ -120,5 +126,6 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
                 && kus.customerId.equals(this.customerId)
                 && kus.sessionId.equals(this.sessionId);
     }
+    //endregion
 }
 

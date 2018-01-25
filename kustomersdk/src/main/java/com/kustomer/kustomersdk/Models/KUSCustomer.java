@@ -5,4 +5,5 @@ package com.kustomer.kustomersdk.Models;
  */
 
 public class KUSCustomer {
+    //TODO: Not Implemented
 }

@@ -55,7 +55,7 @@ public class KUSUserSession implements Serializable {
         }
 
         //chatSettingsDataSource.fetch();
-        //pushClient();
+        //getPushClient();
     }
 
     public KUSUserSession(String orgName, String orgId){
@@ -67,7 +67,6 @@ public class KUSUserSession implements Serializable {
 
     //region public methods
     public KUSChatMessagesDataSource chatMessageDataSourceForSessionId(String sessionId){
-
         if(sessionId.length() == 0)
             return null;
 
@@ -80,15 +79,6 @@ public class KUSUserSession implements Serializable {
     }
 
     public KUSUserDataSource userDataSourceForUserId(String userId) {
-//        if (userId.length() == 0 || userId.equals("__team")) {
-//            return null;
-//        }
-//
-//        KUSUserDataSource userDataSource = userDataSources.get(userId);
-//        if (userDataSource == null) {
-//            userDataSource = KUSUserDataSource()
-//        }
-//        return userDataSource;
         return null;
     }
 
@@ -133,7 +123,7 @@ public class KUSUserSession implements Serializable {
 
     public KUSPushClient getPushClient() {
         if (pushClient == null)
-            pushClient = new KUSPushClient();
+            pushClient = new KUSPushClient(this);
         return pushClient;
     }
 

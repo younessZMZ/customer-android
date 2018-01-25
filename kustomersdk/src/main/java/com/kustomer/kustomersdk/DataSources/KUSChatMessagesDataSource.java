@@ -16,11 +16,11 @@ import com.kustomer.kustomersdk.Models.KUSForm;
 import com.kustomer.kustomersdk.Models.KUSFormQuestion;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,6 +34,7 @@ import java.util.Set;
 
 public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener {
 
+    //region Properties
     private String sessionId;
     private boolean createdLocally;
     private KUSForm form;
@@ -42,8 +43,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private KUSFormQuestion questions;
     private boolean submittingForm;
     private boolean creatingSession;
+    //endregion
 
-
+    //region Initializer
     public KUSChatMessagesDataSource(KUSUserSession userSession) {
         super(userSession);
         delayedChatMessageIds = new HashSet<>();
@@ -51,13 +53,14 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         addListener(this);
     }
+    //endregion
 
-
+    //region Public Methods
     public KUSChatMessagesDataSource(KUSUserSession userSession, String sessionId){
         this(userSession);
-        assert sessionId.length() > 0;
 
-        this.sessionId = sessionId;
+        if(sessionId.length() > 0)
+            this.sessionId = sessionId;
     }
 
     public void addListener(KUSChatMessagesDataSourceListener listener) {
@@ -66,7 +69,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     public URL firstUrl() {
         if (sessionId != null) {
-            String endPoint = String.format("/c/v1/chat/sessions/%s/messages", sessionId);
+            String endPoint = String.format(KUSConstants.URL.MESSAGES_LIST_ENDPOINT, sessionId);
             return userSession.getRequestManager().urlForEndpoint(endPoint);
         }
         return  null;
@@ -92,7 +95,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
 
-    //region Public Methods
     public void sendMessageWithText(String text, List<Bitmap> attachments){
         sendMessageWithText(text,attachments,null);
     }
@@ -163,7 +165,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             public void onCompletion(Error error, List<KUSChatAttachment> attachments) {
                 userSession.getRequestManager().performRequestType(
                         KUSRequestType.KUS_REQUEST_TYPE_POST,
-                        "/c/v1/chat/messages",
+                        KUSConstants.URL.SEND_MESSAGE_ENDPOINT,
                         new HashMap<String, Object>() {
                             {
                                 put("body", text);
@@ -199,6 +201,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     //endregion
 
 
+    //region Callbacks
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
 
@@ -218,4 +221,5 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void onContentChange(KUSPaginatedDataSource dataSource) {
 
     }
+    //endregion
 }

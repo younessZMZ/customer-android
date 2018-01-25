@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.DataSources;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -9,22 +10,24 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 public class KUSTrackingTokenDataSource extends KUSObjectDataSource {
 
     //region Properties
-    private String currentTrackingToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhNjJlNTU5YTY0YTFkMDAxMGIyY2VkNSIsIm9yZyI6IjVhNWY2Y2EzYjU3M2ZkMDAwMWFmNzNkZCIsImV4cCI6MTUxOTAyMjY4MSwiYXVkIjoidXJuOmNvbnN1bWVyIiwiaXNzIjoidXJuOmFwaSJ9.qjTqfCcAFwk8OlK0rWbalcp1i667-vFLPcgudnIRcK4";
-    boolean wantsReset;
+    private String currentTrackingToken = KUSConstants.MockedData.TRACKING_TOKEN;
+    private String currentTrackingId = KUSConstants.MockedData.CHAT_SESSION_TRACKING_ID;
     //endregion
 
     //region LifeCycle
     public KUSTrackingTokenDataSource(KUSUserSession userSession){
-        // To be implemented
+        // TODO:
     }
     //endregion
 
     //region Public Methods
-
     public String getCurrentTrackingToken() {
         return currentTrackingToken;
     }
 
+    public String getCurrentTrackingId() {
+        return currentTrackingId;
+    }
     //endregion
 
     //region Private Methods

@@ -22,44 +22,36 @@ import java.util.List;
 
 
 public class KUSPaginatedDataSource {
+
+    //region Properties
     private List<KUSModel> fetchedModels;
     private HashMap<String, KUSModel> fetchedModelsById;
 
     private KUSPaginatedResponse mostRecentPaginatedResponse;
     private KUSPaginatedResponse lastPaginatedResponse;
 
-    protected KUSUserSession userSession;
+    KUSUserSession userSession;
     private List<KUSPaginatedDataSourceListener> listeners;
 
-    protected boolean fetching;
-    protected boolean fetched;
-    protected boolean fetchedAll;
+    boolean fetching;
+    boolean fetched;
+    boolean fetchedAll;
 
-    public Error error;
+    private Error error;
 
     private Object requestMarker;
+    //endregion
 
-    public boolean isFetched(){
-        return fetched;
-    }
-
-    public boolean isFetchedAll(){
-        return fetchedAll;
-    }
-
-    public boolean isFetching(){
-        return fetching;
-    }
-
-
-
-    public KUSPaginatedDataSource(KUSUserSession userSession) {
+    //region LifeCycle
+    KUSPaginatedDataSource(KUSUserSession userSession) {
         this.userSession = userSession;
         listeners = new ArrayList<>();
         fetchedModels = new ArrayList<>();
         fetchedModelsById = new HashMap<>();
     }
+    //endregion
 
+    //region Methods
     public int count() {
         return fetchedModels.size();
     }
@@ -76,7 +68,7 @@ public class KUSPaginatedDataSource {
         return fetchedModels.get(index);
     }
 
-    public int indexOfObject(KUSModel obj) {
+    private int indexOfObject(KUSModel obj) {
         return indexOfObjectId(obj.oid);
     }
 
@@ -87,7 +79,7 @@ public class KUSPaginatedDataSource {
         return null;
     }
 
-    public int indexOfObjectId(String objectId) {
+    private int indexOfObjectId(String objectId) {
         if (objectId == null) {
             return -1;
         }
@@ -103,7 +95,7 @@ public class KUSPaginatedDataSource {
         return -1;
     }
 
-    public void addListener(KUSPaginatedDataSourceListener listener) {
+    void addListener(KUSPaginatedDataSourceListener listener) {
         listeners.add(listener);
     }
 
@@ -154,9 +146,7 @@ public class KUSPaginatedDataSource {
                             instance.requestMarker = null;
                             prependResponse(pageResponse, error);
                         }
-                        catch (JSONException e) {
-
-                        }
+                        catch (JSONException ignore) {}
                     }
                 });
 
@@ -224,7 +214,7 @@ public class KUSPaginatedDataSource {
         return new KUSModel();
     }
 
-    public void appendResponse(KUSPaginatedResponse response, Error error) {
+    private void appendResponse(KUSPaginatedResponse response, Error error) {
         if (error != null || response == null) {
             fetching = false;
             this.error = error != null ? error : new Error();
@@ -243,7 +233,7 @@ public class KUSPaginatedDataSource {
         notifyAnnouncersOnLoad();
     }
 
-    public void prependResponse(KUSPaginatedResponse response, Error error) {
+    private void prependResponse(KUSPaginatedResponse response, Error error) {
         if (error != null || response == null) {
             fetching = false;
             this.error = error != null ? error : new Error();
@@ -262,11 +252,23 @@ public class KUSPaginatedDataSource {
         notifyAnnouncersOnLoad();
     }
 
-    public void sortObjects() {
+    private void sortObjects() {
         Collections.sort(fetchedModels);
     }
 
-    public void removeObjects(List<KUSModel> objects) {
+    public boolean isFetched(){
+        return fetched;
+    }
+
+    public boolean isFetchedAll(){
+        return fetchedAll;
+    }
+
+    public boolean isFetching(){
+        return fetching;
+    }
+
+    void removeObjects(List<KUSModel> objects) {
         if (objects == null || objects.size() == 0) {
             return;
         }
@@ -320,20 +322,22 @@ public class KUSPaginatedDataSource {
         }
     }
 
+    //endregion
+
     // region Notifier
-    public void notifyAnnouncersOnContentChange() {
+    private void notifyAnnouncersOnContentChange() {
         for (KUSPaginatedDataSourceListener listener : listeners) {
             listener.onContentChange(this);
         }
     }
 
-    public void notifyAnnouncersOnError(Error error) {
+    private void notifyAnnouncersOnError(Error error) {
         for (KUSPaginatedDataSourceListener listener : listeners) {
             listener.onError(this, error);
         }
     }
 
-    public void notifyAnnouncersOnLoad() {
+    private void notifyAnnouncersOnLoad() {
         for (KUSPaginatedDataSourceListener listener : listeners) {
             listener.onLoad(this);
         }

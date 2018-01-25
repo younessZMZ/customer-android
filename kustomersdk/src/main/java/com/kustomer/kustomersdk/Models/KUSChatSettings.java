@@ -9,5 +9,5 @@ import java.util.HashMap;
  */
 
 public class KUSChatSettings extends KUSModel {
-
+    //TODO: Not Implemented
 }

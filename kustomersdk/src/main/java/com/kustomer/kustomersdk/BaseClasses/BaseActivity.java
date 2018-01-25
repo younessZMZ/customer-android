@@ -88,24 +88,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
             }
         });
     }
-
-    protected void showSnackBar(View view, int textId, int colorId) {
-        Snackbar snackbar = Snackbar
-                .make(view, textId, Snackbar.LENGTH_LONG);
-
-        snackbar.getView().setBackgroundColor(getResources().getColor(colorId));
-
-        snackbar.show();
-    }
-
-    protected void showSnackBar(View view, String text, int colorId) {
-        Snackbar snackbar = Snackbar
-                .make(view, text, Snackbar.LENGTH_LONG);
-
-        snackbar.getView().setBackgroundColor(getResources().getColor(colorId));
-
-        snackbar.show();
-    }
     //endregion
 
     //region Callbacks

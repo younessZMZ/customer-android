@@ -1,9 +1,9 @@
 package com.kustomer.kustomersdk;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Base64;
-import android.util.Log;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Activities.KUSChatActivity;
@@ -25,59 +25,59 @@ import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.USER_SESSIO
 public class Kustomer {
 
     //region Properties
+    private static Context mContext;
     private static Kustomer sharedInstance = null;
-    private static String kKustomerOrgIdKey = "org";
-    private static String kKustomerOrgNameKey = "orgName";
 
-    KUSUserSession userSession;
+    private KUSUserSession userSession;
 
-    String apiKey;
-    String orgId;
-    String orgName;
+    private String apiKey;
+    private String orgId;
+    private String orgName;
 
     private static String hostDomainOverride = null;
     //endregion
 
     //region LifeCycle
-    public static Kustomer getSharedInstance(){
+    private static Kustomer getSharedInstance(){
         if(sharedInstance == null)
             sharedInstance = new Kustomer();
 
         return sharedInstance;
     }
+
+    public static void init(Context context, String apiKey){
+        getSharedInstance().setApiKey(apiKey);
+        mContext = context.getApplicationContext();
+    }
     //endregion
 
     //region Class Methods
-    public static void initializeWithAPIKey(String apiKey){
-        getSharedInstance().setApiKey(apiKey);
-    }
-
     public static void describeConversation(HashMap<String,Object> customAttributes){
-
+        //TODO:
     }
 
     public static void describeCustomer(KUSCustomerDescription customerDescription){
-
+        //TODO:
     }
 
     public static void identify(String externalToken){
-
+        //TODO:
     }
 
     public static void resetToken(){
-
+        //TODO:
     }
 
     public static void showSupport(Activity activity){
 
-        //TODO: need to mock this
+        //TODO: Mocking Session Object for POC
         KUSChatSession chatSession =  new KUSChatSession();
-        chatSession.oid = "5a62e560f3fbb800014f7a27";
-        chatSession.orgId = "5a5f6ca3b573fd0001af73dd";
-        chatSession.customerId = "5a62e55cf3fbb800014f7a11";
-        chatSession.preview = "Yt";
-        chatSession.trackingId = "5a62e559a64a1d0010b2ced5";
-        chatSession.sessionId = "5a6083aff105640001c8f96c";
+        chatSession.oid = KUSConstants.MockedData.CHAT_SESSION_OID;
+        chatSession.orgId = KUSConstants.MockedData.CHAT_SESSION_ORG_ID;
+        chatSession.customerId = KUSConstants.MockedData.CHAT_SESSION_CUSTOMER_ID;
+        chatSession.preview = KUSConstants.MockedData.CHAT_SESSION_PREVIEW;
+        chatSession.trackingId = KUSConstants.MockedData.CHAT_SESSION_TRACKING_ID;
+        chatSession.sessionId = KUSConstants.MockedData.CHAT_SESSION_SESSION_ID;
 
 
 
@@ -98,21 +98,17 @@ public class Kustomer {
         if(apiKeyParts.length<=2)
             return;
 
-        //String base64EncodedTokenJson = paddedBase64String(apiKeyParts[1]);
         JSONObject tokenPayload = null;
         try {
             tokenPayload = jsonFromBase64EncodedJsonString(apiKeyParts[1]);
             this.apiKey = apiKey;
-            orgId = tokenPayload.getString(kKustomerOrgIdKey);
-            orgName = tokenPayload.getString(kKustomerOrgNameKey);
+            orgId = tokenPayload.getString(KUSConstants.Keys.K_KUSTOMER_ORG_ID_KEY);
+            orgName = tokenPayload.getString(KUSConstants.Keys.K_KUSTOMER_ORG_NAME_KEY);
 
             if(orgName.length()==0)
                 return;
 
-            Log.v("KUSTOMER","kustomer initialized for organization" + orgName);
             userSession = new KUSUserSession(orgName,orgId);
-
-
         } catch (JSONException ignore) {}
 
     }
@@ -129,11 +125,15 @@ public class Kustomer {
     }
 
     public static String hostDomain(){
-        return hostDomainOverride != null ? hostDomainOverride : "kustomerapp.com";
+        return hostDomainOverride != null ? hostDomainOverride : KUSConstants.URL.HOST_NAME;
     }
 
     public static void setHostDomain(String hostDomain){
         hostDomainOverride = hostDomain;
+    }
+
+    public static Context getContext() {
+        return mContext;
     }
     //endregion
 

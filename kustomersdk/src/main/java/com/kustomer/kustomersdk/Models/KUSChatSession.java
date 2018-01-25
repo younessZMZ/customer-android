@@ -18,14 +18,16 @@ import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 
 public class KUSChatSession extends KUSModel implements Serializable {
 
+    //region Properties
     public String preview;
     public String trackingId;
 
     public Date createdAt;
     public Date lastSeenAt;
     public Date lastMessageAt;
+    //endregion
 
-
+    //region Initializer
     @Override
     public boolean initWithJSON(JSONObject json) {
         boolean val = super.initWithJSON(json);
@@ -42,7 +44,9 @@ public class KUSChatSession extends KUSModel implements Serializable {
 
         return true;
     }
+    //endregion
 
+    //region Public Methods
     @Override
     public String toString() {
         //Missing %p (this)
@@ -79,5 +83,5 @@ public class KUSChatSession extends KUSModel implements Serializable {
     public String modelType() {
         return "chat_session";
     }
-
+    //endregion
 }
