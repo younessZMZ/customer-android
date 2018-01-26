@@ -80,7 +80,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     //region Listeners
     @OnClick(R2.id.fabSendMessage)
     void fabSendMessageClick(){
-        chatMessagesDataSource.sendMessageWithText(etTypeMessage.getText().toString(),null);
+        String textToSend = etTypeMessage.getText().toString();
+        if(!textToSend.isEmpty())
+            chatMessagesDataSource.sendMessageWithText(textToSend,null);
+        else
+            Toast.makeText(this, R.string.please_provide_a_message_body,Toast.LENGTH_SHORT).show();
+
         etTypeMessage.setText("");
     }
 

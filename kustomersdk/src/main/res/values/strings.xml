@@ -7,4 +7,5 @@
     <string name="don_t_miss_a_response_get_notified_by_email">Don\'t miss a response! Get notified by email:</string>
     <string name="we_re_here_let_us_know_if_we_can_help">We\'re here, Let us know if we can help.</string>
     <string name="example">Example</string>
+    <string name="please_provide_a_message_body">Please provide a message body</string>
 </resources>
