@@ -39,7 +39,7 @@ public class KUSPushClient implements Serializable {
     //endregion
 
     //region LifeCycle
-    KUSPushClient(KUSUserSession userSession){
+    public KUSPushClient(KUSUserSession userSession){
         this.userSession = userSession;
 
         //TODO: Incomplete
@@ -62,7 +62,7 @@ public class KUSPushClient implements Serializable {
 
     private String getPusherChannelName(){
         //TODO: Incomplete
-        return String.format("presence-external-%s-tracking-%s",userSession.orgId,
+        return String.format("presence-external-%s-tracking-%s",userSession.getOrgId(),
                 userSession.getTrackingTokenDataSource().getCurrentTrackingId());
     }
 
@@ -119,18 +119,18 @@ public class KUSPushClient implements Serializable {
 
                             @Override
                             public void onEvent(String channelName, String eventName, String data) {
-                                JSONObject jsonObject = JsonHelper.jsonFromString(data);
+                                JSONObject jsonObject = JsonHelper.stringToJson(data);
 
-                                List<KUSModel> chatMessages = new KUSChatMessage()
-                                        .objectsWithJSON(JsonHelper.jsonObjectFromString(jsonObject,"data"));
+                                List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject,"data"));
 
                                 KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
-                                KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.sessionId);
-                                boolean doesNotAlreadyContainMessage = messagesDataSource.objectWithID(chatMessage.oid) == null;
-                                messagesDataSource.upsertObjects(chatMessages);
+                                KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+
+                                boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getOrgId()) == null;
+                                messagesDataSource.upsertAll(chatMessages);
 
                                 if(doesNotAlreadyContainMessage)
-                                    notifyForUpdatedChatSession(chatMessage.sessionId);
+                                    notifyForUpdatedChatSession(chatMessage.getSessionId());
                             }
                         });
                     }

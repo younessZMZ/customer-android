@@ -72,12 +72,12 @@ public class Kustomer {
 
         //TODO: Mocking Session Object for POC
         KUSChatSession chatSession =  new KUSChatSession();
-        chatSession.oid = KUSConstants.MockedData.CHAT_SESSION_OID;
-        chatSession.orgId = KUSConstants.MockedData.CHAT_SESSION_ORG_ID;
-        chatSession.customerId = KUSConstants.MockedData.CHAT_SESSION_CUSTOMER_ID;
-        chatSession.preview = KUSConstants.MockedData.CHAT_SESSION_PREVIEW;
-        chatSession.trackingId = KUSConstants.MockedData.CHAT_SESSION_TRACKING_ID;
-        chatSession.sessionId = KUSConstants.MockedData.CHAT_SESSION_SESSION_ID;
+        chatSession.setId(KUSConstants.MockedData.CHAT_SESSION_OID);
+        chatSession.setOrgId(KUSConstants.MockedData.CHAT_SESSION_ORG_ID);
+        chatSession.setCustomerId(KUSConstants.MockedData.CHAT_SESSION_CUSTOMER_ID);
+        chatSession.setPreview(KUSConstants.MockedData.CHAT_SESSION_PREVIEW);
+        chatSession.setTrackingId(KUSConstants.MockedData.CHAT_SESSION_TRACKING_ID);
+        chatSession.setSessionId(KUSConstants.MockedData.CHAT_SESSION_SESSION_ID);
 
 
 

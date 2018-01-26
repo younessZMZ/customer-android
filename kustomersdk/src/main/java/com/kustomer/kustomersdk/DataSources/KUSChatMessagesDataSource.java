@@ -7,6 +7,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSUpload;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSImageUploadListener;
@@ -17,16 +18,19 @@ import com.kustomer.kustomersdk.Models.KUSFormQuestion;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -50,7 +54,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         super(userSession);
         delayedChatMessageIds = new HashSet<>();
 
-
         addListener(this);
     }
     //endregion
@@ -70,30 +73,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public URL firstUrl() {
         if (sessionId != null) {
             String endPoint = String.format(KUSConstants.URL.MESSAGES_LIST_ENDPOINT, sessionId);
-            return userSession.getRequestManager().urlForEndpoint(endPoint);
+            return getUserSession().getRequestManager().urlForEndpoint(endPoint);
         }
         return  null;
     }
 
-    public KUSModel modelClass() {
-        return new KUSChatMessage();
-    }
-
     @Override
     public boolean isFetched() {
-        return createdLocally || super.fetched;
+        return createdLocally || super.isFetched();
     }
-
-    @Override
-    public boolean isFetchedAll(){
-        return fetchedAll;
-    }
-
-    @Override
-    public boolean isFetching(){
-        return fetching;
-    }
-
 
     public void sendMessageWithText(String text, List<Bitmap> attachments){
         sendMessageWithText(text,attachments,null);
@@ -124,8 +112,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 "}";
 
 
-        JSONObject json = JsonHelper.jsonFromString(jsonString);
-        List<KUSModel> temporaryMessages = new KUSChatMessage().objectsWithJSON(json);
+        JSONObject json = JsonHelper.stringToJson(jsonString);
+        List<KUSModel> temporaryMessages = objectsFromJSON(json);
 
         fullySendMessage(temporaryMessages,attachments,text);
     }
@@ -134,23 +122,22 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
        if(chatMessages.size()>1)
             Collections.reverse(chatMessages);
 
-       upsertObjects(chatMessages);
+       upsertAll(chatMessages);
     }
     //endregion
 
     //region Private Methods
     private void fullySendMessage(List<KUSModel> temporaryMessages,List<Bitmap> attachments, String text){
-
         //TODO: Incomplete
         insertMessagesWithState(KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENDING, temporaryMessages);
         sendMessage(attachments,temporaryMessages,text);
     }
 
     private void insertMessagesWithState(KUSChatMessageState state, List<KUSModel> temporaryMessages){
-        removeObjects(temporaryMessages);
+        removeAll(temporaryMessages);
         for(KUSModel message : temporaryMessages){
             if(message.getClass().equals(KUSChatMessage.class)){
-                ((KUSChatMessage)message).state = state;
+                ((KUSChatMessage)message).setState(state);
             }
         }
 
@@ -160,10 +147,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private void sendMessage(List<Bitmap> attachments, final List<KUSModel> temporaryMessages , final String text){
 
         //TODO: send attachmentIds
-        KUSUpload.uploadImages(attachments, userSession, new KUSImageUploadListener() {
+        KUSUpload.uploadImages(attachments, getUserSession(), new KUSImageUploadListener() {
             @Override
             public void onCompletion(Error error, List<KUSChatAttachment> attachments) {
-                userSession.getRequestManager().performRequestType(
+                getUserSession().getRequestManager().performRequestType(
                         KUSRequestType.KUS_REQUEST_TYPE_POST,
                         KUSConstants.URL.SEND_MESSAGE_ENDPOINT,
                         new HashMap<String, Object>() {
@@ -188,13 +175,17 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         });
     }
 
+    @Override
+    public List<KUSModel> objectsFromJSON(JSONObject jsonObject)
+    {
+        return JsonHelper.kusChatModelsFromJSON(jsonObject);
+    }
+
     private void handleMessageSent(JSONObject response, List<KUSModel> temporaryMessages){
-        List<KUSModel> finalMessages = new KUSChatMessage().objectsWithJSON(JsonHelper.jsonObjectFromString(response,"data"));
-
+        List<KUSModel> finalMessages = objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(response,"data"));
         //TODO: Incomplete
-
         if(finalMessages != null) {
-            removeObjects(temporaryMessages);
+            removeAll(temporaryMessages);
             upsertNewMessages(finalMessages);
         }
     }
@@ -204,22 +195,22 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     //region Callbacks
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
-
+        //TODO: Not implemented
     }
 
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
-
+        //TODO: Not implemented
     }
 
     @Override
     public void onError(KUSPaginatedDataSource dataSource, Error error) {
-
+        //TODO: Not implemented
     }
 
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
-
+        //TODO: Not implemented
     }
     //endregion
 }

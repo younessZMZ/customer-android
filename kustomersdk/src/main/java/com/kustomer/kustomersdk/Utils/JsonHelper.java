@@ -2,6 +2,9 @@ package com.kustomer.kustomersdk.Utils;
 
 import com.google.gson.Gson;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Models.KUSChatMessage;
+import com.kustomer.kustomersdk.Models.KUSModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by Junaid on 1/23/2018.
@@ -110,10 +115,10 @@ public class JsonHelper {
         }
     }
 
-    public static JSONObject jsonObjectFromString(JSONObject json, String key){
+    public static JSONObject jsonObjectFromKeyPath(JSONObject json, String keyPath){
 
         try {
-            return json.getJSONObject(key);
+            return json.getJSONObject(keyPath);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -121,7 +126,7 @@ public class JsonHelper {
         return null;
     }
 
-    public static JSONObject jsonFromString(String jsonString){
+    public static JSONObject stringToJson(String jsonString){
         try {
             return new JSONObject(jsonString);
         } catch (JSONException e) {
@@ -130,4 +135,37 @@ public class JsonHelper {
 
         return null;
     }
+
+    public static List<KUSModel> kusChatModelsFromJSON(JSONObject jsonObject) {
+        if(jsonObject == null)
+            return null;
+
+        KUSChatMessage standardChatMessage = null;
+
+        try {
+            standardChatMessage = new KUSChatMessage(jsonObject);
+        } catch (KUSInvalidJsonException e) {
+            e.printStackTrace();
+        }
+
+        if(standardChatMessage == null)
+            return new ArrayList<>();
+
+        String body = KUSUtils.KUSUnescapeBackslashesFromString(standardChatMessage.getBody());
+        standardChatMessage.setBody(body);
+
+        //The markdown url pattern we want to detect
+        String imagePattern = "!\\[.*\\]\\(.*\\)";
+        List<KUSModel> chatMessages = new ArrayList<>();
+
+        Pattern regex = Pattern.compile(imagePattern);
+
+
+        // TODO: Incomplete
+
+        chatMessages.add(standardChatMessage);
+
+        return chatMessages;
+    }
+
 }

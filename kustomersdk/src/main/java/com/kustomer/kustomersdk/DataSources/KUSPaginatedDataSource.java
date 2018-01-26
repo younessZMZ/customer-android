@@ -8,6 +8,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSPaginatedResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,12 +32,12 @@ public class KUSPaginatedDataSource {
     private KUSPaginatedResponse mostRecentPaginatedResponse;
     private KUSPaginatedResponse lastPaginatedResponse;
 
-    KUSUserSession userSession;
+    private KUSUserSession userSession;
     private List<KUSPaginatedDataSourceListener> listeners;
 
-    boolean fetching;
-    boolean fetched;
-    boolean fetchedAll;
+    private boolean fetching;
+    private boolean fetched;
+    private boolean fetchedAll;
 
     private Error error;
 
@@ -44,7 +45,7 @@ public class KUSPaginatedDataSource {
     //endregion
 
     //region LifeCycle
-    KUSPaginatedDataSource(KUSUserSession userSession) {
+    public KUSPaginatedDataSource(KUSUserSession userSession) {
         this.userSession = userSession;
         listeners = new ArrayList<>();
         fetchedModels = new ArrayList<>();
@@ -53,28 +54,28 @@ public class KUSPaginatedDataSource {
     //endregion
 
     //region Methods
-    public int count() {
+    public int getSize() {
         return fetchedModels.size();
     }
 
-    public List<KUSModel> allObjects() {
+    public List<KUSModel> getList() {
         return fetchedModels;
     }
 
-    public KUSModel objectWithID(String oid) {
+    public KUSModel findById(String oid) {
         return fetchedModelsById.get(oid);
     }
 
-    public KUSModel objectAtIndex(int index) {
+    public KUSModel get(int index) {
         return fetchedModels.get(index);
     }
 
-    private int indexOfObject(KUSModel obj) {
-        return indexOfObjectId(obj.oid);
+    private int indexOf(KUSModel obj) {
+        return indexOfObjectId(obj.getId());
     }
 
-    public KUSModel firstObject() {
-        if (count() > 0) {
+    public KUSModel getFirst() {
+        if (getSize() > 0) {
             return fetchedModels.get(0);
         }
         return null;
@@ -85,18 +86,18 @@ public class KUSPaginatedDataSource {
             return -1;
         }
 
-        KUSModel internalObj = objectWithID(objectId);
+        KUSModel internalObj = findById(objectId);
         if (internalObj == null)
             return -1;
         for (int i = 0; i < fetchedModels.size(); i++) {
-            if (fetchedModels.get(i).oid.equals(internalObj.oid)) {
+            if (fetchedModels.get(i).getId().equals(internalObj.getId())) {
                 return i;
             }
         }
         return -1;
     }
 
-    void addListener(KUSPaginatedDataSourceListener listener) {
+    public void addListener(KUSPaginatedDataSourceListener listener) {
         listeners.add(listener);
     }
 
@@ -107,8 +108,8 @@ public class KUSPaginatedDataSource {
     // TODO: completion Listener should be in background
     public void fetchLatest() {
         URL url = firstUrl();
-        if (mostRecentPaginatedResponse != null && mostRecentPaginatedResponse.firstPath != null) {
-            url = userSession.getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.firstPath);
+        if (mostRecentPaginatedResponse != null && mostRecentPaginatedResponse.getFirstPath() != null) {
+            url = userSession.getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.getFirstPath());
         }
 
         if (url == null) {
@@ -126,7 +127,7 @@ public class KUSPaginatedDataSource {
         this.requestMarker = requestMarker;
         final KUSPaginatedDataSource instance = this;
 
-        final KUSModel model = modelClass();
+        final KUSPaginatedDataSource dataSource = this;
 
         userSession.getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_GET,
@@ -138,7 +139,7 @@ public class KUSPaginatedDataSource {
                     public void onCompletion(Error error, JSONObject response) {
 
                         try {
-                            KUSPaginatedResponse pageResponse = new KUSPaginatedResponse(response, model);
+                            KUSPaginatedResponse pageResponse = new KUSPaginatedResponse(response, dataSource);
 
                             if(requestMarker != instance.requestMarker  )
                                 return;
@@ -156,9 +157,9 @@ public class KUSPaginatedDataSource {
     public void fetchNext() {
         URL url = null;
         if(lastPaginatedResponse != null){
-            url = userSession.getRequestManager().urlForEndpoint(lastPaginatedResponse.nextPath);
+            url = userSession.getRequestManager().urlForEndpoint(lastPaginatedResponse.getNextPath());
         }else if(mostRecentPaginatedResponse!= null){
-            url  = userSession.getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.nextPath);
+            url  = userSession.getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.getNextPath());
         }
 
         if(url == null)
@@ -173,7 +174,7 @@ public class KUSPaginatedDataSource {
         this.requestMarker = requestMarker;
         final KUSPaginatedDataSource instance = this;
 
-        final KUSModel model = modelClass();
+        final KUSPaginatedDataSource model = this;
 
         userSession.getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_GET,
@@ -209,11 +210,6 @@ public class KUSPaginatedDataSource {
         return null;
     }
 
-
-    public KUSModel modelClass() {
-        return new KUSModel();
-    }
-
     private void appendResponse(KUSPaginatedResponse response, Error error) {
         if (error != null || response == null) {
             fetching = false;
@@ -227,9 +223,9 @@ public class KUSPaginatedDataSource {
 
         fetching = false;
         fetched = true;
-        fetchedAll = (fetchedAll || response.nextPath == null);
+        fetchedAll = (fetchedAll || response.getNextPath() == null);
 
-        upsertObjects(response.objects);
+        upsertAll(response.getObjects());
         notifyAnnouncersOnLoad();
     }
 
@@ -246,13 +242,13 @@ public class KUSPaginatedDataSource {
 
         fetching = false;
         fetched = true;
-        fetchedAll = (fetchedAll || response.nextPath == null);
+        fetchedAll = (fetchedAll || response.getNextPath() == null);
 
-        upsertObjects(response.objects);
+        upsertAll(response.getObjects());
         notifyAnnouncersOnLoad();
     }
 
-    private void sortObjects() {
+    private void sort() {
         Collections.sort(fetchedModels);
     }
 
@@ -268,18 +264,18 @@ public class KUSPaginatedDataSource {
         return fetching;
     }
 
-    void removeObjects(List<KUSModel> objects) {
+    public void removeAll(List<KUSModel> objects) {
         if (objects == null || objects.size() == 0) {
             return;
         }
 
         boolean didChange = false;
         for (KUSModel obj : objects) {
-            int index = indexOfObject(obj);
+            int index = indexOf(obj);
             if (index != -1) {
                 didChange = true;
                 fetchedModels.remove(index);
-                fetchedModelsById.remove(obj.oid);
+                fetchedModelsById.remove(obj.getId());
             }
         }
 
@@ -288,38 +284,85 @@ public class KUSPaginatedDataSource {
         }
     }
 
-    public void upsertObjects(List<KUSModel> objects) {
+    public void upsertAll(List<KUSModel> objects) {
         if (objects == null || objects.size() == 0) {
             return;
         }
 
         boolean didChange = false;
         for (KUSModel obj : objects) {
-            int index = indexOfObject(obj);
+            int index = indexOf(obj);
             if (index != -1) {
-                KUSModel curObj = objectWithID(obj.oid);
+                KUSModel curObj = findById(obj.getId());
                 if (!obj.equals(curObj)) {
                     didChange = true;
                 }
 
-                int existingIndex = indexOfObject(curObj);
+                int existingIndex = indexOf(curObj);
                 if (existingIndex != -1) {
                     fetchedModels.remove(existingIndex);
                 }
                 fetchedModels.add(obj);
-                fetchedModelsById.put(obj.oid, obj);
+                fetchedModelsById.put(obj.getId(), obj);
             }
             else {
                 didChange = true;
                 fetchedModels.add(obj);
-                fetchedModelsById.put(obj.oid, obj);
+                fetchedModelsById.put(obj.getId(), obj);
             }
         }
 
-        sortObjects();
+        sort();
         if (didChange) {
             notifyAnnouncersOnContentChange();
         }
+    }
+
+    public List<KUSModel> objectsFromJSON(JSONObject jsonObject) {
+
+        ArrayList<KUSModel> arrayList = null;
+
+        KUSModel model = null;
+        try {
+            model = new KUSModel(jsonObject);
+        } catch (KUSInvalidJsonException e) {
+            e.printStackTrace();
+        }
+
+        if(model != null) {
+            arrayList = new ArrayList<>();
+            arrayList.add(model);
+        }
+
+        return arrayList;
+    }
+
+    public List<KUSModel> objectsFromJSONArray(JSONArray jsonArray) {
+
+        ArrayList<KUSModel> objects = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+
+                KUSModel object = new KUSModel(jsonObject);
+                objects.add(object);
+            } catch (JSONException | KUSInvalidJsonException e) {
+                e.printStackTrace();
+            }
+        }
+        return objects;
+    }
+    //endregion
+
+    //region Accessors
+
+    public KUSUserSession getUserSession() {
+        return userSession;
+    }
+
+    public void setUserSession(KUSUserSession userSession) {
+        this.userSession = userSession;
     }
 
     //endregion
@@ -343,4 +386,5 @@ public class KUSPaginatedDataSource {
         }
     }
     //endregion
+
 }

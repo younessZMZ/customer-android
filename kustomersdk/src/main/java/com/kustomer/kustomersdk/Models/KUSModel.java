@@ -2,20 +2,11 @@ package com.kustomer.kustomersdk.Models;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 
@@ -26,13 +17,15 @@ import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 public class KUSModel implements Comparable<KUSModel>, Serializable {
 
     //region Properties
-    public String oid;
-    public String orgId;
-    public String customerId;
-    public String sessionId;
+    private String id;
+    private String orgId;
+    private String customerId;
+    private String sessionId;
     //endregion
 
     //region Initializer
+    public KUSModel(){}
+
     public KUSModel(JSONObject json) throws KUSInvalidJsonException {
         //Reject any objects  where the model type doesn't match, if enforced
         String type = stringFromKeyPath(json,"type");
@@ -46,7 +39,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         if (objectId == null)
             throw new KUSInvalidJsonException("Object Id not found.");
 
-        oid = objectId;
+        id = objectId;
 
         this.orgId = stringFromKeyPath(json, "relationships.org.data.id");
         this.customerId = stringFromKeyPath(json, "relationships.customer.data.id");
@@ -63,61 +56,21 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         return true;
     }
 
-    public KUSModel(){
-
-    }
-
-    public List<KUSModel> objectsWithJSON(JSONObject jsonObject) {
-
-        ArrayList<KUSModel> arrayList = null;
-
-        KUSModel model = null;
-        try {
-            model = new KUSModel(jsonObject);
-        } catch (KUSInvalidJsonException e) {
-            e.printStackTrace();
-        }
-
-        if(model != null) {
-            arrayList = new ArrayList<>();
-            arrayList.add(model);
-        }
-
-        return arrayList;
-    }
-
-    public ArrayList<KUSModel> objectsWithJSONs(JSONArray jsonArray) {
-
-        ArrayList<KUSModel> objects = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-
-                KUSModel object = new KUSModel(jsonObject);
-                objects.add(object);
-            } catch (JSONException | KUSInvalidJsonException e) {
-                e.printStackTrace();
-            }
-        }
-        return objects;
-    }
-
     @Override
     public String toString() {
         //Missing %p (this)
-        return String.format("<%s : oid: %s>", this.getClass(), this.oid);
+        return String.format("<%s : id: %s>", this.getClass(), this.id);
     }
 
     public int hash() {
-        return this.oid.hashCode();
+        return this.id.hashCode();
     }
 
     // Helper Methods
 
     @Override
     public int compareTo(@NonNull KUSModel kusModel) {
-        return kusModel.oid.compareTo(this.oid);
+        return kusModel.id.compareTo(this.id);
     }
 
     @Override
@@ -127,11 +80,47 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         }
 
         KUSModel kus = (KUSModel) obj;
-        return kus.oid.equals(this.oid)
+        return kus.id.equals(this.id)
                 && kus.orgId.equals(this.orgId)
                 && kus.customerId.equals(this.customerId)
                 && kus.sessionId.equals(this.sessionId);
     }
+    //endregion
+
+    //region Accessors
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     //endregion
 }
 

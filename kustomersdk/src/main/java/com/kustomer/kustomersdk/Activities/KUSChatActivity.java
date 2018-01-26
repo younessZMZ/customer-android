@@ -46,7 +46,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusUserSession = (KUSUserSession) getIntent().getSerializableExtra(KUSConstants.BundleName.USER_SESSION_BUNDLE__KEY);
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY);
 
-        chatSessionId = kusChatSession.oid;
+        chatSessionId = kusChatSession.getId();
         chatMessagesDataSource = kusUserSession.chatMessageDataSourceForSessionId(chatSessionId);
 
         kusUserSession.getPushClient().setSupportScreenShown(true);

@@ -7,13 +7,11 @@ import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,7 +29,7 @@ public class KUSChatMessage extends KUSModel {
 
     //region Properties
     private String trackingId;
-    public String body;
+    private String body;
     private URL imageUrl;
     private ArrayList attachmentIds;
 
@@ -40,16 +38,17 @@ public class KUSChatMessage extends KUSModel {
     private KUSChatMessageDirection direction;
     private String sentById;
 
-    public KUSChatMessageType type;
-    public KUSChatMessageState state;
-    public String value;
+    private KUSChatMessageType type;
+    private KUSChatMessageState state;
+    private String value;
     //endregion
 
+    //region Initializer
     public KUSChatMessage(){
 
     }
 
-    private KUSChatMessage(JSONObject json) throws KUSInvalidJsonException {
+    public KUSChatMessage(JSONObject json) throws KUSInvalidJsonException {
         this(json, KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT, null);
     }
 
@@ -67,8 +66,9 @@ public class KUSChatMessage extends KUSModel {
         this.direction = KUSChatMessageDirectionFromString(stringFromKeyPath(json,"attributes.direction"));
         this.sentById = stringFromKeyPath(json, "relationships.sentBy.data.id");
     }
+    //endregion
 
-
+    //region Public Methods
     public static boolean KUSChatMessageSentByUser(KUSChatMessage message) {
         return message.direction == KUSChatMessageDirection.KUS_CHAT_MESSAGE_DIRECTION_IN;
     }
@@ -86,25 +86,9 @@ public class KUSChatMessage extends KUSModel {
                 : KUSChatMessageDirection.KUS_CHAT_MESSAGE_DIRECTION_OUT;
     }
 
-    public static String KUSUnescapeBackslashesFromString (String string){
-        String mutableString = "";
-
-        int startingIndex = 0;
-        for(int i = 0; i<string.length(); i++){
-            String character = string.substring(i,i+1);
-            if(character.equals("\\")){
-                String lastString = string.substring(startingIndex, i);
-                mutableString = mutableString.concat(lastString);
-
-                i++;
-                startingIndex = i;
-            }
-        }
-
-        String endingString = string.substring(startingIndex);
-        mutableString = mutableString.concat(endingString);
-
-        return mutableString;
+    public static URL attachmentURLForMessageId(String messageId, String attachmentId){
+        //TODO: Not Implemented yet
+        return null;
     }
 
     @Override
@@ -112,49 +96,10 @@ public class KUSChatMessage extends KUSModel {
         return "chat_message";
     }
 
-    public static URL attachmentURLForMessageId(String messageId, String attachmentId){
-        //Not Implemented yet
-        return null;
-    }
-
-    public List<KUSModel> objectsWithJSON(JSONObject jsonObject)
-    {
-
-        if(jsonObject == null)
-            return null;
-
-        KUSChatMessage standardChatMessage = null;
-
-        try {
-            standardChatMessage = new KUSChatMessage(jsonObject);
-        } catch (KUSInvalidJsonException e) {
-            e.printStackTrace();
-        }
-
-        if(standardChatMessage == null)
-            return new ArrayList<>();
-
-        String body = KUSUnescapeBackslashesFromString(standardChatMessage.body);
-        standardChatMessage.body = body;
-
-        //The markdown url pattern we want to detect
-        String imagePattern = "!\\[.*\\]\\(.*\\)";
-        List<KUSModel> chatMessages = new ArrayList<>();
-
-        Pattern regex = Pattern.compile(imagePattern);
-
-
-        // TODO: Incomplete
-
-        chatMessages.add(standardChatMessage);
-
-        return chatMessages;
-    }
-
     @Override
     public String toString() {
         //Missing %p (this)
-        return String.format("<%s : oid: %s; body: %s>",this.getClass(),this.oid,this.body);
+        return String.format("<%s : oid: %s; body: %s>",this.getClass(),this.getId(),this.body);
     }
 
     @Override
@@ -177,7 +122,7 @@ public class KUSChatMessage extends KUSModel {
             return false;
         if(chatMessage.attachmentIds == null || this.attachmentIds == null)
             return false;
-        if(!chatMessage.oid.equals(this.oid))
+        if(!chatMessage.getId().equals(this.getId()))
             return false;
         if(!chatMessage.createdAt.equals(this.createdAt))
             return false;
@@ -196,4 +141,98 @@ public class KUSChatMessage extends KUSModel {
         int parent = super.compareTo(kusModel);
         return date == 0 ? parent : date;
     }
+    //endregion
+
+    //region Accessors
+
+    public String getTrackingId() {
+        return trackingId;
+    }
+
+    public void setTrackingId(String trackingId) {
+        this.trackingId = trackingId;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public URL getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(URL imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public ArrayList getAttachmentIds() {
+        return attachmentIds;
+    }
+
+    public void setAttachmentIds(ArrayList attachmentIds) {
+        this.attachmentIds = attachmentIds;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getImportedAt() {
+        return importedAt;
+    }
+
+    public void setImportedAt(Date importedAt) {
+        this.importedAt = importedAt;
+    }
+
+    public KUSChatMessageDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(KUSChatMessageDirection direction) {
+        this.direction = direction;
+    }
+
+    public String getSentById() {
+        return sentById;
+    }
+
+    public void setSentById(String sentById) {
+        this.sentById = sentById;
+    }
+
+    public KUSChatMessageType getType() {
+        return type;
+    }
+
+    public void setType(KUSChatMessageType type) {
+        this.type = type;
+    }
+
+    public KUSChatMessageState getState() {
+        return state;
+    }
+
+    public void setState(KUSChatMessageState state) {
+        this.state = state;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    //endregion
+
 }

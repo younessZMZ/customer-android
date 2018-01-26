@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Models;
 
+import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 
@@ -20,14 +21,14 @@ import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 public class KUSPaginatedResponse {
 
     //region Properties
-    public List<KUSModel> objects;
-    public Integer page;
-    public Integer pageSize;
+    private List<KUSModel> objects;
+    private Integer page;
+    private Integer pageSize;
 
-    public String selfPath;
-    public String firstPath;
-    public String prevPath;
-    public String nextPath;
+    private String selfPath;
+    private String firstPath;
+    private String prevPath;
+    private String nextPath;
     //endregion
 
     //region LifeCycle
@@ -35,7 +36,7 @@ public class KUSPaginatedResponse {
 
     }
 
-    public KUSPaginatedResponse(JSONObject json, KUSModel model) throws JSONException, KUSInvalidJsonException {
+    public KUSPaginatedResponse(JSONObject json, KUSPaginatedDataSource dataSource) throws JSONException, KUSInvalidJsonException {
 
         Object data = json.get("data");
         boolean dataIsArray = data.getClass().equals(JSONArray.class);
@@ -51,7 +52,7 @@ public class KUSPaginatedResponse {
             for (int i = 0; i<array.length();i++){
                 JSONObject jsonObject = array.getJSONObject(i);
 
-                List<KUSModel> models = model.objectsWithJSON(jsonObject);
+                List<KUSModel> models = dataSource.objectsFromJSON(jsonObject);
                 if(models != null) {
                     for (int j = models.size() - 1; j >= 0; j--) {
                         objects.add(models.get(j));
@@ -59,7 +60,7 @@ public class KUSPaginatedResponse {
                 }
             }
         }else{
-            List<KUSModel> models = model.objectsWithJSON(json);
+            List<KUSModel> models = dataSource.objectsFromJSON(json);
 
             if(models != null) {
                 for (int j = models.size() - 1; j >= 0; j--) {
@@ -81,4 +82,64 @@ public class KUSPaginatedResponse {
         prevPath = stringFromKeyPath(json,"links.prev");
         nextPath = stringFromKeyPath(json,"links.next");
     }
+
+    //region Accessors
+
+    public List<KUSModel> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<KUSModel> objects) {
+        this.objects = objects;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getSelfPath() {
+        return selfPath;
+    }
+
+    public void setSelfPath(String selfPath) {
+        this.selfPath = selfPath;
+    }
+
+    public String getFirstPath() {
+        return firstPath;
+    }
+
+    public void setFirstPath(String firstPath) {
+        this.firstPath = firstPath;
+    }
+
+    public String getPrevPath() {
+        return prevPath;
+    }
+
+    public void setPrevPath(String prevPath) {
+        this.prevPath = prevPath;
+    }
+
+    public String getNextPath() {
+        return nextPath;
+    }
+
+    public void setNextPath(String nextPath) {
+        this.nextPath = nextPath;
+    }
+
+    //endregion
 }

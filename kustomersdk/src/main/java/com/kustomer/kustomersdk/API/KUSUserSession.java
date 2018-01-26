@@ -19,9 +19,9 @@ import java.util.HashMap;
 public class KUSUserSession implements Serializable {
 
     //region Properties
-    public String orgId;
-    public String orgName;
-    public String organizationName; //UserFacing
+    private String orgId;
+    private String orgName;
+    private String organizationName; //UserFacing
 
     private KUSChatSessionsDataSource chatSessionsDataSource;
     private KUSChatSettingsDataSource chatSettingsDataSource;
@@ -150,7 +150,33 @@ public class KUSUserSession implements Serializable {
             chatMessagesDataSources = new HashMap<>();
         return chatMessagesDataSources;
     }
+    //endregion
 
+    //region Accessors
+
+    public String getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
 
     //endregion
 }

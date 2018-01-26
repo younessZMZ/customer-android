@@ -27,6 +27,6 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void onBind(KUSChatMessage chatMessage){
-        tvMessage.setText(chatMessage.body);
+        tvMessage.setText(chatMessage.getBody());
     }
 }

@@ -51,7 +51,7 @@ public class KUSRequestManager {
     public KUSRequestManager (KUSUserSession userSession){
         this.userSession = userSession;
 
-        baseUrlString = String.format("https://%s.api.%s",userSession.orgName, Kustomer.hostDomain());
+        baseUrlString = String.format("https://%s.api.%s",userSession.getOrgName(), Kustomer.hostDomain());
         genericHTTPHeaderValues = new HashMap<String, String>(){
             {
                 put("X-Kustomer","kustomer");

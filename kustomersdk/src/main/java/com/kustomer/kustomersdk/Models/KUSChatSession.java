@@ -20,12 +20,12 @@ import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 public class KUSChatSession extends KUSModel implements Serializable {
 
     //region Properties
-    public String preview;
-    public String trackingId;
+    private String preview;
+    private String trackingId;
 
-    public Date createdAt;
-    public Date lastSeenAt;
-    public Date lastMessageAt;
+    private Date createdAt;
+    private Date lastSeenAt;
+    private Date lastMessageAt;
     //endregion
 
     //region Initializer
@@ -47,9 +47,8 @@ public class KUSChatSession extends KUSModel implements Serializable {
     @Override
     public String toString() {
         //Missing %p (this)
-        return String.format("<%s : oid: %s; preview: %s>",this.getClass(),this.oid,this.preview);
+        return String.format("<%s : oid: %s; preview: %s>",this.getClass(),this.getId(),this.preview);
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -58,7 +57,7 @@ public class KUSChatSession extends KUSModel implements Serializable {
 
         KUSChatSession chatSession = (KUSChatSession)obj;
 
-        if(!chatSession.oid.equals(this.oid))
+        if(!chatSession.getId().equals(this.getId()))
             return false;
         if (this.preview != null && chatSession.preview != null && !chatSession.preview.equals(this.preview))
             return false;
@@ -79,6 +78,48 @@ public class KUSChatSession extends KUSModel implements Serializable {
     @Override
     public String modelType() {
         return "chat_session";
+    }
+    //endregion
+
+    //region Accessors
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
+    public String getTrackingId() {
+        return trackingId;
+    }
+
+    public void setTrackingId(String trackingId) {
+        this.trackingId = trackingId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getLastSeenAt() {
+        return lastSeenAt;
+    }
+
+    public void setLastSeenAt(Date lastSeenAt) {
+        this.lastSeenAt = lastSeenAt;
+    }
+
+    public Date getLastMessageAt() {
+        return lastMessageAt;
+    }
+
+    public void setLastMessageAt(Date lastMessageAt) {
+        this.lastMessageAt = lastMessageAt;
     }
     //endregion
 }

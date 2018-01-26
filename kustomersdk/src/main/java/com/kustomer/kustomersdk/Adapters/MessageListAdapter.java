@@ -2,7 +2,6 @@ package com.kustomer.kustomersdk.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
@@ -41,15 +40,15 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == USER_VIEW) {
-            ((UserMessageViewHolder)holder).onBind((KUSChatMessage) mPaginatedDataSource.objectAtIndex(position));
+            ((UserMessageViewHolder)holder).onBind((KUSChatMessage) mPaginatedDataSource.get(position));
         }else{
-            ((AgentMessageViewHolder)holder).onBind((KUSChatMessage) mPaginatedDataSource.objectAtIndex(position));
+            ((AgentMessageViewHolder)holder).onBind((KUSChatMessage) mPaginatedDataSource.get(position));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        KUSChatMessage chatMessage = (KUSChatMessage) mPaginatedDataSource.objectAtIndex(position);
+        KUSChatMessage chatMessage = (KUSChatMessage) mPaginatedDataSource.get(position);
 
         boolean currentUser = KUSChatMessage.KUSChatMessageSentByUser(chatMessage);
 
@@ -61,7 +60,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        return mPaginatedDataSource.count();
+        return mPaginatedDataSource.getSize();
     }
     //endregion
 }
