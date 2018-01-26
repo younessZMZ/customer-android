@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
 import com.google.gson.annotations.SerializedName;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,12 +29,10 @@ public class KUSChatSession extends KUSModel implements Serializable {
     //endregion
 
     //region Initializer
-    @Override
-    public boolean initWithJSON(JSONObject json) {
-        boolean val = super.initWithJSON(json);
+    public KUSChatSession(){}
 
-        if(!val)
-            return false;
+    public KUSChatSession(JSONObject json) throws KUSInvalidJsonException {
+        super(json);
 
         preview = stringFromKeyPath(json, "attributes.preview");
         trackingId = stringFromKeyPath(json, "attributes.trackingId");
@@ -41,8 +40,6 @@ public class KUSChatSession extends KUSModel implements Serializable {
         createdAt = dateFromKeyPath(json, "attributes.createdAt");
         lastSeenAt = dateFromKeyPath(json, "attributes.lastSeenAt");
         lastMessageAt = dateFromKeyPath(json, "attributes.lastMessageAt");
-
-        return true;
     }
     //endregion
 

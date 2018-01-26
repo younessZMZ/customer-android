@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Models;
 
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
@@ -18,6 +19,7 @@ import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 
 public class KUSPaginatedResponse {
 
+    //region Properties
     public List<KUSModel> objects;
     public Integer page;
     public Integer pageSize;
@@ -26,19 +28,21 @@ public class KUSPaginatedResponse {
     public String firstPath;
     public String prevPath;
     public String nextPath;
+    //endregion
 
+    //region LifeCycle
     public KUSPaginatedResponse() {
 
     }
 
-    public void initWithJSON(JSONObject json, KUSModel model) throws JSONException {
+    public KUSPaginatedResponse(JSONObject json, KUSModel model) throws JSONException, KUSInvalidJsonException {
 
         Object data = json.get("data");
         boolean dataIsArray = data.getClass().equals(JSONArray.class);
         boolean dataIsJsonObject = data.getClass().equals(JSONObject.class);
 
         if(!dataIsArray && !dataIsJsonObject)
-            return;
+            throw  new KUSInvalidJsonException("Json Format for \"data\" is invalid.");
 
         ArrayList<KUSModel> objects = new ArrayList<>();
 

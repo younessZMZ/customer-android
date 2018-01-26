@@ -1,7 +1,9 @@
 package com.kustomer.kustomersdk.Helpers;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;

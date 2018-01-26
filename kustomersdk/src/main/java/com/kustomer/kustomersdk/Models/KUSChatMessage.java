@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageDirection;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,30 +30,31 @@ import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 public class KUSChatMessage extends KUSModel {
 
     //region Properties
-    public String trackingId;
+    private String trackingId;
     public String body;
-    public URL imageUrl;
-    public ArrayList attachmentIds;
+    private URL imageUrl;
+    private ArrayList attachmentIds;
 
-    public Date createdAt;
-    public Date importedAt;
-    public KUSChatMessageDirection direction;
-    public String sentById;
+    private Date createdAt;
+    private Date importedAt;
+    private KUSChatMessageDirection direction;
+    private String sentById;
 
     public KUSChatMessageType type;
     public KUSChatMessageState state;
     public String value;
     //endregion
 
-    public boolean initWithJSON(JSONObject json) {
-        return initWithJSON(json, KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT, null);
+    public KUSChatMessage(){
+
     }
 
-    public boolean initWithJSON(JSONObject json, KUSChatMessageType type, URL imageUrl) {
-        boolean val = super.initWithJSON(json);
+    private KUSChatMessage(JSONObject json) throws KUSInvalidJsonException {
+        this(json, KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT, null);
+    }
 
-        if(!val)
-            return false;
+    private KUSChatMessage(JSONObject json, KUSChatMessageType type, URL imageUrl) throws KUSInvalidJsonException {
+        super(json);
 
         trackingId = stringFromKeyPath(json,"attributes.trackingId");
         body = stringFromKeyPath(json,"attributes.body");
@@ -64,8 +66,6 @@ public class KUSChatMessage extends KUSModel {
         this.importedAt = dateFromKeyPath(json,"attributes.importedAt");
         this.direction = KUSChatMessageDirectionFromString(stringFromKeyPath(json,"attributes.direction"));
         this.sentById = stringFromKeyPath(json, "relationships.sentBy.data.id");
-
-        return true;
     }
 
 
@@ -124,9 +124,12 @@ public class KUSChatMessage extends KUSModel {
             return null;
 
         KUSChatMessage standardChatMessage = null;
-        standardChatMessage = new KUSChatMessage();
-        standardChatMessage.initWithJSON(jsonObject);
 
+        try {
+            standardChatMessage = new KUSChatMessage(jsonObject);
+        } catch (KUSInvalidJsonException e) {
+            e.printStackTrace();
+        }
 
         if(standardChatMessage == null)
             return new ArrayList<>();

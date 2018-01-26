@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk.DataSources;
 import com.kustomer.kustomersdk.API.KUSRequestManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSPaginatedResponse;
@@ -137,8 +138,7 @@ public class KUSPaginatedDataSource {
                     public void onCompletion(Error error, JSONObject response) {
 
                         try {
-                            KUSPaginatedResponse pageResponse = new KUSPaginatedResponse();
-                            pageResponse.initWithJSON(response, model);
+                            KUSPaginatedResponse pageResponse = new KUSPaginatedResponse(response, model);
 
                             if(requestMarker != instance.requestMarker  )
                                 return;
@@ -146,7 +146,7 @@ public class KUSPaginatedDataSource {
                             instance.requestMarker = null;
                             prependResponse(pageResponse, error);
                         }
-                        catch (JSONException ignore) {}
+                        catch (JSONException | KUSInvalidJsonException ignore) {}
                     }
                 });
 
@@ -184,8 +184,7 @@ public class KUSPaginatedDataSource {
                     @Override
                     public void onCompletion(Error error, JSONObject json) {
                         try {
-                            KUSPaginatedResponse response = new KUSPaginatedResponse();
-                            response.initWithJSON(json, model);
+                            KUSPaginatedResponse response = new KUSPaginatedResponse(json, model);
 
                             if(requestMarker != instance.requestMarker  )
                                 return;
@@ -193,7 +192,7 @@ public class KUSPaginatedDataSource {
                             instance.requestMarker = null;
                             instance.appendResponse(response,error);
 
-                        } catch (JSONException e) {
+                        } catch (JSONException | KUSInvalidJsonException e) {
                             e.printStackTrace();
                         }
                     }
@@ -209,6 +208,7 @@ public class KUSPaginatedDataSource {
     public URL firstUrl() {
         return null;
     }
+
 
     public KUSModel modelClass() {
         return new KUSModel();

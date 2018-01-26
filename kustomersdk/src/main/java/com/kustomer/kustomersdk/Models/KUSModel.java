@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,26 +33,24 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
     //endregion
 
     //region Initializer
-    public boolean initWithJSON(JSONObject json) {
+    public KUSModel(JSONObject json) throws KUSInvalidJsonException {
         //Reject any objects  where the model type doesn't match, if enforced
         String type = stringFromKeyPath(json,"type");
         String classType = modelType();
 
-        if (enforcesModelType() && !type.equals(classType))
-            return false;
+        if (enforcesModelType() && type != null && !type.equals(classType))
+            throw new KUSInvalidJsonException("Model Type not matched.");
 
         //Make sure there is an object id
         String objectId = stringFromKeyPath(json,"id");
         if (objectId == null)
-            return false;
+            throw new KUSInvalidJsonException("Object Id not found.");
 
         oid = objectId;
 
         this.orgId = stringFromKeyPath(json, "relationships.org.data.id");
         this.customerId = stringFromKeyPath(json, "relationships.customer.data.id");
         this.sessionId = stringFromKeyPath(json, "relationships.session.data.id");
-
-        return true;
     }
     //endregion
 
@@ -64,13 +63,22 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         return true;
     }
 
+    public KUSModel(){
+
+    }
+
     public List<KUSModel> objectsWithJSON(JSONObject jsonObject) {
 
         ArrayList<KUSModel> arrayList = null;
 
-        KUSModel model = new KUSModel();
+        KUSModel model = null;
+        try {
+            model = new KUSModel(jsonObject);
+        } catch (KUSInvalidJsonException e) {
+            e.printStackTrace();
+        }
 
-        if(model.initWithJSON(jsonObject)) {
+        if(model != null) {
             arrayList = new ArrayList<>();
             arrayList.add(model);
         }
@@ -78,7 +86,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         return arrayList;
     }
 
-    public static ArrayList<KUSModel> objectsWithJSONs(JSONArray jsonArray) {
+    public ArrayList<KUSModel> objectsWithJSONs(JSONArray jsonArray) {
 
         ArrayList<KUSModel> objects = new ArrayList<>();
 
@@ -86,11 +94,9 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
             try {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 
-                KUSModel object = new KUSModel();
-                object.initWithJSON(jsonObject);
-
+                KUSModel object = new KUSModel(jsonObject);
                 objects.add(object);
-            } catch (JSONException e) {
+            } catch (JSONException | KUSInvalidJsonException e) {
                 e.printStackTrace();
             }
         }

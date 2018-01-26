@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,17 +21,12 @@ public class KUSTrackingToken extends KUSModel {
     public Boolean verified;
 
 
-    public boolean initWithJSON(JSONObject json)  {
-        boolean val = super.initWithJSON(json);
-
-        if(!val)
-            return false;
+    public KUSTrackingToken (JSONObject json) throws KUSInvalidJsonException {
+        super(json);
 
         trackingId = stringFromKeyPath(json, "attributes.trackingId");
         token = stringFromKeyPath(json, "attributes.token");
         verified = boolFromKeyPath(json, "attributes.verified");
-
-        return true;
     }
 
 
