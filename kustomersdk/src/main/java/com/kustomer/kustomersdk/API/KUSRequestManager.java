@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.kustomer.kustomersdk.BuildConfig;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -14,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ import okhttp3.Response;
  */
 
 
-public class KUSRequestManager {
+public class KUSRequestManager implements Serializable{
 
 
 
@@ -275,10 +277,6 @@ public class KUSRequestManager {
     //endregion
 
     //region Request Completion Interface
-    public interface KUSRequestCompletionListener{
-        void onCompletion(Error error, JSONObject response);
-    }
-
     public interface KUSTrackingTokenListener{
         void onCompletion(Error error, String trackingToken);
     }

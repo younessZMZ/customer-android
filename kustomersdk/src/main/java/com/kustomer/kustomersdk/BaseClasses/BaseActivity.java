@@ -64,7 +64,9 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
 
     protected void setLayout(int layoutId, int toolbarId, String title, boolean homeEnabled) {
         setContentView(layoutId);
-        setupToolbar(title, toolbarId, homeEnabled);
+
+        if(toolbarId != -1)
+            setupToolbar(title, toolbarId, homeEnabled);
     }
 
     protected void setLayout(int layoutId) {

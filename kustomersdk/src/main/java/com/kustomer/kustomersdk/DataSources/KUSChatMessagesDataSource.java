@@ -11,6 +11,7 @@ import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSUpload;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSImageUploadListener;
+import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatAttachment;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSForm;
@@ -32,6 +33,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static com.kustomer.kustomersdk.Models.KUSChatMessage.KUSChatMessageSentByUser;
+
 /**
  * Created by Junaid on 1/20/2018.
  */
@@ -47,6 +50,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private KUSFormQuestion questions;
     private boolean submittingForm;
     private boolean creatingSession;
+
+    private String firstOtherUserId;
+    private ArrayList<String> otherUserIds;
     //endregion
 
     //region Initializer
@@ -161,7 +167,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                             }
                         },
                         true,
-                        new KUSRequestManager.KUSRequestCompletionListener() {
+                        new KUSRequestCompletionListener() {
                             @Override
                             public void onCompletion(Error error, JSONObject response) {
                                 if(error != null){
@@ -212,5 +218,37 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         //TODO: Not implemented
     }
+    //endregion
+
+    //region Accessors
+
+    public String getFirstOtherUserId() {
+
+        for(KUSModel message : getList()){
+            KUSChatMessage chatMessage = (KUSChatMessage) message;
+            if(!KUSChatMessageSentByUser(chatMessage))
+                return chatMessage.getSentById();
+        }
+        return firstOtherUserId;
+    }
+
+    public List<String> getOtherUserIds(){
+        HashSet<String> userIdsSet = new HashSet<>();
+        List<String> otherUserIds = new ArrayList<>();
+
+        for(KUSModel message : getList()){
+            KUSChatMessage kusChatMessage = (KUSChatMessage) message;
+            if(!KUSChatMessageSentByUser(kusChatMessage)){
+                String sentById = kusChatMessage.getSentById();
+                if(sentById != null && !userIdsSet.contains(sentById)){
+                    userIdsSet.add(sentById);
+                    otherUserIds.add(sentById);
+                }
+            }
+        }
+
+        return otherUserIds;
+    }
+
     //endregion
 }

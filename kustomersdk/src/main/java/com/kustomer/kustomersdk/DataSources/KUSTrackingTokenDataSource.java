@@ -16,6 +16,7 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource {
 
     //region LifeCycle
     public KUSTrackingTokenDataSource(KUSUserSession userSession){
+        super(userSession);
         // TODO: Not Implemented
     }
     //endregion

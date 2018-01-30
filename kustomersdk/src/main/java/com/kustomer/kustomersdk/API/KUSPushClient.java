@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk.API;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
+import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -69,7 +70,6 @@ public class KUSPushClient implements Serializable {
     private void connectToChannelsIfNecessary(){
 
         //TODO: Needs to be enhanced
-
         if(pusherClient == null) {
             HashMap<String, String> headers = new HashMap<>();
             headers.put(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY,
@@ -88,52 +88,6 @@ public class KUSPushClient implements Serializable {
                 @Override
                 public void onConnectionStateChange(ConnectionStateChange change) {
 
-                    if(change.getCurrentState() == ConnectionState.CONNECTED){
-                        String pusherChannelName = getPusherChannelName();
-                        pusherChannel = pusherClient.subscribePresence(pusherChannelName);
-                        pusherChannel.bind(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT, new PresenceChannelEventListener() {
-                            @Override
-                            public void onUsersInformationReceived(String channelName, Set<User> users) {
-
-                            }
-
-                            @Override
-                            public void userSubscribed(String channelName, User user) {
-
-                            }
-
-                            @Override
-                            public void userUnsubscribed(String channelName, User user) {
-
-                            }
-
-                            @Override
-                            public void onAuthenticationFailure(String message, Exception e) {
-
-                            }
-
-                            @Override
-                            public void onSubscriptionSucceeded(String channelName) {
-
-                            }
-
-                            @Override
-                            public void onEvent(String channelName, String eventName, String data) {
-                                JSONObject jsonObject = JsonHelper.stringToJson(data);
-
-                                List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject,"data"));
-
-                                KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
-                                KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
-
-                                boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getOrgId()) == null;
-                                messagesDataSource.upsertAll(chatMessages);
-
-                                if(doesNotAlreadyContainMessage)
-                                    notifyForUpdatedChatSession(chatMessage.getSessionId());
-                            }
-                        });
-                    }
                 }
 
                 @Override
@@ -143,6 +97,54 @@ public class KUSPushClient implements Serializable {
             });
         }else{
             pusherClient.disconnect();
+        }
+
+        String pusherChannelName = getPusherChannelName();
+
+        if(pusherChannelName != null && pusherChannel == null) {
+            pusherChannel = pusherClient.subscribePresence(pusherChannelName);
+            pusherChannel.bind(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT, new PresenceChannelEventListener() {
+                @Override
+                public void onUsersInformationReceived(String channelName, Set<User> users) {
+
+                }
+
+                @Override
+                public void userSubscribed(String channelName, User user) {
+
+                }
+
+                @Override
+                public void userUnsubscribed(String channelName, User user) {
+
+                }
+
+                @Override
+                public void onAuthenticationFailure(String message, Exception e) {
+
+                }
+
+                @Override
+                public void onSubscriptionSucceeded(String channelName) {
+
+                }
+
+                @Override
+                public void onEvent(String channelName, String eventName, String data) {
+                    JSONObject jsonObject = JsonHelper.stringToJson(data);
+
+                    List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+
+                    KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
+                    KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+
+                    boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getOrgId()) == null;
+                    messagesDataSource.upsertAll(chatMessages);
+
+                    if (doesNotAlreadyContainMessage)
+                        notifyForUpdatedChatSession(chatMessage.getSessionId());
+                }
+            });
         }
 
     }

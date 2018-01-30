@@ -4,26 +4,36 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
+import com.kustomer.kustomersdk.Models.KUSChatSettings;
+import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Views.KUSToolbar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSObjectDataSourceListener {
 
     //region Properties
     @BindView(R2.id.etTypeMessage) EditText etTypeMessage;
@@ -33,6 +43,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     KUSChatSession kusChatSession;
     KUSUserSession kusUserSession;
     KUSChatMessagesDataSource chatMessagesDataSource;
+    KUSUserDataSource userDataSource;
     String chatSessionId;
     MessageListAdapter adapter;
     //endregion
@@ -43,7 +54,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         setLayout(R.layout.activity_kuschat,R.id.toolbar_main,null,true);
         super.onCreate(savedInstanceState);
 
-        kusUserSession = (KUSUserSession) getIntent().getSerializableExtra(KUSConstants.BundleName.USER_SESSION_BUNDLE__KEY);
+        kusUserSession = Kustomer.getSharedInstance().getUserSession();
+//        kusUserSession = (KUSUserSession) getIntent().getSerializableExtra(KUSConstants.BundleName.USER_SESSION_BUNDLE__KEY);
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY);
 
         chatSessionId = kusChatSession.getId();
@@ -56,6 +68,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         chatMessagesDataSource.fetchLatest();
 
         setupAdapter();
+        setupToolbar();
     }
 
     @Override
@@ -66,6 +79,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     //endregion
 
     //region Initializer
+    private void setupToolbar(){
+        KUSToolbar kusToolbar = (KUSToolbar)toolbar;
+        kusToolbar.initWithUserSession(kusUserSession);
+        kusToolbar.setSessionId(chatSessionId);
+        kusToolbar.setShowBackButton(true);
+        kusToolbar.setShowDismissButton(true);
+    }
     private void setupAdapter(){
         adapter = new MessageListAdapter(chatMessagesDataSource);
         rvMessages.setAdapter(adapter);
@@ -75,14 +95,47 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         adapter.notifyDataSetChanged();
     }
+
+    private void updateTextLabel() {
+        if (userDataSource != null) {
+            userDataSource.removeListener(this);
+        }
+
+        TextView tvName = findViewById(R.id.tvName);
+        TextView tvGreetingMessage = findViewById(R.id.tvGreetingMessage);
+
+        userDataSource = kusUserSession.userDataSourceForUserId(chatMessagesDataSource.getFirstOtherUserId());
+        userDataSource.addListener(this);
+
+        KUSChatSettings chatSettings = (KUSChatSettings) kusUserSession.getChatSettingsDataSource().getObject();
+        KUSUser firstOtherUser = (KUSUser) userDataSource.getObject();
+        String responderName = "";
+        if (firstOtherUser != null) {
+            responderName = firstOtherUser.getDisplayName();
+        }
+
+        if(responderName == null || responderName.length() == 0){
+            if(chatSettings.getTeamName()!=null && chatSettings.getTeamName().length()!= 0)
+                responderName = chatSettings.getTeamName();
+            else
+                responderName = kusUserSession.getOrganizationName();
+        }
+
+        tvName.setText(responderName);
+        tvGreetingMessage.setText(chatSettings.getGreeting());
+    }
+
+    private void setAvatars(){
+
+    }
     //endregion
 
     //region Listeners
     @OnClick(R2.id.fabSendMessage)
     void fabSendMessageClick(){
         String textToSend = etTypeMessage.getText().toString();
-        if(!textToSend.isEmpty())
-            chatMessagesDataSource.sendMessageWithText(textToSend,null);
+        if(!textToSend.trim().isEmpty())
+            chatMessagesDataSource.sendMessageWithText(textToSend.trim(),null);
         else
             Toast.makeText(this, R.string.please_provide_a_message_body,Toast.LENGTH_SHORT).show();
 
@@ -118,6 +171,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 @Override
                 public void run() {
                     adapter.notifyDataSetChanged();
+                    //TODO: change
+                    //userDataSource.fetch();
                 }
             };
             mainHandler.post(myRunnable);
@@ -126,6 +181,25 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
+
+    }
+
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                //updateTextLabel();
+                //setAvatars();
+            }
+        };
+        mainHandler.post(myRunnable);
+    }
+
+    @Override
+    public void objectDataSouceOnError(KUSObjectDataSource dataSource, Error error) {
 
     }
     //endregion

@@ -23,19 +23,20 @@ public class KUSUserSession implements Serializable {
     private String orgName;
     private String organizationName; //UserFacing
 
-    private KUSChatSessionsDataSource chatSessionsDataSource;
+
+    private transient KUSChatSessionsDataSource chatSessionsDataSource;
     private KUSChatSettingsDataSource chatSettingsDataSource;
-    private KUSTrackingTokenDataSource trackingTokenDataSource;
-    private KUSFormDataSource formDataSource;
+    private transient KUSTrackingTokenDataSource trackingTokenDataSource;
+    private transient KUSFormDataSource formDataSource;
 
-    private HashMap<String, KUSUserDataSource> userDataSources;
-    private HashMap<String, KUSChatMessagesDataSource> chatMessagesDataSources;
+    private transient HashMap<String, KUSUserDataSource> userDataSources;
+    private transient HashMap<String, KUSChatMessagesDataSource> chatMessagesDataSources;
 
-    private KUSRequestManager requestManager;
-    private KUSPushClient pushClient;
-    private KUSDelegateProxy delegateProxy;
+    private transient KUSRequestManager requestManager;
+    private transient KUSPushClient pushClient;
+    private transient KUSDelegateProxy delegateProxy;
 
-    private KUSSharedPreferences sharedPreferences;
+    private transient KUSSharedPreferences sharedPreferences;
 
     boolean shouldCaptureEmail;
     //endregion
@@ -54,7 +55,7 @@ public class KUSUserSession implements Serializable {
             // To be implemented
         }
 
-        //chatSettingsDataSource.fetch();
+        getChatSettingsDataSource().fetch();
         //getPushClient();
     }
 
@@ -79,7 +80,16 @@ public class KUSUserSession implements Serializable {
     }
 
     public KUSUserDataSource userDataSourceForUserId(String userId) {
-        return null;
+        if(userId == null || userId.length() == 0 || userId.equals("__team"))
+            return null;
+
+        KUSUserDataSource userDataSource = getUserDataSources().get(userId);
+        if(userDataSource == null){
+            userDataSource = new KUSUserDataSource(this,userId);
+            getUserDataSources().put(userId,userDataSource);
+        }
+
+        return userDataSource;
     }
 
     public void submitEmail(String emailAddress){
@@ -93,13 +103,13 @@ public class KUSUserSession implements Serializable {
 
     public KUSChatSessionsDataSource getChatSessionsDataSource() {
         if (chatSessionsDataSource == null)
-            chatSessionsDataSource = new KUSChatSessionsDataSource();
+            chatSessionsDataSource = new KUSChatSessionsDataSource(this);
         return chatSessionsDataSource;
     }
 
     public KUSChatSettingsDataSource getChatSettingsDataSource() {
         if (chatSettingsDataSource == null)
-            chatSettingsDataSource = new KUSChatSettingsDataSource();
+            chatSettingsDataSource = new KUSChatSettingsDataSource(this);
         return chatSettingsDataSource;
     }
 

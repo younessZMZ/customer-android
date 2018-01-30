@@ -38,14 +38,14 @@ public class Kustomer {
     //endregion
 
     //region LifeCycle
-    private static Kustomer getSharedInstance(){
+    public static Kustomer getSharedInstance(){
         if(sharedInstance == null)
             sharedInstance = new Kustomer();
 
         return sharedInstance;
     }
 
-    public static void init(Context context, String apiKey){
+    public static void init(Context context, String apiKey) {
         getSharedInstance().setApiKey(apiKey);
         mContext = context.getApplicationContext();
     }
@@ -82,7 +82,7 @@ public class Kustomer {
 
 
         Intent intent = new Intent(activity, KUSChatActivity.class);
-        intent.putExtra(USER_SESSION_BUNDLE__KEY,Kustomer.sharedInstance.userSession);
+        intent.putExtra(USER_SESSION_BUNDLE__KEY, Kustomer.sharedInstance.userSession);
         intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
         activity.startActivity(intent);
     }
@@ -134,6 +134,10 @@ public class Kustomer {
 
     public static Context getContext() {
         return mContext;
+    }
+
+    public KUSUserSession getUserSession() {
+        return userSession;
     }
     //endregion
 

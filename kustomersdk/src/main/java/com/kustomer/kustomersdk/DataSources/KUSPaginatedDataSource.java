@@ -5,6 +5,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSPaginatedResponse;
 
@@ -134,7 +135,7 @@ public class KUSPaginatedDataSource {
                 url,
                 null,
                 true,
-                new KUSRequestManager.KUSRequestCompletionListener() {
+                new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
 
@@ -181,7 +182,7 @@ public class KUSPaginatedDataSource {
                 url,
                 null,
                 true,
-                new KUSRequestManager.KUSRequestCompletionListener() {
+                new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject json) {
                         try {

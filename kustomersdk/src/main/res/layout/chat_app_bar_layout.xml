@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:theme="@style/AppTheme.AppBarOverlay">
 
-    <android.support.v7.widget.Toolbar
+    <com.kustomer.kustomersdk.Views.KUSToolbar
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,28 +21,18 @@
             android:layout_gravity="center"
             android:layout_margin="10dp">
 
-            <FrameLayout
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+            <com.kustomer.kustomersdk.Views.KUSMultipleAvatarsView
+                android:id="@+id/multipleAvatarViews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="2dp">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/shape_circle"
-                    />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:src="@drawable/kusty"
-                    android:layout_gravity="center"/>
-
-            </FrameLayout>
+            </com.kustomer.kustomersdk.Views.KUSMultipleAvatarsView>
 
             <TextView
+                android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -52,6 +42,7 @@
                 android:textColor="@android:color/white"/>
 
             <TextView
+                android:id="@+id/tvGreetingMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
@@ -59,7 +50,7 @@
 
         </LinearLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </com.kustomer.kustomersdk.Views.KUSToolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
