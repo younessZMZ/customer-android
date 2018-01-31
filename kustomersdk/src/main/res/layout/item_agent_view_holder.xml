@@ -10,21 +10,10 @@
         android:id="@+id/flAvatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginEnd="10dp"
+        android:padding="1dp">
 
-        <ImageView
-            android:id="@+id/ivAvatarBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/shape_circle"
-            tools:ignore="ContentDescription" />
-        <ImageView
-            android:id="@+id/ivAvatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/kusty"
-            android:padding="7dp"
-            tools:ignore="ContentDescription" />
+
 
     </FrameLayout>
 

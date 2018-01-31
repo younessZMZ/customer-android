@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -19,6 +20,8 @@ public class KUSMultipleAvatarsView extends FrameLayout {
 
     //region Properties
     private static final int K_KUS_DEFAULT_MAXIMUM_AVATARS_TO_DISPLAY = 3;
+    private static final int STROKE_WIDTH_IN_DP = 3;
+    private static final int AVATAR_SIZE_IN_DP = 30;
 
     private int maximumAvatarsToDisplay;
     private ArrayList<KUSAvatarImageView> avatarImageViews;
@@ -74,8 +77,7 @@ public class KUSMultipleAvatarsView extends FrameLayout {
 
     void rebuildAvatarViews(){
 
-        //TODO: Make avatars appear in list
-
+        int marginCounter = 0;
         if(userSession == null)
             return;
 
@@ -86,12 +88,12 @@ public class KUSMultipleAvatarsView extends FrameLayout {
 
         ArrayList<KUSAvatarImageView> avatarImageViews = new ArrayList<>();
 
+
         if(userIds != null) {
             for (int i = 0; i < Math.min(userIds.size(), maximumAvatarsToDisplay); i++) {
                 String userId = userIds.get(i);
                 KUSAvatarImageView userAvatarView = new KUSAvatarImageView(getContext());
-                userAvatarView.setLayoutParams(new LayoutParams((int)KUSUtils.dipToPixels(getContext(),40)
-                        ,(int)KUSUtils.dipToPixels(getContext(),40)));
+                userAvatarView.setStrokeWidth(STROKE_WIDTH_IN_DP);
                 userAvatarView.initWithUserSession(userSession);
                 userAvatarView.setUserId(userId);
                 avatarImageViews.add(userAvatarView);
@@ -100,15 +102,20 @@ public class KUSMultipleAvatarsView extends FrameLayout {
 
         if(avatarImageViews.size() < maximumAvatarsToDisplay){
             KUSAvatarImageView companyAvatarView = new KUSAvatarImageView(getContext());
-            companyAvatarView.setLayoutParams(new LayoutParams((int)KUSUtils.dipToPixels(getContext(),40)
-                    ,(int)KUSUtils.dipToPixels(getContext(),40)));
+            companyAvatarView.setStrokeWidth(STROKE_WIDTH_IN_DP);
             companyAvatarView.initWithUserSession(userSession);
             avatarImageViews.add(companyAvatarView);
         }
 
         for(int i = avatarImageViews.size()-1 ; i>=0; i--){
             KUSAvatarImageView avatarImageView = avatarImageViews.get(i);
+            LayoutParams avatarLayoutParams = new LayoutParams((int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP)
+                    ,(int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP),Gravity.END);
+            avatarLayoutParams.setMarginEnd((int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP/2) * marginCounter);
+            avatarImageView.setLayoutParams(avatarLayoutParams);
             addView(avatarImageView);
+
+            marginCounter++;
         }
 
         this.avatarImageViews = avatarImageViews;

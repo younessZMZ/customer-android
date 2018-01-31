@@ -6,4 +6,12 @@
     <color name="color_red_semi">#aacc0000</color>
     <color name="color_light_grey">#11000000</color>
     <color name="color_blue_message">#2962FF</color>
+
+
+    <color name="defaultNameColor1">#d73d32</color>
+    <color name="defaultNameColor2">#7e3794</color>
+    <color name="defaultNameColor3">#4285f4</color>
+    <color name="defaultNameColor4">#67ae3f</color>
+    <color name="defaultNameColor5">#d61a7f</color>
+    <color name="defaultNameColor6">#ff4080</color>
 </resources>

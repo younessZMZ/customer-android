@@ -2,24 +2,32 @@ package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Size;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestFutureTarget;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
+import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.Utils.KUSConstants;
-import com.squareup.picasso.Picasso;
+import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import java.net.URL;
 
@@ -38,6 +46,11 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
 
     ImageView staticImageView;
     ImageView remoteImageView;
+
+    int strokeWidth = 0;
+    int fontSize = 10;
+    int drawableSize = 30;
+
     //endregion
 
     //region Initializer
@@ -65,13 +78,24 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
 
         staticImageView = new ImageView(getContext());
         staticImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        staticImageView.setImageResource(R.drawable.shape_dark_grey_circle_with_stroke);
-        staticImageView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+        LayoutParams params1 = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+
+        //default Margin in case there is no stroke around the image.
+        if(strokeWidth == 0)
+            params1.setMargins(1,1,1,1);
+
+        staticImageView.setLayoutParams(params1);
         addView(staticImageView);
 
         remoteImageView = new ImageView(getContext());
         remoteImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        remoteImageView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+        LayoutParams params2 = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+
+        if(strokeWidth > 0)
+            //noinspection SuspiciousNameCombination
+            params2.setMargins(strokeWidth, strokeWidth, strokeWidth, strokeWidth);
+
+        remoteImageView.setLayoutParams(params2);
         addView(remoteImageView);
 
         updateAvatarImage();
@@ -94,6 +118,18 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
         userDataSource.addListener(this);
 
         updateAvatarImage();
+    }
+
+    public void setStrokeWidth(int dp){
+        strokeWidth = (int) KUSUtils.dipToPixels(getContext(),dp);
+    }
+
+    public void setFontSize (int fontSize){
+        this.fontSize = fontSize;
+    }
+
+    public void setDrawableSize (int dp){
+        drawableSize = dp;
     }
     //endregion
 
@@ -126,13 +162,29 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
         else if (userSession.getOrganizationName() != null)
             name = userSession.getOrganizationName();
 
-         //TODO: Create bitmap with name text
+        Bitmap placeHolderImage = KUSImage.defaultAvatarBitmapForName(getContext(),
+                new Size((int)KUSUtils.dipToPixels(getContext(),drawableSize),
+                        (int)KUSUtils.dipToPixels(getContext(),drawableSize)),
+                name,
+                strokeWidth,
+                fontSize);
+
+        staticImageView.setImageBitmap(placeHolderImage);
 
         if(user != null && chatSettings != null) {
             URL iconURL = user.getAvatarURL() != null ? user.getAvatarURL() : chatSettings.getTeamIconURL();
-            Picasso.with(getContext())
+
+            Glide.with(getContext())
                     .load(iconURL.toString())
-                    .into(staticImageView);
+                    .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.noAnimation())
+                    .into(new SimpleTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            remoteImageView.setImageDrawable(resource);
+                        }
+                    });
+
         }
     }
     //endregion
@@ -150,7 +202,6 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
                 }else if(dataSource == userDataSource){
                     updateAvatarImage();
                 }
-
             }
         };
         mainHandler.post(myRunnable);
