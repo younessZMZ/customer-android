@@ -1,5 +1,8 @@
 package com.kustomer.kustomersdk.Helpers;
 
+import android.content.Context;
+import android.text.format.DateUtils;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,13 +16,29 @@ import java.util.TimeZone;
 
 public class KUSDate {
 
+    //region properties
+    private static int TWO_DAYS_MILLIS = 48 * 60 * 60 *1000;
+    private static DateFormat shortDateFormat;
+    private static DateFormat shortTimeFormat;
+    //endregion
+
     //region Static Methods
     public static String humanReadableTextFromDate(Date date){
         return null;
     }
 
     public static String messageTimeStampTextFromDate(Date date){
-        return null;
+        long now = System.currentTimeMillis();
+
+        //2days
+        if(now-date.getTime() <= TWO_DAYS_MILLIS){
+            return DateUtils.getRelativeTimeSpanString(date.getTime(),
+                    now,
+                    DateUtils.DAY_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE).toString() + shortTimeFormatter().format(date);
+        }else
+            return shortRelativeDateFormatter().format(date);
+
     }
 
     public static Date dateFromString (String string){
@@ -42,6 +61,22 @@ public class KUSDate {
     //endregion
 
     //region Private Methods
+    private static DateFormat shortRelativeDateFormatter(){
+        if(shortDateFormat == null) {
+            shortDateFormat = new SimpleDateFormat("dd/MM/yyyy h:mm a",new Locale("en_US_POSIX"));
+        }
+
+        return shortDateFormat;
+    }
+
+    private static DateFormat shortTimeFormatter(){
+        if(shortTimeFormat == null) {
+            shortTimeFormat = new SimpleDateFormat(", h:mm a",new Locale("en_US_POSIX"));
+        }
+
+        return shortTimeFormat;
+    }
+
     private static DateFormat ISO8601DateFormatterFromString(){
         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", new Locale("en_US_POSIX"));
     }

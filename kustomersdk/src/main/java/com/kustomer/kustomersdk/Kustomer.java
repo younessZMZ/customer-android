@@ -82,7 +82,6 @@ public class Kustomer {
 
 
         Intent intent = new Intent(activity, KUSChatActivity.class);
-        intent.putExtra(USER_SESSION_BUNDLE__KEY, Kustomer.sharedInstance.userSession);
         intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
         activity.startActivity(intent);
     }

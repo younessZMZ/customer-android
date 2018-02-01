@@ -24,9 +24,9 @@ public class KUSObjectDataSource {
     private KUSModel object;
 
     private KUSUserSession userSession;
-    Object requestMarker;
+    private Object requestMarker;
 
-    List<KUSObjectDataSourceListener> listeners;
+    private List<KUSObjectDataSourceListener> listeners;
     //endregion
 
     //region Initializer
@@ -99,13 +99,13 @@ public class KUSObjectDataSource {
     //endregion
 
     //region Private Methods
-    void notifyAnnouncersOnError(Error error){
+    private void notifyAnnouncersOnError(Error error){
         for(KUSObjectDataSourceListener listener : listeners){
             listener.objectDataSouceOnError(this,error);
         }
     }
 
-    void notifyAnnouncersOnLoad(){
+    private void notifyAnnouncersOnLoad(){
         for(KUSObjectDataSourceListener listener : listeners){
             listener.objectDataSourceOnLoad(this);
         }

@@ -18,10 +18,6 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
 
 
     //region Initializer
-    public KUSChatSettingsDataSource() {
-
-    }
-
     public KUSChatSettingsDataSource(KUSUserSession userSession) {
         super(userSession);
     }

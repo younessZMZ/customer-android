@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class KUSUserDataSource extends KUSObjectDataSource {
     //region Properties
-    String userId;
+    private String userId;
     //endregion
 
     //region Initializer

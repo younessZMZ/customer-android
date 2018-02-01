@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
@@ -27,6 +28,8 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
     TextView tvMessage;
     @BindView(R2.id.flAvatar)
     FrameLayout imageLayout;
+    @BindView(R2.id.tvDate)
+    TextView tvDate;
     //endregion
 
     public AgentMessageViewHolder(View itemView) {
@@ -34,8 +37,10 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this,itemView);
     }
 
-    public void onBind(KUSChatMessage chatMessage, KUSUserSession userSession, boolean showAvatar){
-        tvMessage.setText(chatMessage.getBody());
+    public void onBind(KUSChatMessage chatMessage, KUSUserSession userSession, boolean showAvatar,
+                       boolean showDate){
+
+        tvMessage.setText(chatMessage.getBody().trim());
 
         imageLayout.removeAllViews();
         if(showAvatar) {
@@ -54,6 +59,14 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
 
 
             imageLayout.addView(avatarImageView);
+        }
+
+        if(showDate){
+            tvDate.setVisibility(View.VISIBLE);
+            tvDate.setText(KUSDate.messageTimeStampTextFromDate(chatMessage.getCreatedAt()));
+        }else {
+            tvDate.setText("");
+            tvDate.setVisibility(View.GONE);
         }
 
     }

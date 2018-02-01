@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.R2;
 
@@ -19,6 +20,8 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
     //region Properties
     @BindView(R2.id.tvMessage)
     TextView tvMessage;
+    @BindView(R2.id.tvDate)
+    TextView tvDate;
     //endregion
 
     //region LifeCycle
@@ -27,8 +30,16 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this,itemView);
     }
 
-    public void onBind(KUSChatMessage chatMessage){
-        tvMessage.setText(chatMessage.getBody());
+    public void onBind(KUSChatMessage chatMessage, boolean showDate){
+        tvMessage.setText(chatMessage.getBody().trim());
+
+        if(showDate){
+            tvDate.setVisibility(View.VISIBLE);
+            tvDate.setText(KUSDate.messageTimeStampTextFromDate(chatMessage.getCreatedAt()));
+        }else {
+            tvDate.setText("");
+            tvDate.setVisibility(View.GONE);
+        }
     }
     //endregion
 }

@@ -109,9 +109,13 @@ public class KUSMultipleAvatarsView extends FrameLayout {
 
         for(int i = avatarImageViews.size()-1 ; i>=0; i--){
             KUSAvatarImageView avatarImageView = avatarImageViews.get(i);
-            LayoutParams avatarLayoutParams = new LayoutParams((int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP)
-                    ,(int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP),Gravity.END);
-            avatarLayoutParams.setMarginEnd((int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP/2) * marginCounter);
+            LayoutParams avatarLayoutParams = new LayoutParams(
+                    (int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP),
+                    (int)KUSUtils.dipToPixels(getContext(),AVATAR_SIZE_IN_DP),Gravity.END);
+
+            avatarLayoutParams.setMarginEnd((int)KUSUtils.dipToPixels(getContext(),
+                    AVATAR_SIZE_IN_DP/2) * marginCounter);
+
             avatarImageView.setLayoutParams(avatarLayoutParams);
             addView(avatarImageView);
 

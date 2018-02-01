@@ -173,6 +173,5 @@ public class KUSPushClient implements Serializable {
         isSupportScreenShown = supportScreenShown;
         connectToChannelsIfNecessary();
     }
-
     //endregion
 }

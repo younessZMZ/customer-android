@@ -38,6 +38,9 @@ public class KUSPaginatedResponse {
 
     public KUSPaginatedResponse(JSONObject json, KUSPaginatedDataSource dataSource) throws JSONException, KUSInvalidJsonException {
 
+        if(json == null)
+            return;
+
         Object data = json.get("data");
         boolean dataIsArray = data.getClass().equals(JSONArray.class);
         boolean dataIsJsonObject = data.getClass().equals(JSONObject.class);

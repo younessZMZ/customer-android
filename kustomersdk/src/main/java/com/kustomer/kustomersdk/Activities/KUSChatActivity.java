@@ -35,7 +35,7 @@ import com.kustomer.kustomersdk.Views.KUSToolbar;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, TextWatcher {
 
     //region Properties
     @BindView(R2.id.etTypeMessage) EditText etTypeMessage;
@@ -72,7 +72,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     //region Initializer
     private void initData(){
         kusUserSession = Kustomer.getSharedInstance().getUserSession();
-//      kusUserSession = (KUSUserSession) getIntent().getSerializableExtra(KUSConstants.BundleName.USER_SESSION_BUNDLE__KEY);
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY);
 
         chatSessionId = kusChatSession.getId();
@@ -89,29 +88,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         fabSendMessage.setEnabled(false);
         fabSendMessage.setAlpha(0.5f);
 
-        etTypeMessage.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length() > 0) {
-                    fabSendMessage.setEnabled(true);
-                    fabSendMessage.setAlpha(1.0f);
-                }
-                else {
-                    fabSendMessage.setEnabled(false);
-                    fabSendMessage.setAlpha(0.5f);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+        etTypeMessage.addTextChangedListener(this);
     }
 
     private void setupToolbar(){
@@ -123,7 +100,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void setupAdapter(){
-        adapter = new MessageListAdapter(chatMessagesDataSource, kusUserSession);
+        adapter = new MessageListAdapter(chatMessagesDataSource, kusUserSession, chatMessagesDataSource);
         rvMessages.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,true);
@@ -187,6 +164,26 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     }
 
-    //endregion
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        if(charSequence.toString().trim().length() > 0) {
+            fabSendMessage.setEnabled(true);
+            fabSendMessage.setAlpha(1.0f);
+        }
+        else {
+            fabSendMessage.setEnabled(false);
+            fabSendMessage.setAlpha(0.5f);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+    //endregion
 }
