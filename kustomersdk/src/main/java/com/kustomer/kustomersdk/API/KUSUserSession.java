@@ -56,7 +56,7 @@ public class KUSUserSession implements Serializable {
         }
 
         getChatSettingsDataSource().fetch();
-        //getPushClient();
+        getPushClient();
     }
 
     public KUSUserSession(String orgName, String orgId){
