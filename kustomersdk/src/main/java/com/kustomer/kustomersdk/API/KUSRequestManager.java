@@ -2,6 +2,8 @@ package com.kustomer.kustomersdk.API;
 
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -112,7 +114,7 @@ public class KUSRequestManager implements Serializable{
 
     }
 
-    private void performRequestType(KUSRequestType type, URL url,
+    public void performRequestType(KUSRequestType type, URL url,
                                     HashMap<String, Object> params,
                                     boolean authenticated,
                                     HashMap additionalHeaders,
@@ -163,7 +165,6 @@ public class KUSRequestManager implements Serializable{
                                                  HashMap additionalHeaders,
                                                  final KUSRequestCompletionListener completionListener){
 
-        //TODO: Incomplete for requests other than GET & POST
 
         OkHttpClient client = new OkHttpClient();
         HttpUrl httpUrl = HttpUrl.parse(url.toString());
@@ -198,13 +199,13 @@ public class KUSRequestManager implements Serializable{
                 }
             }
 
-            if(type == KUSRequestType.KUS_REQUEST_TYPE_POST){
+            if(type != KUSRequestType.KUS_REQUEST_TYPE_GET){
+                byte []bytes = null;
+
                 if(bodyData != null){
-                    //TODO: incomplete
+                    bytes = bodyData;
                 }else{
                     if(params != null){
-
-                        //TODO: Need to enhance
                         JSONObject jsonObject = new JSONObject();
                         for (String key: params.keySet()) {
                             try {
@@ -213,13 +214,22 @@ public class KUSRequestManager implements Serializable{
                                 e.printStackTrace();
                             }
                         }
-                        byte []bytes = jsonObject.toString().getBytes();
 
-                        requestBuilder.post(RequestBody.create(MediaType.parse("application/json"), bytes));
-                        requestBuilder.addHeader("Content-Length", String.valueOf(bytes.length));
                         requestBuilder.addHeader("Content-Type", "application/json");
+                        bytes = jsonObject.toString().getBytes();
                     }
                 }
+
+                if(bytes != null) {
+                    requestBuilder.addHeader("Content-Length", String.valueOf(bytes.length));
+                    if (type == KUSRequestType.KUS_REQUEST_TYPE_POST)
+                        requestBuilder.post(RequestBody.create(MediaType.parse("application/json"), bytes));
+                    else if (type == KUSRequestType.KUS_REQUEST_TYPE_PUT)
+                        requestBuilder.put(RequestBody.create(MediaType.parse("application/json"), bytes));
+                    else if (type == KUSRequestType.KUS_REQUEST_TYPE_PATCH)
+                        requestBuilder.patch(RequestBody.create(MediaType.parse("application/json"), bytes));
+                }
+
             }
 
             if(authenticated && trackingToken != null)
@@ -254,9 +264,14 @@ public class KUSRequestManager implements Serializable{
     }
 
 
-    private void dispenseTrackingToken(KUSTrackingTokenListener listener){
-        //TODO:
-        listener.onCompletion(null,KUSConstants.MockedData.TRACKING_TOKEN);
+    private void dispenseTrackingToken(final KUSTrackingTokenListener listener){
+        String trackingToken = userSession.getTrackingTokenDataSource().getCurrentTrackingToken();
+        if(trackingToken != null){
+            listener.onCompletion(null,KUSConstants.MockedData.TRACKING_TOKEN);
+        }else{
+            pendingTrackingTokenListeners.add(listener);
+        }
+
     }
 
 

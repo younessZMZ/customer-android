@@ -24,7 +24,10 @@ public class KUSConstants {
         String PUSHER_AUTH = "/c/v1/pusher/auth";
         String MESSAGES_LIST_ENDPOINT = "/c/v1/chat/sessions/%s/messages";
         String SEND_MESSAGE_ENDPOINT = "/c/v1/chat/messages";
-        String CHAT_SESSION_LIST_ENDPOINT = "/c/v1/chat/sessions";
+        String CHAT_SESSIONS_ENDPOINT = "/c/v1/chat/sessions";
+        String CHAT_CONVERSATIONS_ENDPOINT = "/c/v1/chat/conversations";
+        String TRACKING_TOKEN_ENDPOINT = "/c/v1/tracking/tokens";
+        String CURRENT_TRACKING_TOKEN_ENDPOINT = "/c/v1/tracking/tokens/current";
     }
 
     public interface Keys {

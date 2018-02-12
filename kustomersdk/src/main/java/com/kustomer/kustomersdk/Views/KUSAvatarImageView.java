@@ -192,24 +192,18 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
     //region Listener
     @Override
     public void objectDataSourceOnLoad(final KUSObjectDataSource dataSource) {
-        Handler mainHandler = new Handler(Looper.getMainLooper());
 
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if(dataSource == userSession.getChatSettingsDataSource()){
-                    updateAvatarImage();
-                }else if(dataSource == userDataSource){
-                    updateAvatarImage();
-                }
-            }
-        };
-        mainHandler.post(myRunnable);
+        if(dataSource == userSession.getChatSettingsDataSource()){
+            updateAvatarImage();
+        }else if(dataSource == userDataSource){
+            updateAvatarImage();
+        }
+
 
     }
 
     @Override
-    public void objectDataSouceOnError(KUSObjectDataSource dataSource, Error error) {
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
 
     }
     //endregion

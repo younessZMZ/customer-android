@@ -1,38 +1,103 @@
 package com.kustomer.kustomersdk.DataSources;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
+import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+
+import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSTrackingTokenDataSource extends KUSObjectDataSource {
+public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements KUSObjectDataSourceListener {
 
     //region Properties
-    private String currentTrackingToken = KUSConstants.MockedData.TRACKING_TOKEN;
-    private String currentTrackingId = KUSConstants.MockedData.CHAT_SESSION_TRACKING_ID;
+    private boolean wantsReset;
     //endregion
 
-    //region LifeCycle
+    //region Initializer
     public KUSTrackingTokenDataSource(KUSUserSession userSession){
         super(userSession);
-        // TODO: Not Implemented
+        addListener(this);
     }
     //endregion
 
     //region Public Methods
-    public String getCurrentTrackingToken() {
-        return currentTrackingToken;
+    public void performRequest(KUSRequestCompletionListener listener){
+        String endPoint = wantsReset ? KUSConstants.URL.TRACKING_TOKEN_ENDPOINT :
+                KUSConstants.URL.CURRENT_TRACKING_TOKEN_ENDPOINT;
+
+        URL url = getUserSession().getRequestManager().urlForEndpoint(endPoint);
+        KUSRequestType requestType = wantsReset ? KUSRequestType.KUS_REQUEST_TYPE_POST :
+                KUSRequestType.KUS_REQUEST_TYPE_GET;
+
+        getUserSession().getRequestManager().performRequestType(
+                requestType,
+                url,
+                null,
+                false,
+                getAdditionalHeaders(),
+                listener );
     }
 
-    public String getCurrentTrackingId() {
-        return currentTrackingId;
+    public void reset(){
+        wantsReset = true;
+        cancel();
+        fetch();
     }
     //endregion
 
     //region Private Methods
+    private HashMap<Object, Object> getAdditionalHeaders(){
 
+        String currentTrackingToken = getCurrentTrackingToken();
+        HashMap<Object, Object> headers = new HashMap<>();
+        if(currentTrackingToken != null) {
+            headers.put(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, currentTrackingToken);
+            return headers;
+        }
+        else {
+            String cachedTrackingToken = getUserSession().getSharedPreferences().getTrackingToken(Kustomer.getContext());
+
+            if(cachedTrackingToken != null) {
+                headers.put(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, cachedTrackingToken);
+                return headers;
+            }
+        }
+
+        return null;
+    }
+    //endregion
+
+    //region Accessors
+    public String getCurrentTrackingToken() {
+        KUSTrackingToken trackingTokenObj = (KUSTrackingToken) getObject();
+        return trackingTokenObj.getToken();
+    }
+
+    //endregion
+
+    //region Listener
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        wantsReset = false;
+
+        String currentTrackingToken = getCurrentTrackingToken();
+        if(currentTrackingToken != null)
+            getUserSession().getSharedPreferences().setTrackingToken(Kustomer.getContext(),
+                    currentTrackingToken);
+    }
+
+    @Override
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+
+    }
     //endregion
 
 }

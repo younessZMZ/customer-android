@@ -1,5 +1,8 @@
 package com.kustomer.kustomersdk.DataSources;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
@@ -136,16 +139,24 @@ public class KUSPaginatedDataSource {
                 true,
                 new KUSRequestCompletionListener() {
                     @Override
-                    public void onCompletion(Error error, JSONObject response) {
+                    public void onCompletion(final Error error, final JSONObject response) {
 
                         try {
-                            KUSPaginatedResponse pageResponse = new KUSPaginatedResponse(response, dataSource);
+                            final KUSPaginatedResponse pageResponse = new KUSPaginatedResponse(response, dataSource);
 
-                            if(requestMarker != instance.requestMarker  )
-                                return;
+                            Handler mainHandler = new Handler(Looper.getMainLooper());
 
-                            instance.requestMarker = null;
-                            prependResponse(pageResponse, error);
+                            Runnable myRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(requestMarker != instance.requestMarker  )
+                                        return;
+
+                                    instance.requestMarker = null;
+                                    instance.prependResponse(pageResponse, error);
+                                }
+                            };
+                            mainHandler.post(myRunnable);
                         }
                         catch (JSONException | KUSInvalidJsonException ignore) {}
                     }
@@ -153,7 +164,6 @@ public class KUSPaginatedDataSource {
 
     }
 
-    // TODO: completion Listener should be in background
     public void fetchNext() {
         URL url = null;
         if(lastPaginatedResponse != null){
@@ -183,15 +193,23 @@ public class KUSPaginatedDataSource {
                 true,
                 new KUSRequestCompletionListener() {
                     @Override
-                    public void onCompletion(Error error, JSONObject json) {
+                    public void onCompletion(final Error error, JSONObject json) {
                         try {
-                            KUSPaginatedResponse response = new KUSPaginatedResponse(json, model);
+                            final KUSPaginatedResponse response = new KUSPaginatedResponse(json, model);
 
-                            if(requestMarker != instance.requestMarker  )
-                                return;
+                            Handler mainHandler = new Handler(Looper.getMainLooper());
 
-                            instance.requestMarker = null;
-                            instance.appendResponse(response,error);
+                            Runnable myRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(requestMarker != instance.requestMarker  )
+                                        return;
+
+                                    instance.requestMarker = null;
+                                    instance.appendResponse(response,error);
+                                }
+                            };
+                            mainHandler.post(myRunnable);
 
                         } catch (JSONException | KUSInvalidJsonException e) {
                             e.printStackTrace();
@@ -248,7 +266,7 @@ public class KUSPaginatedDataSource {
         notifyAnnouncersOnLoad();
     }
 
-    private void sort() {
+    public void sort() {
         Collections.sort(fetchedModels);
     }
 
@@ -368,7 +386,7 @@ public class KUSPaginatedDataSource {
     //endregion
 
     // region Notifier
-    private void notifyAnnouncersOnContentChange() {
+    public void notifyAnnouncersOnContentChange() {
         for (KUSPaginatedDataSourceListener listener : listeners) {
             listener.onContentChange(this);
         }

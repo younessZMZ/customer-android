@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -248,6 +249,29 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
 
         return otherUserIds;
+    }
+
+    public int unreadCountAfterDate(Date date){
+        int count = 0;
+
+        for(KUSModel model : getList()){
+            KUSChatMessage message = (KUSChatMessage) model;
+
+            if(KUSChatMessageSentByUser(message)){
+                return count;
+            }
+
+            if(message.getCreatedAt() != null){
+                if(message.getCreatedAt().before(date)){
+                    return count;
+                }
+
+                count ++;
+            }
+
+        }
+
+        return count;
     }
 
     //endregion

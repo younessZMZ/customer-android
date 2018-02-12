@@ -1,7 +1,12 @@
 package com.kustomer.kustomersdk.Models;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
+import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Kustomer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,6 +78,34 @@ public class KUSChatSession extends KUSModel implements Serializable {
 
 
         return true;
+    }
+
+    private Date sortDate(){
+        KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
+        KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(getId());
+        KUSChatMessage chatMessage = null;
+
+        if(messagesDataSource != null && messagesDataSource.getSize()>0)
+            chatMessage = (KUSChatMessage) messagesDataSource.get(0);
+
+        Date laterLastMessageAt = null;
+
+        if(chatMessage != null && chatMessage.getCreatedAt() != null) {
+            laterLastMessageAt = chatMessage.getCreatedAt().after(lastMessageAt) ?
+                    chatMessage.getCreatedAt() : lastMessageAt;
+        }
+        else
+            laterLastMessageAt = lastMessageAt;
+
+        return laterLastMessageAt != null ? laterLastMessageAt : createdAt;
+    }
+
+    @Override
+    public int compareTo(@NonNull KUSModel kusModel) {
+        KUSChatSession chatSession = (KUSChatSession) kusModel;
+        int date = chatSession.sortDate().compareTo(this.sortDate());
+        int parent = super.compareTo(kusModel);
+        return date == 0 ? parent : date;
     }
 
     @Override

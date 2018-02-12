@@ -124,16 +124,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                progressDialog.hide();
-            }
-        };
-        mainHandler.post(myRunnable);
-
+        progressDialog.hide();
     }
 
     @Override
@@ -143,19 +134,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
-
         if(dataSource == chatMessagesDataSource){
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-
-            Runnable myRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                    //TODO: change
-                    //userDataSource.fetch();
-                }
-            };
-            mainHandler.post(myRunnable);
+            adapter.notifyDataSetChanged();
         }
     }
 

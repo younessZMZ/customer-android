@@ -8,5 +8,5 @@ import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 
 public interface KUSObjectDataSourceListener {
     void objectDataSourceOnLoad(KUSObjectDataSource dataSource);
-    void objectDataSouceOnError(KUSObjectDataSource dataSource, Error error);
+    void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error);
 }

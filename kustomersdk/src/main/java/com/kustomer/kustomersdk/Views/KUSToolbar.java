@@ -171,19 +171,11 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     //region Listeners
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateTextLabel();
-            }
-        };
-        mainHandler.post(myRunnable);
+        updateTextLabel();
     }
 
     @Override
-    public void objectDataSouceOnError(KUSObjectDataSource dataSource, Error error) {
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
 
     }
 
@@ -199,22 +191,15 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
     @Override
     public void onContentChange(final KUSPaginatedDataSource dataSource) {
-        Handler mainHandler = new Handler(Looper.getMainLooper());
 
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
+        if(dataSource == chatMessagesDataSource){
+            kusMultipleAvatarsView.setUserIds((ArrayList<String>) chatMessagesDataSource.getOtherUserIds());
+            updateTextLabel();
+        }else if(dataSource == userSession.getChatSessionsDataSource()){
+            updateTextLabel();
+        }
 
-                if(dataSource == chatMessagesDataSource){
-                    kusMultipleAvatarsView.setUserIds((ArrayList<String>) chatMessagesDataSource.getOtherUserIds());
-                    updateTextLabel();
-                }else if(dataSource == userSession.getChatSessionsDataSource()){
-                    updateTextLabel();
-                }
 
-            }
-        };
-        mainHandler.post(myRunnable);
     }
     //endregion
 

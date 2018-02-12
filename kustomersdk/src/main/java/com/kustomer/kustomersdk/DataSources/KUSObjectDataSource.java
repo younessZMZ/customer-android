@@ -101,7 +101,7 @@ public class KUSObjectDataSource {
     //region Private Methods
     private void notifyAnnouncersOnError(Error error){
         for(KUSObjectDataSourceListener listener : listeners){
-            listener.objectDataSouceOnError(this,error);
+            listener.objectDataSourceOnError(this,error);
         }
     }
 
