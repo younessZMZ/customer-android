@@ -1,6 +1,5 @@
 package com.kustomer.kustomersdk.DataSources;
 
-import com.kustomer.kustomersdk.API.KUSRequestManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
@@ -108,7 +107,7 @@ public class KUSPaginatedDataSource {
 
     // TODO: completion Listener should be in background
     public void fetchLatest() {
-        URL url = firstUrl();
+        URL url = getFirstUrl();
         if (mostRecentPaginatedResponse != null && mostRecentPaginatedResponse.getFirstPath() != null) {
             url = userSession.getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.getFirstPath());
         }
@@ -207,7 +206,7 @@ public class KUSPaginatedDataSource {
         requestMarker = null;
     }
 
-    public URL firstUrl() {
+    public URL getFirstUrl() {
         return null;
     }
 

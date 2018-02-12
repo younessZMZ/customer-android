@@ -76,7 +76,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         super.addListener(listener);
     }
 
-    public URL firstUrl() {
+    public URL getFirstUrl() {
         if (sessionId != null) {
             String endPoint = String.format(KUSConstants.URL.MESSAGES_LIST_ENDPOINT, sessionId);
             return getUserSession().getRequestManager().urlForEndpoint(endPoint);

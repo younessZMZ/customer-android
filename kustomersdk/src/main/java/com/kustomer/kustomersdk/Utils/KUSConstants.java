@@ -24,6 +24,7 @@ public class KUSConstants {
         String PUSHER_AUTH = "/c/v1/pusher/auth";
         String MESSAGES_LIST_ENDPOINT = "/c/v1/chat/sessions/%s/messages";
         String SEND_MESSAGE_ENDPOINT = "/c/v1/chat/messages";
+        String CHAT_SESSION_LIST_ENDPOINT = "/c/v1/chat/sessions";
     }
 
     public interface Keys {
