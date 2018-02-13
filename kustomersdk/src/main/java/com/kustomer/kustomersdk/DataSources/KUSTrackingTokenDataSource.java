@@ -2,11 +2,15 @@ package com.kustomer.kustomersdk.DataSources;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+
+import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -51,6 +55,11 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
         cancel();
         fetch();
     }
+
+    @Override
+    KUSModel objectFromJson(JSONObject jsonObject) throws KUSInvalidJsonException {
+        return new KUSTrackingToken(jsonObject);
+    }
     //endregion
 
     //region Private Methods
@@ -63,7 +72,7 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
             return headers;
         }
         else {
-            String cachedTrackingToken = getUserSession().getSharedPreferences().getTrackingToken(Kustomer.getContext());
+            String cachedTrackingToken = getUserSession().getSharedPreferences().getTrackingToken();
 
             if(cachedTrackingToken != null) {
                 headers.put(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, cachedTrackingToken);
@@ -78,7 +87,11 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
     //region Accessors
     public String getCurrentTrackingToken() {
         KUSTrackingToken trackingTokenObj = (KUSTrackingToken) getObject();
-        return trackingTokenObj.getToken();
+
+        if(trackingTokenObj != null)
+            return trackingTokenObj.getToken();
+        else
+            return null;
     }
 
     //endregion
@@ -90,8 +103,7 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
 
         String currentTrackingToken = getCurrentTrackingToken();
         if(currentTrackingToken != null)
-            getUserSession().getSharedPreferences().setTrackingToken(Kustomer.getContext(),
-                    currentTrackingToken);
+            getUserSession().getSharedPreferences().setTrackingToken(currentTrackingToken);
     }
 
     @Override

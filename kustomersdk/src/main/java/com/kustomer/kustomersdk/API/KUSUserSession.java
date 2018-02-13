@@ -8,6 +8,9 @@ import com.kustomer.kustomersdk.DataSources.KUSFormDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTrackingTokenDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
+import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
+import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -24,19 +27,19 @@ public class KUSUserSession implements Serializable {
     private String organizationName; //UserFacing
 
 
-    private transient KUSChatSessionsDataSource chatSessionsDataSource;
+    private KUSChatSessionsDataSource chatSessionsDataSource;
     private KUSChatSettingsDataSource chatSettingsDataSource;
-    private transient KUSTrackingTokenDataSource trackingTokenDataSource;
-    private transient KUSFormDataSource formDataSource;
+    private KUSTrackingTokenDataSource trackingTokenDataSource;
+    private KUSFormDataSource formDataSource;
 
-    private transient HashMap<String, KUSUserDataSource> userDataSources;
-    private transient HashMap<String, KUSChatMessagesDataSource> chatMessagesDataSources;
+    private HashMap<String, KUSUserDataSource> userDataSources;
+    private HashMap<String, KUSChatMessagesDataSource> chatMessagesDataSources;
 
-    private transient KUSRequestManager requestManager;
-    private transient KUSPushClient pushClient;
-    private transient KUSDelegateProxy delegateProxy;
+    private KUSRequestManager requestManager;
+    private KUSPushClient pushClient;
+    private KUSDelegateProxy delegateProxy;
 
-    private transient KUSSharedPreferences sharedPreferences;
+    private KUSSharedPreferences sharedPreferences;
 
     boolean shouldCaptureEmail;
     //endregion
@@ -52,7 +55,8 @@ public class KUSUserSession implements Serializable {
         }
 
         if(reset){
-            // To be implemented
+            trackingTokenDataSource.reset();
+            getSharedPreferences().reset();
         }
 
         getChatSettingsDataSource().fetch();
@@ -93,7 +97,11 @@ public class KUSUserSession implements Serializable {
     }
 
     public void submitEmail(String emailAddress){
+        //TODO:
+    }
 
+    public void describeCustomer(KUSCustomerDescription customerDescription, KUSRequestCompletionListener listener){
+        //TODO:
     }
 
 
@@ -137,15 +145,10 @@ public class KUSUserSession implements Serializable {
         return pushClient;
     }
 
-    public KUSDelegateProxy getDelegateProxy() {
-        if (delegateProxy == null)
-            delegateProxy = new KUSDelegateProxy();
-        return delegateProxy;
-    }
 
     public KUSSharedPreferences getSharedPreferences() {
         if (sharedPreferences == null)
-            sharedPreferences = new KUSSharedPreferences();
+            sharedPreferences = new KUSSharedPreferences(Kustomer.getContext(),this);
         return sharedPreferences;
     }
 

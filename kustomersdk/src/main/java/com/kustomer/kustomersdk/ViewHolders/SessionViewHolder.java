@@ -1,0 +1,188 @@
+package com.kustomer.kustomersdk.ViewHolders;
+
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
+import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
+import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
+import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
+import com.kustomer.kustomersdk.Models.KUSChatMessage;
+import com.kustomer.kustomersdk.Models.KUSChatSession;
+import com.kustomer.kustomersdk.Models.KUSChatSettings;
+import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.Models.KUSUser;
+import com.kustomer.kustomersdk.R;
+import com.kustomer.kustomersdk.R2;
+import com.kustomer.kustomersdk.Views.KUSAvatarImageView;
+
+import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Created by Junaid on 1/19/2018.
+ */
+
+public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObjectDataSourceListener,
+        KUSPaginatedDataSourceListener {
+
+    //region Properties
+    @BindView(R2.id.tvSessionTitle)
+    TextView tvSessionTitle;
+    @BindView(R2.id.flAvatar)
+    FrameLayout imageLayout;
+    @BindView(R2.id.tvSessionDate)
+    TextView tvSessionDate;
+    @BindView(R2.id.tvSessionSubtitle)
+    TextView tvSessionSubtitle;
+    @BindView(R2.id.tvUnreadCount)
+    TextView tvUnreadCount;
+
+    private KUSUserSession mUserSession;
+    private KUSChatMessagesDataSource chatMessagesDataSource;
+    private KUSUserDataSource userDataSource;
+    private KUSChatSession mChatSession;
+    //endregion
+
+    public SessionViewHolder(View itemView) {
+        super(itemView);
+        ButterKnife.bind(this,itemView);
+    }
+
+    public void onBind(final KUSChatSession chatSession, KUSUserSession userSession,
+                       final SessionListAdapter.onItemClickListener listener){
+        mUserSession = userSession;
+        mChatSession = chatSession;
+
+        mUserSession.getChatSettingsDataSource().addListener(this);
+        chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
+        chatMessagesDataSource.addListener(this);
+        if(!chatMessagesDataSource.isFetched() && !chatMessagesDataSource.isFetching())
+            chatMessagesDataSource.fetchLatest();
+
+        updateAvatar();
+        updateLabels();
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onSessionItemClicked(chatSession);
+            }
+        });
+    }
+
+    //region Private Methods
+    private void updateAvatar(){
+        KUSAvatarImageView avatarImageView = new KUSAvatarImageView(itemView.getContext());
+        avatarImageView.setFontSize(13);
+        avatarImageView.setDrawableSize(40);
+
+        avatarImageView.initWithUserSession(mUserSession);
+        avatarImageView.setUserId(chatMessagesDataSource.getFirstOtherUserId());
+
+        FrameLayout.LayoutParams avatarLayoutParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+
+        avatarImageView.setLayoutParams(avatarLayoutParams);
+
+
+        imageLayout.addView(avatarImageView);
+    }
+
+    private void updateLabels(){
+        if(userDataSource != null)
+            userDataSource.removeListener(this);
+
+        userDataSource = mUserSession.userDataSourceForUserId(chatMessagesDataSource.getFirstOtherUserId());
+        userDataSource.addListener(this);
+
+        //Title text (from last responder, chat settings or organization name)
+        KUSUser firstOtherUser = (KUSUser) userDataSource.getObject();
+        String responderName = firstOtherUser.getDisplayName();
+        if(responderName != null && responderName.length() == 0){
+            KUSChatSettings chatSettings = (KUSChatSettings) mUserSession.getChatSettingsDataSource().getObject();
+            responderName = chatSettings.getTeamName().length() > 0 ?
+                    chatSettings.getTeamName() : mUserSession.getOrganizationName();
+        }
+
+        tvSessionTitle.setText(String.format(itemView.getContext().getString(R.string.chat_with)+" %s",responderName));
+
+        //Subtitle text (from last message, or preview text)
+        KUSChatMessage latestTextMessage = null;
+        for(KUSModel model : chatMessagesDataSource.getList()){
+            KUSChatMessage message = (KUSChatMessage) model;
+            if(message.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT){
+                latestTextMessage = message;
+                break;
+            }
+        }
+
+        String subtitleText = null;
+        if (latestTextMessage != null) {
+            subtitleText = latestTextMessage.getBody() != null ?
+                    latestTextMessage.getBody() : mChatSession.getPreview();
+        }
+        tvSessionSubtitle.setText(subtitleText);
+
+        //Date text (from last message date, or session created at)
+        Date sessionDate = null;
+        if (latestTextMessage != null) {
+            sessionDate = latestTextMessage.getCreatedAt() != null ?
+                    latestTextMessage.getCreatedAt() : mChatSession.getCreatedAt();
+        }
+        tvSessionDate.setText(KUSDate.humanReadableTextFromDate(sessionDate));
+
+        //Unread count (number of messages > the lastSeenAt)
+        Date sessionLastSeenAt = mUserSession.getChatSessionsDataSource().lastSeenAtForSessionId(mChatSession.getId());
+        int unreadCount = chatMessagesDataSource.unreadCountAfterDate(sessionLastSeenAt);
+        if(unreadCount > 0){
+            tvUnreadCount.setText(String.valueOf(unreadCount));
+            tvUnreadCount.setVisibility(View.VISIBLE);
+        }else{
+            tvUnreadCount.setVisibility(View.INVISIBLE);
+        }
+
+    }
+    //endregion
+
+    //region Listener
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        updateLabels();
+    }
+
+    @Override
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+
+    }
+
+    @Override
+    public void onLoad(KUSPaginatedDataSource dataSource) {
+
+    }
+
+    @Override
+    public void onError(KUSPaginatedDataSource dataSource, Error error) {
+
+    }
+
+    @Override
+    public void onContentChange(KUSPaginatedDataSource dataSource) {
+        updateLabels();
+        updateAvatar();
+    }
+    //endregion
+}

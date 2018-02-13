@@ -29,7 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //region Initializer
     private void initViews(){
-        btnStartChat = findViewById(R.id.btnStartChat);
+        btnStartChat = findViewById(R.id.btnPresentSupport);
     }
 
     private void setListeners(){
@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.btnStartChat:
+            case R.id.btnPresentSupport:
                 Kustomer.showSupport(this);
         }
     }

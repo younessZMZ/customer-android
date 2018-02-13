@@ -48,7 +48,7 @@ public class KUSRequestManager implements Serializable{
     private KUSUserSession userSession;
 
     HashMap<String, String> genericHTTPHeaderValues = null;
-    ArrayList<KUSTrackingTokenListener> pendingTrackingTokenListeners = null;
+    ArrayList<KUSTrackingTokenListener> pendingTrackingTokenListeners = new ArrayList<>();
     //endregion
 
     //region LifeCycle
@@ -267,9 +267,10 @@ public class KUSRequestManager implements Serializable{
     private void dispenseTrackingToken(final KUSTrackingTokenListener listener){
         String trackingToken = userSession.getTrackingTokenDataSource().getCurrentTrackingToken();
         if(trackingToken != null){
-            listener.onCompletion(null,KUSConstants.MockedData.TRACKING_TOKEN);
+            listener.onCompletion(null,trackingToken);
         }else{
             pendingTrackingTokenListeners.add(listener);
+            userSession.getTrackingTokenDataSource().fetch();
         }
 
     }

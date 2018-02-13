@@ -108,7 +108,7 @@ public class KUSPaginatedDataSource {
         listeners.remove(listener);
     }
 
-    // TODO: completion Listener should be in background
+
     public void fetchLatest() {
         URL url = getFirstUrl();
         if (mostRecentPaginatedResponse != null && mostRecentPaginatedResponse.getFirstPath() != null) {

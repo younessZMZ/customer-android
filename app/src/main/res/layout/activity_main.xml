@@ -18,12 +18,41 @@
             layout="@layout/internet_status_layout"
             android:visibility="gone" />
 
-        <Button
-            android:id="@+id/btnStartChat"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/start_chat" />
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/btnResetToken"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:text="@string/reset_tracking_token"
+                android:textAllCaps="false"
+                android:layout_margin="10dp"/>
+
+            <Button
+                android:id="@+id/btnKnowledgeBase"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:text="@string/present_knowledgebase"
+                android:textAllCaps="false"
+                android:layout_margin="10dp"/>
+
+            <Button
+                android:id="@+id/btnPresentSupport"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:text="@string/manually_present_support"
+                android:textAllCaps="false"
+                android:layout_margin="10dp"/>
+
+        </LinearLayout>
+
+
 
     </RelativeLayout>
 

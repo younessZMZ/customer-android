@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 
+import com.kustomer.kustomersdk.API.KUSUserSession;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -11,68 +13,63 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class KUSSharedPreferences {
-    //TODO: Incomplete
     //region Properties
     private static String PREFERENCE_FILE_KEY = "kustomer_app_preferences";
     private static String TRACKING_TOKEN_PREFERENCE = "tracking_token_pref";
+    private static String DID_CAPTURE_EMAIL_PREFERENCE = "email_capture_pref";
+    private SharedPreferences sharedPref = null;
+    //endregion
+
+    //region Initializer
+    public KUSSharedPreferences(Context context, KUSUserSession userSession){
+        String suiteName = userSession.getOrgName()+ "_" + PREFERENCE_FILE_KEY;
+        sharedPref = context.getSharedPreferences(
+                suiteName, MODE_PRIVATE);
+    }
     //endregion
 
     //region Basic Methods
-    private static void saveInt(Context context, String key, int value) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                PREFERENCE_FILE_KEY, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putInt(key, value);
-        editor.apply();
-    }
-
-    private static int getInt(Context context, String key) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                PREFERENCE_FILE_KEY, MODE_PRIVATE);
-
-        return sharedPref.getInt(key, -1);
-    }
-
-    private static void saveBoolean(Context context, String key, boolean check) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                PREFERENCE_FILE_KEY, MODE_PRIVATE);
-
+    private void saveBoolean(String key, boolean check) {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(key, check);
         editor.apply();
     }
 
-    private static boolean getBoolean(Context context, String key) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                PREFERENCE_FILE_KEY, MODE_PRIVATE);
+    private boolean getBoolean(String key) {
         return sharedPref.getBoolean(key, true);
     }
 
-    private static void saveString(Context context, String key, String value) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                PREFERENCE_FILE_KEY, MODE_PRIVATE);
-
+    private void saveString(String key, String value) {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.apply();
     }
 
-    private static String getString(Context context, String key) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                PREFERENCE_FILE_KEY, MODE_PRIVATE);
+    private String getString(String key) {
         return sharedPref.getString(key, null);
     }
 
     //endregion
 
     //region Public Methods
-    public void setTrackingToken(Context context, String trackingToken) {
-        saveString(context,TRACKING_TOKEN_PREFERENCE,trackingToken);
+    public void setDidCaptureEmail(boolean didCaptureEmail){
+        saveBoolean(DID_CAPTURE_EMAIL_PREFERENCE,didCaptureEmail);
     }
 
-    public String getTrackingToken(Context context) {
-        return getString(context,TRACKING_TOKEN_PREFERENCE);
+    public boolean getDidCaptureEmail(){
+        return getBoolean(DID_CAPTURE_EMAIL_PREFERENCE);
+    }
+
+    public void setTrackingToken(String trackingToken) {
+        saveString(TRACKING_TOKEN_PREFERENCE,trackingToken);
+    }
+
+    public String getTrackingToken() {
+        return getString(TRACKING_TOKEN_PREFERENCE);
+    }
+
+    public void reset() {
+        sharedPref.edit().clear().apply();
     }
     //endregion
 

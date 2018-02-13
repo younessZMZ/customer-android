@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -41,6 +42,26 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
         localLastSeenAtBySessionId = new HashMap<>();
         addListener(this);
+    }
+
+    @Override
+    public List<KUSModel> objectsFromJSON(JSONObject jsonObject) {
+
+        ArrayList<KUSModel> arrayList = null;
+
+        KUSModel model = null;
+        try {
+            model = new KUSChatSession(jsonObject);
+        } catch (KUSInvalidJsonException e) {
+            e.printStackTrace();
+        }
+
+        if(model != null) {
+            arrayList = new ArrayList<>();
+            arrayList.add(model);
+        }
+
+        return arrayList;
     }
     //endregion
 
@@ -221,7 +242,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         return null;
     }
 
-    private Date lastSeenAtForSessionId(String sessionId){
+    public Date lastSeenAtForSessionId(String sessionId){
         KUSChatSession chatSession = (KUSChatSession) findById(sessionId);
         Date chatSessionDate = chatSession.getLastSeenAt();
         Date localDate = localLastSeenAtBySessionId.get(sessionId);
@@ -274,6 +295,13 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                     flushCustomAttributes(pendingCustomChatSessionAttributes,mostRecentChatSessionId);
                     pendingCustomChatSessionAttributes = null;
                 }
+            }
+
+            for(KUSModel model : getList()){
+                KUSChatSession chatSession = (KUSChatSession) model;
+                KUSChatMessagesDataSource messagesDataSource = getUserSession()
+                        .chatMessageDataSourceForSessionId(chatSession.getId());
+                messagesDataSource.addListener(this);
             }
 
         }else if(dataSource.getClass().equals(KUSChatMessagesDataSource.class)){

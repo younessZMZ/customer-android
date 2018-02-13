@@ -6,17 +6,18 @@ import android.content.Intent;
 import android.util.Base64;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Activities.KUSChatActivity;
-import com.kustomer.kustomersdk.Models.KUSChatSession;
+import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
+import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+
+import junit.framework.Assert;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-
-import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.USER_SESSION_BUNDLE__KEY;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -46,48 +47,80 @@ public class Kustomer {
     }
 
     public static void init(Context context, String apiKey) {
-        getSharedInstance().setApiKey(apiKey);
         mContext = context.getApplicationContext();
+        getSharedInstance().setApiKey(apiKey);
     }
     //endregion
 
     //region Class Methods
     public static void describeConversation(HashMap<String,Object> customAttributes){
-        //TODO:
+        getSharedInstance().mDescribeConversation(customAttributes);
     }
 
     public static void describeCustomer(KUSCustomerDescription customerDescription){
-        //TODO:
+        getSharedInstance().mDescribeCustomer(customerDescription);
     }
 
     public static void identify(String externalToken){
-        //TODO:
+        getSharedInstance().mIdentify(externalToken);
     }
 
     public static void resetToken(){
-        //TODO:
+        getSharedInstance().mResetTracking();
     }
 
     public static void showSupport(Activity activity){
-
-        //TODO: Mocking Session Object for POC
-        KUSChatSession chatSession =  new KUSChatSession();
-        chatSession.setId(KUSConstants.MockedData.CHAT_SESSION_OID);
-        chatSession.setOrgId(KUSConstants.MockedData.CHAT_SESSION_ORG_ID);
-        chatSession.setCustomerId(KUSConstants.MockedData.CHAT_SESSION_CUSTOMER_ID);
-        chatSession.setPreview(KUSConstants.MockedData.CHAT_SESSION_PREVIEW);
-        chatSession.setTrackingId(KUSConstants.MockedData.CHAT_SESSION_TRACKING_ID);
-        chatSession.setSessionId(KUSConstants.MockedData.CHAT_SESSION_SESSION_ID);
-
-
-
-        Intent intent = new Intent(activity, KUSChatActivity.class);
-        intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
+        Intent intent = new Intent(activity, KUSSessionsActivity.class);
         activity.startActivity(intent);
+    }
+
+    public static void presentKnowledgeBase(){
+        //TODO:
     }
     //endregion
 
     //region Private Methods
+    private void mDescribeConversation(HashMap<String,Object> customAttributes){
+        if (customAttributes==null)
+            throw new AssertionError("Attempted to describe a conversation with no attributes set");
+
+        if(customAttributes.keySet().size() == 0)
+            return;
+
+        userSession.getChatSessionsDataSource().describeActiveConversation(customAttributes);
+    }
+
+    private void mDescribeCustomer(KUSCustomerDescription customerDescription){
+        userSession.describeCustomer(customerDescription,null);
+    }
+
+    private void mIdentify(final String externalToken){
+        if(externalToken == null)
+            return;
+
+        HashMap<String , Object> params = new HashMap<String , Object>(){{
+            put("externalToken",externalToken);
+        }};
+
+        final KUSUserSession instance = this.userSession;
+        userSession.getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_POST,
+                KUSConstants.URL.IDENTITY_ENDPOINT,
+                params,
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+                        instance.getTrackingTokenDataSource().fetch();
+                    }
+                }
+        );
+    }
+
+    private void mResetTracking(){
+        userSession = new KUSUserSession(orgName,orgId,true);
+    }
+
     private void setApiKey(String apiKey){
         if(apiKey.length()==0){
             return;

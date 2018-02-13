@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Kustomer</string>
     <string name="processing">Processing…</string>
-    <string name="start_chat">Start Chat</string>
+    <string name="manually_present_support">Manually Present Support</string>
+    <string name="reset_tracking_token">Reset Tracking Token</string>
+    <string name="present_knowledgebase">Present KnowledgeBase</string>
 </resources>

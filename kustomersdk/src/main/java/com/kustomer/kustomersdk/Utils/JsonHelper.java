@@ -119,7 +119,7 @@ public class JsonHelper {
 
         try {
             return json.getJSONObject(keyPath);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -166,6 +166,11 @@ public class JsonHelper {
         chatMessages.add(standardChatMessage);
 
         return chatMessages;
+    }
+
+    public static List<KUSModel> kusSessionModelsFromJSON(JSONObject jsonObject) {
+
+        return null;
     }
 
 }

@@ -81,6 +81,18 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         tvName = findViewById(R.id.tvName);
         tvGreetingMessage = findViewById(R.id.tvGreetingMessage);
         kusMultipleAvatarsView = findViewById(R.id.multipleAvatarViews);
+
+        //TODO: adjust Sizes etc
+
+        if(showLabel){
+            tvName.setVisibility(VISIBLE);
+            tvGreetingMessage.setVisibility(VISIBLE);
+        }else{
+            tvName.setVisibility(GONE);
+            tvGreetingMessage.setVisibility(GONE);
+        }
+
+
     }
 
     private void updateTextLabel() {
@@ -149,6 +161,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
     public void setShowLabel(boolean showLabel) {
         this.showLabel = showLabel;
+        initViews();
     }
 
     public boolean isShowBackButton() {

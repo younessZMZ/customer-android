@@ -8,4 +8,8 @@
     <string name="we_re_here_let_us_know_if_we_can_help">We\'re here, Let us know if we can help.</string>
     <string name="example">Example</string>
     <string name="please_provide_a_message_body">Please provide a message body</string>
+    <string name="messaging_by_kustomer">Messaging by Kustomer</string>
+    <string name="new_conversation">New Conversation</string>
+    <string name="something_went_wrong_please_try_again">Something went wrong. Please try again.</string>
+    <string name="chat_with">Chat with</string>
 </resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
+    android:orientation="vertical">
+
+        <include layout="@layout/sessions_app_bar_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvSessions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btnNewConversation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_conversation"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:drawableStart="@drawable/ic_edit_white_20dp"
+            android:drawablePadding="5dp"/>
+
+        <include
+            android:id="@+id/internet_status_view"
+            layout="@layout/internet_status_layout"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="16dp">
+        <TextView
+            android:id="@+id/tvFooter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:text="@string/messaging_by_kustomer"/>
+    </LinearLayout>
+
+</LinearLayout>
