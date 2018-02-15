@@ -22,6 +22,7 @@ import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener {
 
@@ -92,7 +93,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         rvSessions.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL,true);
+                LinearLayoutManager.VERTICAL,false);
         rvSessions.setLayoutManager(layoutManager);
 
         adapter.notifyDataSetChanged();
@@ -108,8 +109,8 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
         if(chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 0){
             //TODO: handle back Button
-//            Intent intent = new Intent(this, KUSChatActivity.class);
-//            startActivity(intent);
+            Intent intent = new Intent(this, KUSChatActivity.class);
+            startActivity(intent);
         }else if (chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 1){
             KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.getFirst();
 
@@ -121,6 +122,12 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Listeners
+    @OnClick(R2.id.btnNewConversation)
+    void newConversationClicked(){
+        Intent intent = new Intent(this, KUSChatActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
         progressDialog.hide();
@@ -140,7 +147,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
-        adapter.notifyDataSetChanged();
+        setupAdapter();
     }
 
     @Override

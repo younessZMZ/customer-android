@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.kustomer.kustomersdk.BuildConfig;
+import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -39,7 +41,7 @@ import okhttp3.Response;
  */
 
 
-public class KUSRequestManager implements Serializable{
+public class KUSRequestManager implements Serializable, KUSObjectDataSourceListener {
 
 
 
@@ -48,7 +50,7 @@ public class KUSRequestManager implements Serializable{
     private KUSUserSession userSession;
 
     HashMap<String, String> genericHTTPHeaderValues = null;
-    ArrayList<KUSTrackingTokenListener> pendingTrackingTokenListeners = new ArrayList<>();
+    private ArrayList<KUSTrackingTokenListener> pendingTrackingTokenListeners  = null;
     //endregion
 
     //region LifeCycle
@@ -65,6 +67,8 @@ public class KUSRequestManager implements Serializable{
                 put("x-kustomer-version", Kustomer.sdkVersion());
             }
         };
+
+        userSession.getTrackingTokenDataSource().addListener(this);
     }
     //endregion
 
@@ -142,7 +146,7 @@ public class KUSRequestManager implements Serializable{
                 @Override
                 public void onCompletion(Error error, String trackingToken) {
                     if(error != null){
-                        completionListener.onCompletion(error,null);
+                        safeComplete(completionListener,error,null);
                     }else{
                         performRequestWithTrackingToken(type,trackingToken,url,params,bodyData,authenticated,additionalHeaders,completionListener);
                     }
@@ -220,15 +224,16 @@ public class KUSRequestManager implements Serializable{
                     }
                 }
 
-                if(bytes != null) {
+                if(bytes != null)
                     requestBuilder.addHeader("Content-Length", String.valueOf(bytes.length));
-                    if (type == KUSRequestType.KUS_REQUEST_TYPE_POST)
-                        requestBuilder.post(RequestBody.create(MediaType.parse("application/json"), bytes));
-                    else if (type == KUSRequestType.KUS_REQUEST_TYPE_PUT)
-                        requestBuilder.put(RequestBody.create(MediaType.parse("application/json"), bytes));
-                    else if (type == KUSRequestType.KUS_REQUEST_TYPE_PATCH)
-                        requestBuilder.patch(RequestBody.create(MediaType.parse("application/json"), bytes));
-                }
+
+                if (type == KUSRequestType.KUS_REQUEST_TYPE_POST)
+                    requestBuilder.post(RequestBody.create(MediaType.parse("application/json"), bytes));
+                else if (type == KUSRequestType.KUS_REQUEST_TYPE_PUT)
+                    requestBuilder.put(RequestBody.create(MediaType.parse("application/json"), bytes));
+                else if (type == KUSRequestType.KUS_REQUEST_TYPE_PATCH)
+                    requestBuilder.patch(RequestBody.create(MediaType.parse("application/json"), bytes));
+
 
             }
 
@@ -241,7 +246,7 @@ public class KUSRequestManager implements Serializable{
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    completionListener.onCompletion(new Error(e.getMessage()),null);
+                    safeComplete(completionListener,new Error(e.getMessage()), null);
                 }
 
                 @Override
@@ -251,7 +256,7 @@ public class KUSRequestManager implements Serializable{
 
                         try {
                             JSONObject jsonObject = new JSONObject(body);
-                            completionListener.onCompletion(null, jsonObject);
+                            safeComplete(completionListener,null, jsonObject);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -263,16 +268,44 @@ public class KUSRequestManager implements Serializable{
 
     }
 
+    private void safeComplete(final KUSRequestCompletionListener completionListener, final Error error, final JSONObject jsonObject){
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                completionListener.onCompletion(error, jsonObject);
+            }
+        };
+        mainHandler.post(myRunnable);
+    }
+
 
     private void dispenseTrackingToken(final KUSTrackingTokenListener listener){
         String trackingToken = userSession.getTrackingTokenDataSource().getCurrentTrackingToken();
         if(trackingToken != null){
             listener.onCompletion(null,trackingToken);
         }else{
-            pendingTrackingTokenListeners.add(listener);
+            getPendingTrackingTokenListeners().add(listener);
             userSession.getTrackingTokenDataSource().fetch();
         }
+    }
 
+    private void firePendingTokenCompletionsWithToken(final String token, final Error error){
+        final ArrayList<KUSTrackingTokenListener> listeners = new ArrayList<>(getPendingTrackingTokenListeners());
+        pendingTrackingTokenListeners = null;
+
+        if(listeners.size() > 0){
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    for(KUSTrackingTokenListener trackingTokenListener : listeners){
+                        trackingTokenListener.onCompletion(error,token);
+                    }
+                }
+            };
+            handler.post(runnable);
+        }
     }
 
 
@@ -289,6 +322,28 @@ public class KUSRequestManager implements Serializable{
                 BuildConfig.VERSION_NAME,
                 Build.MODEL,
                 Build.VERSION.RELEASE);
+    }
+
+    private ArrayList<KUSTrackingTokenListener> getPendingTrackingTokenListeners(){
+        if(pendingTrackingTokenListeners == null)
+            pendingTrackingTokenListeners = new ArrayList<>();
+
+        return pendingTrackingTokenListeners;
+    }
+    //endregion
+
+    //region Callbacks
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if(dataSource == userSession.getTrackingTokenDataSource()){
+            String trackingToken = userSession.getTrackingTokenDataSource().getCurrentTrackingToken();
+            firePendingTokenCompletionsWithToken(trackingToken,null);
+        }
+    }
+
+    @Override
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+        firePendingTokenCompletionsWithToken(null,error);
     }
     //endregion
 

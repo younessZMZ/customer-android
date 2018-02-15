@@ -77,7 +77,7 @@ public class KUSChatMessage extends KUSModel {
         return message1 != null
                 && message2 != null
                 && message1.direction == message2.direction
-                && message1.sentById.equalsIgnoreCase(message2.sentById);
+                && (message1.sentById != null && message1.sentById.equalsIgnoreCase(message2.sentById));
     }
 
     public static KUSChatMessageDirection KUSChatMessageDirectionFromString(String str) {

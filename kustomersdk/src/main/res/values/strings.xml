@@ -12,4 +12,9 @@
     <string name="new_conversation">New Conversation</string>
     <string name="something_went_wrong_please_try_again">Something went wrong. Please try again.</string>
     <string name="chat_with">Chat with</string>
+    <string name="week">week</string>
+    <string name="day">day</string>
+    <string name="hour">hour</string>
+    <string name="minute">minute</string>
+    <string name="just_now">Just now</string>
 </resources>

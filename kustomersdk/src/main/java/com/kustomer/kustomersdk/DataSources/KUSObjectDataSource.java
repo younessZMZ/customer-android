@@ -100,13 +100,13 @@ public class KUSObjectDataSource {
 
     //region Private Methods
     private void notifyAnnouncersOnError(Error error){
-        for(KUSObjectDataSourceListener listener : listeners){
+        for(KUSObjectDataSourceListener listener : new ArrayList<>(listeners)){
             listener.objectDataSourceOnError(this,error);
         }
     }
 
     private void notifyAnnouncersOnLoad(){
-        for(KUSObjectDataSourceListener listener : listeners){
+        for(KUSObjectDataSourceListener listener : new ArrayList<>(listeners)){
             listener.objectDataSourceOnLoad(this);
         }
     }

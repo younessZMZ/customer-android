@@ -55,7 +55,7 @@ public class KUSUserSession implements Serializable {
         }
 
         if(reset){
-            trackingTokenDataSource.reset();
+            getTrackingTokenDataSource().reset();
             getSharedPreferences().reset();
         }
 

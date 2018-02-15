@@ -68,11 +68,11 @@ public class KUSChatSession extends KUSModel implements Serializable {
             return false;
         if (this.preview != null || chatSession.preview != null)
             return false;
-        if(!chatSession.lastSeenAt.equals(this.lastSeenAt))
+        if(chatSession.lastSeenAt!=null && !chatSession.lastSeenAt.equals(this.lastSeenAt))
             return false;
-        if(!chatSession.lastMessageAt.equals(this.lastMessageAt))
+        if(chatSession.lastMessageAt!=null && !chatSession.lastMessageAt.equals(this.lastMessageAt))
             return false;
-        if(!chatSession.createdAt.equals(this.createdAt))
+        if(chatSession.createdAt!=null && !chatSession.createdAt.equals(this.createdAt))
             return false;
 
 

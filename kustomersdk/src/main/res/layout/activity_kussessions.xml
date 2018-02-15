@@ -27,12 +27,16 @@
             android:text="@string/new_conversation"
             android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:paddingRight="30dp"
-            android:paddingLeft="30dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingRight="25dp"
+            android:paddingLeft="25dp"
             android:drawableStart="@drawable/ic_edit_white_20dp"
-            android:drawablePadding="5dp"/>
+            android:drawablePadding="5dp"
+            android:textAllCaps="false"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/colorBlueMessage"
+            android:textColor="@android:color/white"/>
 
         <include
             android:id="@+id/internet_status_view"
@@ -42,7 +46,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="16dp">
+        android:layout_height="16dp"
+        android:orientation="vertical"
+        android:background="@color/kusPrimaryColor">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLightGrey"/>
+
         <TextView
             android:id="@+id/tvFooter"
             android:layout_width="match_parent"

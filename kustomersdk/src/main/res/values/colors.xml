@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="color_red_semi">#aacc0000</color>
-    <color name="color_light_grey">#11000000</color>
-    <color name="color_blue_message">#2962FF</color>
+    <color name="kusPrimaryColor">#E0E0E0</color>
+    <color name="kusPrimaryDarkColor">#BDBDBD</color>
+    <color name="kusColorAccent">#FF4081</color>
+    <color name="kusColorRedSemi">#aacc0000</color>
+    <color name="colorLightGrey">#E0E0E0</color>
+    <color name="colorBlueMessage">#2962FF</color>
 
 
     <color name="defaultNameColor1">#d73d32</color>

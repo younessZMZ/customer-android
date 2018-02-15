@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestFutureTarget;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -115,7 +116,9 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
 
         this.userId = userId;
         this.userDataSource = userSession.userDataSourceForUserId(userId);
-        userDataSource.addListener(this);
+
+        if(userDataSource != null)
+            userDataSource.addListener(this);
 
         updateAvatarImage();
     }
@@ -171,19 +174,23 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
 
         staticImageView.setImageBitmap(placeHolderImage);
 
-        if(user != null && chatSettings != null) {
-            URL iconURL = user.getAvatarURL() != null ? user.getAvatarURL() : chatSettings.getTeamIconURL();
+        if(chatSettings != null) {
+            URL iconURL = user != null && user.getAvatarURL() != null ? user.getAvatarURL() : chatSettings.getTeamIconURL();
 
-            Glide.with(getContext())
-                    .load(iconURL.toString())
-                    .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.noAnimation())
-                    .into(new SimpleTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            remoteImageView.setImageDrawable(resource);
-                        }
-                    });
+            try {
+                Glide.with(getContext())
+                        .load(iconURL.toString())
+                        .apply(RequestOptions.circleCropTransform())
+                        .apply(RequestOptions.noAnimation())
+                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
+                        .into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                remoteImageView.setImageDrawable(resource);
+                            }
+                        });
+
+            }catch (IllegalArgumentException ignore){}
 
         }
     }

@@ -48,6 +48,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     KUSUserDataSource userDataSource;
     String chatSessionId;
     MessageListAdapter adapter;
+    KUSToolbar kusToolbar;
     //endregion
 
     //region LifeCycle
@@ -64,7 +65,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     protected void onDestroy() {
-        kusUserSession.getPushClient().setSupportScreenShown(false);
         super.onDestroy();
     }
     //endregion
@@ -74,14 +74,18 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusUserSession = Kustomer.getSharedInstance().getUserSession();
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY);
 
-        chatSessionId = kusChatSession.getId();
-        chatMessagesDataSource = kusUserSession.chatMessageDataSourceForSessionId(chatSessionId);
+        if(kusChatSession != null) {
+            chatSessionId = kusChatSession.getId();
+            chatMessagesDataSource = kusUserSession.chatMessageDataSourceForSessionId(chatSessionId);
+        }else{
+            chatMessagesDataSource = new KUSChatMessagesDataSource(kusUserSession,true);
+        }
 
-        kusUserSession.getPushClient().setSupportScreenShown(true);
         chatMessagesDataSource.addListener(this);
-
-        progressDialog.show();
         chatMessagesDataSource.fetchLatest();
+        if(!chatMessagesDataSource.isFetched()){
+            progressDialog.show();
+        }
     }
 
     private void initViews(){
@@ -92,9 +96,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void setupToolbar(){
-        KUSToolbar kusToolbar = (KUSToolbar)toolbar;
+        kusToolbar = (KUSToolbar)toolbar;
         kusToolbar.initWithUserSession(kusUserSession);
         kusToolbar.setSessionId(chatSessionId);
+        kusToolbar.setShowLabel(true);
         kusToolbar.setShowBackButton(true);
         kusToolbar.setShowDismissButton(true);
     }
@@ -141,7 +146,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
-
+        chatSessionId = sessionId;
+        //TODO: incomplete
+        kusToolbar.setSessionId(chatSessionId);
     }
 
     @Override

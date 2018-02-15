@@ -119,7 +119,7 @@ public class KUSImage {
                 context,
                 size,
                 ContextCompat.getColor(context,getDefaultNameColors().get(colorIndex)),
-                ContextCompat.getColor(context,R.color.colorPrimary),
+                ContextCompat.getColor(context,R.color.kusPrimaryColor),
                 strokeWidth,
                 text.toString(),
                 fontSize);

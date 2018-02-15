@@ -29,6 +29,7 @@ public class KUSConstants {
         String TRACKING_TOKEN_ENDPOINT = "/c/v1/tracking/tokens";
         String CURRENT_TRACKING_TOKEN_ENDPOINT = "/c/v1/tracking/tokens/current";
         String IDENTITY_ENDPOINT = "/c/v1/identity";
+        String SETTINGS_ENDPOINT = "/c/v1/chat/settings";
     }
 
     public interface Keys {

@@ -107,18 +107,24 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
             userDataSource.removeListener(this);
 
         userDataSource = mUserSession.userDataSourceForUserId(chatMessagesDataSource.getFirstOtherUserId());
-        userDataSource.addListener(this);
+
+        if(userDataSource != null)
+            userDataSource.addListener(this);
 
         //Title text (from last responder, chat settings or organization name)
-        KUSUser firstOtherUser = (KUSUser) userDataSource.getObject();
-        String responderName = firstOtherUser.getDisplayName();
-        if(responderName != null && responderName.length() == 0){
+        KUSUser firstOtherUser = userDataSource != null ? (KUSUser) userDataSource.getObject() : null;
+
+
+        String responderName = firstOtherUser != null ? firstOtherUser.getDisplayName() : null ;
+
+        if (responderName == null || responderName.length() == 0) {
             KUSChatSettings chatSettings = (KUSChatSettings) mUserSession.getChatSettingsDataSource().getObject();
-            responderName = chatSettings.getTeamName().length() > 0 ?
+            responderName = chatSettings != null && chatSettings.getTeamName().length() > 0 ?
                     chatSettings.getTeamName() : mUserSession.getOrganizationName();
         }
 
         tvSessionTitle.setText(String.format(itemView.getContext().getString(R.string.chat_with)+" %s",responderName));
+
 
         //Subtitle text (from last message, or preview text)
         KUSChatMessage latestTextMessage = null;
@@ -147,7 +153,12 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
 
         //Unread count (number of messages > the lastSeenAt)
         Date sessionLastSeenAt = mUserSession.getChatSessionsDataSource().lastSeenAtForSessionId(mChatSession.getId());
-        int unreadCount = chatMessagesDataSource.unreadCountAfterDate(sessionLastSeenAt);
+
+        int unreadCount = 0;
+
+        if(sessionLastSeenAt != null)
+            unreadCount = chatMessagesDataSource.unreadCountAfterDate(sessionLastSeenAt);
+
         if(unreadCount > 0){
             tvUnreadCount.setText(String.valueOf(unreadCount));
             tvUnreadCount.setVisibility(View.VISIBLE);

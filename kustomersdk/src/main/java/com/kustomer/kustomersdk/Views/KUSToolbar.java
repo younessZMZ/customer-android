@@ -140,6 +140,9 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         if(this.sessionId !=null && this.sessionId.equals(sessionId))
             return;
 
+        if(sessionId == null)
+            return;
+
         this.sessionId = sessionId;
 
         if(chatMessagesDataSource != null)

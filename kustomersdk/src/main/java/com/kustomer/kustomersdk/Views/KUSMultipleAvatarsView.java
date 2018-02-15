@@ -21,7 +21,7 @@ public class KUSMultipleAvatarsView extends FrameLayout {
     //region Properties
     private static final int K_KUS_DEFAULT_MAXIMUM_AVATARS_TO_DISPLAY = 3;
     private static final int STROKE_WIDTH_IN_DP = 3;
-    private static final int AVATAR_SIZE_IN_DP = 30;
+    private static final int AVATAR_SIZE_IN_DP = 35;
 
     private int maximumAvatarsToDisplay;
     private ArrayList<KUSAvatarImageView> avatarImageViews;

@@ -36,7 +36,7 @@ public class KUSPaginatedDataSource {
     private KUSPaginatedResponse lastPaginatedResponse;
 
     private KUSUserSession userSession;
-    private List<KUSPaginatedDataSourceListener> listeners;
+    protected List<KUSPaginatedDataSourceListener> listeners;
 
     private boolean fetching;
     private boolean fetched;
@@ -387,19 +387,19 @@ public class KUSPaginatedDataSource {
 
     // region Notifier
     public void notifyAnnouncersOnContentChange() {
-        for (KUSPaginatedDataSourceListener listener : listeners) {
+        for (KUSPaginatedDataSourceListener listener : new ArrayList<>(listeners)) {
             listener.onContentChange(this);
         }
     }
 
     private void notifyAnnouncersOnError(Error error) {
-        for (KUSPaginatedDataSourceListener listener : listeners) {
+        for (KUSPaginatedDataSourceListener listener :  new ArrayList<>(listeners)) {
             listener.onError(this, error);
         }
     }
 
     private void notifyAnnouncersOnLoad() {
-        for (KUSPaginatedDataSourceListener listener : listeners) {
+        for (KUSPaginatedDataSourceListener listener :  new ArrayList<>(listeners)) {
             listener.onLoad(this);
         }
     }

@@ -14,6 +14,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //region Properties
     Button btnStartChat;
+    Button btnResetTrackingToken;
     //endregion
 
     //region LifeCycle
@@ -30,10 +31,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region Initializer
     private void initViews(){
         btnStartChat = findViewById(R.id.btnPresentSupport);
+        btnResetTrackingToken = findViewById(R.id.btnResetToken);
     }
 
     private void setListeners(){
         btnStartChat.setOnClickListener(this);
+        btnResetTrackingToken.setOnClickListener(this);
     }
     //endregion
 
@@ -43,6 +46,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (view.getId()){
             case R.id.btnPresentSupport:
                 Kustomer.showSupport(this);
+                break;
+
+            case R.id.btnResetToken:
+                Kustomer.resetToken();
+                break;
         }
     }
     //endregion

@@ -1,5 +1,8 @@
 package com.kustomer.kustomersdk.API;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
@@ -32,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -112,12 +116,13 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 }
             });
         }else{
-            pusherClient.disconnect();
+            if(pusherClient != null)
+             pusherClient.disconnect();
         }
 
         String pusherChannelName = getPusherChannelName();
 
-        if(pusherChannelName != null && pusherChannel == null) {
+        if(pusherClient!=null && pusherChannelName != null && pusherChannel == null) {
             pusherChannel = pusherClient.subscribePresence(pusherChannelName);
             pusherChannel.bind(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT, new PresenceChannelEventListener() {
                 @Override
@@ -149,13 +154,22 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 public void onEvent(String channelName, String eventName, String data) {
                     JSONObject jsonObject = JsonHelper.stringToJson(data);
 
-                    List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+                    final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
                     KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
-                    KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+                    final KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
 
                     boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getOrgId()) == null;
-                    messagesDataSource.upsertAll(chatMessages);
+
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
+
+                    Runnable myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            messagesDataSource.upsertAll(chatMessages);
+                        }
+                    };
+                    mainHandler.post(myRunnable);
 
                     if (doesNotAlreadyContainMessage)
                         notifyForUpdatedChatSession(chatMessage.getSessionId());
@@ -234,18 +248,21 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 previousChatSession = previousChatSessions.get(chatSession.getId());
 
             if(previousChatSession!=null){
-                KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
-                KUSChatMessage latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
-                boolean isUpdatedSession = chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt());
-                Date sessionLastSeenAt = userSession.getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
-                boolean lastSeenBeforeMessage = chatSession.getLastMessageAt().after(sessionLastSeenAt);
-                boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
-                        || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
 
-                if(isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage){
-                    updatedSessionId = chatSession.getId();
-                    messagesDataSource.fetchLatest();
-                }
+                try {
+                    KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
+                    KUSChatMessage latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
+                    boolean isUpdatedSession = chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt());
+                    Date sessionLastSeenAt = userSession.getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
+                    boolean lastSeenBeforeMessage = chatSession.getLastMessageAt().after(sessionLastSeenAt);
+                    boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
+                            || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
+
+                    if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
+                        updatedSessionId = chatSession.getId();
+                        messagesDataSource.fetchLatest();
+                    }
+                }catch (Exception ignore){}
 
             }
         }

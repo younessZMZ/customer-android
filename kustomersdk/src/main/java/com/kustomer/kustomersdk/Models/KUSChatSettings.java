@@ -37,6 +37,8 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         enabled = JsonHelper.boolFromKeyPath(json,"attributes.enabled");
     }
 
+
+
     @Override
     public String modelType(){
         return "chat_settings";
