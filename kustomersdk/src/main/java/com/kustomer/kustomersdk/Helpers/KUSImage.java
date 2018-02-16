@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.util.Size;
 
@@ -79,6 +80,9 @@ public class KUSImage {
     }
 
     private static Bitmap getBitmapWithText(Context mContext, Size size, int color, int strokeColor, int strokeWidth, String text, int textSize){
+
+
+
         Bitmap src = circularImage(size,color, strokeColor, strokeWidth);
 
         Resources resources = mContext.getResources();
@@ -102,10 +106,12 @@ public class KUSImage {
         return src;
     }
 
-    public static Bitmap defaultAvatarBitmapForName(Context context, Size size, String Name, int strokeWidth, int fontSize){
-        //TODO: Cache Image
+    public static Bitmap defaultAvatarBitmapForName(Context context, Size size, String name, int strokeWidth, int fontSize){
+        Bitmap bitmap = new KUSCache().getBitmapFromMemCache(name + "w:" + strokeWidth);
+        if(bitmap != null)
+            return bitmap;
 
-        List<String> initials = initialsForName(Name);
+        List<String> initials = initialsForName(name);
 
         int letterSum = 0;
         StringBuilder text = new StringBuilder();
@@ -115,7 +121,7 @@ public class KUSImage {
         }
 
         int colorIndex = letterSum % getDefaultNameColors().size();
-        return getBitmapWithText(
+        bitmap = getBitmapWithText(
                 context,
                 size,
                 ContextCompat.getColor(context,getDefaultNameColors().get(colorIndex)),
@@ -124,6 +130,10 @@ public class KUSImage {
                 text.toString(),
                 fontSize);
 
+        if(bitmap != null)
+            new KUSCache().addBitmapToMemoryCache(name + "w:" + strokeWidth,bitmap);
+
+        return bitmap;
     }
     //endregion
 

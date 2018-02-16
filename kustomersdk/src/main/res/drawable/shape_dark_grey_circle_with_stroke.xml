@@ -11,6 +11,6 @@
         android:height="120dp"/>
 
     <stroke
-        android:color="@color/colorPrimary"
+        android:color="@color/kusPrimaryColor"
         android:width="10dp"/>
 </shape>

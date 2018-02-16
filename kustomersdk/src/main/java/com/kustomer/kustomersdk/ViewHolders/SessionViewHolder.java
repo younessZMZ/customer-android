@@ -14,6 +14,7 @@ import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
@@ -141,7 +142,11 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
             subtitleText = latestTextMessage.getBody() != null ?
                     latestTextMessage.getBody() : mChatSession.getPreview();
         }
-        tvSessionSubtitle.setText(subtitleText);
+
+        if (subtitleText != null) {
+            KUSText.setMarkDownText(tvSessionSubtitle, subtitleText.trim());
+            tvSessionSubtitle.setMovementMethod(null);
+        }
 
         //Date text (from last message date, or session created at)
         Date sessionDate = null;

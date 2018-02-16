@@ -24,7 +24,7 @@
 
         <activity android:name="com.kustomer.kustomersdk.Activities.KUSChatActivity"
             android:configChanges="orientation"
-            android:theme="@style/KusAppTheme"/>
+            android:theme="@style/KusAppTheme" />
 
         <activity android:name="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
             android:configChanges="orientation"

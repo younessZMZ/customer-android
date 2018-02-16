@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
-import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
@@ -35,6 +34,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -44,12 +45,17 @@ import java.util.Set;
 public class KUSPushClient implements Serializable, KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
 
     //region Properties
+    private static long LAZY_POLLING_TIMER_INTERVAL = 45000;
+    private static long Active_POLLING_TIMER_INTERVAL = 7500;
+    private long currentPollingTimerInterval = 0;
+
     private Pusher pusherClient;
     private PresenceChannel pusherChannel;
     private HashMap<String, KUSChatSession> previousChatSessions;
 
     private KUSUserSession userSession;
     private boolean isSupportScreenShown = false;
+    private Timer pollingTimer;
     //endregion
 
     //region LifeCycle
@@ -86,8 +92,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void connectToChannelsIfNecessary(){
-
-        //TODO: Needs to be enhanced
         KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
 
         if(pusherClient == null && chatSettings != null) {
@@ -107,14 +111,25 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             pusherClient.connect(new ConnectionEventListener() {
                 @Override
                 public void onConnectionStateChange(ConnectionStateChange change) {
-
+                    if(change.getCurrentState() == ConnectionState.CONNECTED)
+                        updatePollingTimer();
                 }
 
                 @Override
                 public void onError(String message, String code, Exception e) {
-
+                    updatePollingTimer();
                 }
             });
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    connectToChannelsIfNecessary();
+                }
+            };
+            handler.postDelayed(runnable,LAZY_POLLING_TIMER_INTERVAL);
+
         }else{
             if(pusherClient != null)
              pusherClient.disconnect();
@@ -177,6 +192,65 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             });
         }
 
+        updatePollingTimer();
+    }
+
+    private void updatePollingTimer(){
+        if(shouldBeConnectedToPusher()){
+            if(pusherClient != null && pusherClient.getConnection().getState() == ConnectionState.CONNECTED){
+                //Stop Polling
+                if(pollingTimer != null) {
+                    pollingTimer.cancel();
+                    pollingTimer = null;
+                }
+            }else{
+                // We are not yet connected to pusher, setup an active polling pollingTimer
+                // (in the event that connecting to pusher fails)
+                if(pollingTimer == null || currentPollingTimerInterval != Active_POLLING_TIMER_INTERVAL){
+                    if(pollingTimer != null)
+                        pollingTimer.cancel();
+
+                    startTimer(Active_POLLING_TIMER_INTERVAL);
+                }
+            }
+        }else if(userSession != null && userSession.getChatSessionsDataSource().getSize()>0){
+            // Make sure we're polling lazily
+            if(pollingTimer == null || currentPollingTimerInterval != LAZY_POLLING_TIMER_INTERVAL){
+                if(pollingTimer != null)
+                    pollingTimer.cancel();
+
+                startTimer(LAZY_POLLING_TIMER_INTERVAL);
+
+                // Tick immediately
+                onPollTick();
+            }
+        }
+    }
+
+    private void startTimer(long time) {
+        currentPollingTimerInterval = time;
+        final Handler handler = new Handler();
+        pollingTimer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        onPollTick();
+                    }
+                });
+            }
+        };
+        pollingTimer.schedule(doAsynchronousTask, 0, time);
+    }
+
+    private void onPollTick(){
+        KUSTrackingToken trackingToken = (KUSTrackingToken) userSession.getTrackingTokenDataSource().getObject();
+        if(trackingToken == null || trackingToken.getCustomerId() == null || trackingToken.getCustomerId().length() == 0 || !userSession.getChatSessionsDataSource().isFetched()){
+            return;
+        }
+
+        userSession.getChatSessionsDataSource().fetchLatest();
     }
 
     private void notifyForUpdatedChatSession(String sessionId){
@@ -235,7 +309,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         if(dataSource == userSession.getChatSessionsDataSource())
             connectToChannelsIfNecessary();
 
-        //TODO: polling time check
+        // Only consider new messages here if we're actively polling
+        if(pollingTimer == null)
+            return;
 
         String updatedSessionId = null;
         List<KUSModel> newChatSessions = userSession.getChatSessionsDataSource().getList();

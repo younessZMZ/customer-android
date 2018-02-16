@@ -248,7 +248,10 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         Date localDate = localLastSeenAtBySessionId.get(sessionId);
 
         if(chatSessionDate != null){
-            return chatSessionDate.after(localDate) ? chatSessionDate : localDate;
+            if(localDate != null)
+                return chatSessionDate.after(localDate) ? chatSessionDate : localDate;
+            else
+                return chatSessionDate;
         }
         else
             return localDate;

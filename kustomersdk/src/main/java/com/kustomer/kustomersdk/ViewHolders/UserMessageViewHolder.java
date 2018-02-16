@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.R2;
 
@@ -31,8 +32,8 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void onBind(KUSChatMessage chatMessage, boolean showDate){
+        //KUSText.setMarkDownText(tvMessage,chatMessage.getBody().trim());
         tvMessage.setText(chatMessage.getBody().trim());
-
         if(showDate){
             tvDate.setVisibility(View.VISIBLE);
             tvDate.setText(KUSDate.messageTimeStampTextFromDate(chatMessage.getCreatedAt()));

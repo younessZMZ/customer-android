@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
@@ -40,7 +41,7 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
     public void onBind(KUSChatMessage chatMessage, KUSUserSession userSession, boolean showAvatar,
                        boolean showDate){
 
-        tvMessage.setText(chatMessage.getBody().trim());
+        KUSText.setMarkDownText(tvMessage,chatMessage.getBody().trim());
 
         imageLayout.removeAllViews();
         if(showAvatar) {

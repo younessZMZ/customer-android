@@ -28,6 +28,8 @@
             android:padding="10dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="60dp"
+            android:autoLink="web|email"
+            android:textColorLink="@android:color/black"
             android:textColor="@android:color/black"/>
 
         <TextView

@@ -182,7 +182,6 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
                         .load(iconURL.toString())
                         .apply(RequestOptions.circleCropTransform())
                         .apply(RequestOptions.noAnimation())
-                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
                         .into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {

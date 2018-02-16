@@ -55,6 +55,25 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:orientation="vertical"
+                android:background="@color/kusPrimaryColor">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorLightGrey"/>
+
+                <TextView
+                    android:id="@+id/tvFooter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:text="@string/messaging_by_kustomer"/>
+            </LinearLayout>
+
         </LinearLayout>
 
         <include
