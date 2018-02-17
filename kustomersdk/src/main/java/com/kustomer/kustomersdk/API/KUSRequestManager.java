@@ -218,22 +218,26 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                 e.printStackTrace();
                             }
                         }
-
-                        requestBuilder.addHeader("Content-Type", "application/json");
                         bytes = jsonObject.toString().getBytes();
                     }
                 }
 
-                if(bytes != null)
+                RequestBody reqbody = null;
+                requestBuilder.addHeader("Content-Type", "application/json");
+                //Tracking token can be null but we need to define the request type
+                if(bytes != null) {
                     requestBuilder.addHeader("Content-Length", String.valueOf(bytes.length));
+                    reqbody = RequestBody.create(MediaType.parse("application/json"), bytes);
+                }else{
+                    reqbody = RequestBody.create(MediaType.parse("application/json"), new byte[0]);
+                }
 
                 if (type == KUSRequestType.KUS_REQUEST_TYPE_POST)
-                    requestBuilder.post(RequestBody.create(MediaType.parse("application/json"), bytes));
+                    requestBuilder.post(reqbody);
                 else if (type == KUSRequestType.KUS_REQUEST_TYPE_PUT)
-                    requestBuilder.put(RequestBody.create(MediaType.parse("application/json"), bytes));
+                    requestBuilder.put(reqbody);
                 else if (type == KUSRequestType.KUS_REQUEST_TYPE_PATCH)
-                    requestBuilder.patch(RequestBody.create(MediaType.parse("application/json"), bytes));
-
+                    requestBuilder.patch(reqbody);
 
             }
 

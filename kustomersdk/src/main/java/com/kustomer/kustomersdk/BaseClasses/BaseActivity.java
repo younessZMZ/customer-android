@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
@@ -16,6 +17,7 @@ import com.kustomer.kustomersdk.Receivers.NetworkStateReceiver;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Optional;
 
 
 public class BaseActivity extends AppCompatActivity implements NetworkStateReceiver.NetworkStateReceiverListener {
@@ -25,8 +27,10 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     private NetworkStateReceiver networkStateReceiver;
     protected Toolbar toolbar;
 
-    @BindView(R2.id.internet_status_view)
-    View internetStatusView;
+    @Nullable @BindView(R2.id.retryView)
+    View retryView;
+    @Nullable @BindView(R2.id.tvError)
+    TextView tvError;
     //endregion
 
     //region Activity LifeCycle
@@ -73,6 +77,35 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
         setContentView(layoutId);
     }
 
+    protected void showProgressBar(String text){
+        progressDialog.setMessage(text);
+        showProgressBar();
+    }
+
+    protected void showProgressBar(){
+        progressDialog.show();
+
+        if(retryView != null && retryView.getVisibility() == View.VISIBLE)
+            retryView.setVisibility(View.GONE);
+    }
+
+    protected void hideProgressBar(){
+        progressDialog.hide();
+
+        if(retryView != null)
+            retryView.setVisibility(View.GONE);
+    }
+
+    protected void showErrorWithText(String text){
+        progressDialog.hide();
+
+        if(retryView != null && retryView.getVisibility() == View.GONE)
+            retryView.setVisibility(View.VISIBLE);
+
+        if(tvError != null)
+            tvError.setText(text);
+    }
+
     private void setupToolbar(String title, int toolbarId, boolean enabled) {
         toolbar = findViewById(toolbarId);
         setSupportActionBar(toolbar);
@@ -95,18 +128,11 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     //region Callbacks
     @Override
     public void networkAvailable() {
-        if (internetStatusView != null && internetStatusView.getVisibility() == View.VISIBLE) {
-            internetStatusView.setVisibility(View.GONE);
-            internetStatusView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_up));
-        }
+
     }
 
     @Override
     public void networkUnavailable() {
-        if (internetStatusView != null) {
-            internetStatusView.setVisibility(View.VISIBLE);
-            internetStatusView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_down));
-        }
     }
     //endregion
 }

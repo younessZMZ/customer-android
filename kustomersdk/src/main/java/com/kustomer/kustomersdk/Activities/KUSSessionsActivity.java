@@ -1,12 +1,14 @@
 package com.kustomer.kustomersdk.Activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
@@ -23,6 +25,7 @@ import com.kustomer.kustomersdk.Views.KUSToolbar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Optional;
 
 public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener {
 
@@ -60,7 +63,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         }else{
             rvSessions.setVisibility(View.INVISIBLE);
             btnNewConversation.setVisibility(View.INVISIBLE);
-            progressDialog.show();
+            showProgressBar();
         }
     }
 
@@ -122,6 +125,12 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Listeners
+    @Optional @OnClick(R2.id.btnRetry)
+    void userTappedRetry(){
+        chatSessionsDataSource.fetchLatest();
+        showProgressBar();
+    }
+
     @OnClick(R2.id.btnNewConversation)
     void newConversationClicked(){
         Intent intent = new Intent(this, KUSChatActivity.class);
@@ -130,7 +139,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
-        progressDialog.hide();
+        hideProgressBar();
         handleFirstLoadIfNecessary();
         rvSessions.setVisibility(View.VISIBLE);
         btnNewConversation.setVisibility(View.VISIBLE);
@@ -140,7 +149,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     public void onError(KUSPaginatedDataSource dataSource, Error error) {
         progressDialog.hide();
         String errorText = getResources().getString(R.string.something_went_wrong_please_try_again);
-        //TODO: Show Error with retry button
+        showErrorWithText(errorText);
         rvSessions.setVisibility(View.INVISIBLE);
         btnNewConversation.setVisibility(View.INVISIBLE);
     }

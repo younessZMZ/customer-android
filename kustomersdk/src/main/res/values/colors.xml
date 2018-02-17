@@ -5,6 +5,7 @@
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>
     <color name="colorLightGrey">#E0E0E0</color>
+    <color name="colorDummyLines">#EEEEEE</color>
     <color name="colorBlueMessage">#2962FF</color>
 
 

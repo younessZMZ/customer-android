@@ -15,10 +15,13 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvSessions"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"/>
 
         <Button
             android:id="@+id/btnNewConversation"
@@ -38,29 +41,33 @@
             android:backgroundTint="@color/colorBlueMessage"
             android:textColor="@android:color/white"/>
 
-        <include
-            android:id="@+id/internet_status_view"
-            layout="@layout/internet_status_layout"
-            android:visibility="gone"/>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:orientation="vertical"
-        android:background="@color/kusPrimaryColor">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGrey"/>
-
-        <TextView
-            android:id="@+id/tvFooter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:id="@+id/retryView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
             android:gravity="center"
-            android:textSize="10sp"
-            android:text="@string/messaging_by_kustomer"/>
-    </LinearLayout>
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/something_went_wrong_please_try_again"
+                android:padding="5dp"/>
+
+            <Button
+                android:id="@+id/btnRetry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/try_again"/>
+
+        </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

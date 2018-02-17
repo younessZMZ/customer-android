@@ -1,13 +1,12 @@
 package com.kustomer.kustomer.Activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
-import com.kustomer.kustomersdk.Activities.KUSChatActivity;
 import com.kustomer.kustomersdk.Kustomer;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -15,6 +14,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region Properties
     Button btnStartChat;
     Button btnResetTrackingToken;
+    ImageView ivSupport;
     //endregion
 
     //region LifeCycle
@@ -30,13 +30,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //region Initializer
     private void initViews(){
-        btnStartChat = findViewById(R.id.btnPresentSupport);
+        btnStartChat = findViewById(R.id.btnPresent);
+        ivSupport = findViewById(R.id.ivSupport);
         btnResetTrackingToken = findViewById(R.id.btnResetToken);
     }
 
     private void setListeners(){
         btnStartChat.setOnClickListener(this);
         btnResetTrackingToken.setOnClickListener(this);
+        ivSupport.setOnClickListener(this);
     }
     //endregion
 
@@ -44,7 +46,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.btnPresentSupport:
+            case R.id.ivSupport:
+            case R.id.btnPresent:
                 Kustomer.showSupport(this);
                 break;
 

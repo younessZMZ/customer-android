@@ -71,6 +71,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusUserSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId,null);
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();

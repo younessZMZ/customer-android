@@ -23,11 +23,11 @@
         </activity>
 
         <activity android:name="com.kustomer.kustomersdk.Activities.KUSChatActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/KusAppTheme" />
 
         <activity android:name="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/KusAppTheme"/>
     </application>
 
