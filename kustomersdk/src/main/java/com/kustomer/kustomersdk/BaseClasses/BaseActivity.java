@@ -1,23 +1,24 @@
 package com.kustomer.kustomersdk.BaseClasses;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Receivers.NetworkStateReceiver;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Optional;
 
 
 public class BaseActivity extends AppCompatActivity implements NetworkStateReceiver.NetworkStateReceiverListener {
@@ -26,6 +27,8 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     public ProgressDialog progressDialog;
     private NetworkStateReceiver networkStateReceiver;
     protected Toolbar toolbar;
+
+    private static List<Activity> libraryActivities = new ArrayList<>();
 
     @Nullable @BindView(R2.id.retryView)
     View retryView;
@@ -38,9 +41,12 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
 
         networkStateReceiver = new NetworkStateReceiver();
         setupDialog();
+
+        libraryActivities.add(this);
     }
 
     @Override
@@ -56,7 +62,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
         networkStateReceiver.removeListener(this);
         unregisterReceiver(networkStateReceiver);
     }
-
     //endregion
 
     //region Methods
@@ -113,7 +118,8 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
             setTitle(title);
         else
             setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+
+        setBackButton(enabled);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @
@@ -122,6 +128,17 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
                 onBackPressed();
             }
         });
+    }
+
+    protected void setBackButton(boolean enabled){
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+    }
+
+    protected static void clearAllLibraryActivities(){
+        for(Activity activity : libraryActivities){
+            activity.finish();
+        }
     }
     //endregion
 

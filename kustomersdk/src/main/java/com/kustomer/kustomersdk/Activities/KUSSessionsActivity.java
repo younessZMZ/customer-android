@@ -1,14 +1,11 @@
 package com.kustomer.kustomersdk.Activities;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
@@ -27,7 +24,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
 
-public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener {
+public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener, KUSToolbar.OnToolbarItemClickListener {
 
     //region Properties
     @BindView(R2.id.rvSessions)
@@ -45,7 +42,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //region LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setLayout(R.layout.activity_kussessions,R.id.toolbar_main,null,true);
+        setLayout(R.layout.activity_kussessions,R.id.toolbar_main,null,false);
         super.onCreate(savedInstanceState);
 
         userSession = Kustomer.getSharedInstance().getUserSession();
@@ -81,6 +78,11 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         super.onDestroy();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.stay, R.anim.kus_slide_down);
+    }
     //endregion
 
     //region Initializer
@@ -88,6 +90,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         KUSToolbar kusToolbar = (KUSToolbar)toolbar;
         kusToolbar.initWithUserSession(userSession);
         kusToolbar.setShowLabel(false);
+        kusToolbar.setListener(this);
         kusToolbar.setShowDismissButton(true);
     }
 
@@ -111,8 +114,8 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         didHandleFirstLoad = true;
 
         if(chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 0){
-            //TODO: handle back Button
             Intent intent = new Intent(this, KUSChatActivity.class);
+            intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY,false);
             startActivity(intent);
         }else if (chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 1){
             KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.getFirst();
@@ -164,6 +167,16 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         Intent intent = new Intent(this, KUSChatActivity.class);
         intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
         startActivity(intent);
+    }
+
+    @Override
+    public void onToolbarBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onToolbarClosePressed() {
+        clearAllLibraryActivities();
     }
     //endregion
 }

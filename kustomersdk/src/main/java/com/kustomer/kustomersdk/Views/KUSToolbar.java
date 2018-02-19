@@ -1,11 +1,11 @@
 package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -39,7 +39,9 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     TextView tvName;
     TextView tvGreetingMessage;
     KUSMultipleAvatarsView kusMultipleAvatarsView;
-
+    ImageView ivBack;
+    ImageView ivClose;
+    OnToolbarItemClickListener listener;
     //endregion
 
     //region Initializer
@@ -59,6 +61,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     protected void onFinishInflate() {
         super.onFinishInflate();
         initViews();
+        setListeners();
     }
 
     //endregion
@@ -81,6 +84,8 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         tvName = findViewById(R.id.tvName);
         tvGreetingMessage = findViewById(R.id.tvGreetingMessage);
         kusMultipleAvatarsView = findViewById(R.id.multipleAvatarViews);
+        ivBack = findViewById(R.id.ivBack);
+        ivClose = findViewById(R.id.ivClose);
 
         //TODO: adjust Sizes etc
 
@@ -93,6 +98,24 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         }
 
 
+    }
+
+    private void setListeners(){
+        ivBack.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listener != null)
+                    listener.onToolbarBackPressed();
+            }
+        });
+
+        ivClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listener != null)
+                    listener.onToolbarClosePressed();
+            }
+        });
     }
 
     private void updateTextLabel() {
@@ -173,6 +196,11 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
     public void setShowBackButton(boolean showBackButton) {
         this.showBackButton = showBackButton;
+
+        if(showBackButton)
+            ivBack.setVisibility(VISIBLE);
+        else
+            ivBack.setVisibility(INVISIBLE);
     }
 
     public boolean isShowDismissButton() {
@@ -182,6 +210,11 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     public void setShowDismissButton(boolean showDismissButton) {
         this.showDismissButton = showDismissButton;
     }
+
+    public void setListener(OnToolbarItemClickListener listener) {
+        this.listener = listener;
+    }
+
     //endregion
 
     //region Listeners
@@ -214,8 +247,13 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         }else if(dataSource == userSession.getChatSessionsDataSource()){
             updateTextLabel();
         }
+    }
+    //endregion
 
-
+    //region Interface
+    public interface OnToolbarItemClickListener{
+        void onToolbarBackPressed();
+        void onToolbarClosePressed();
     }
     //endregion
 

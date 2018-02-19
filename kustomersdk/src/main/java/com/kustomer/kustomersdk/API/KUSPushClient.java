@@ -228,20 +228,22 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void startTimer(long time) {
-        currentPollingTimerInterval = time;
-        final Handler handler = new Handler();
-        pollingTimer = new Timer();
-        TimerTask doAsynchronousTask = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        onPollTick();
-                    }
-                });
-            }
-        };
-        pollingTimer.schedule(doAsynchronousTask, 0, time);
+        try {
+            currentPollingTimerInterval = time;
+            final Handler handler = new Handler();
+            pollingTimer = new Timer();
+            TimerTask doAsynchronousTask = new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            onPollTick();
+                        }
+                    });
+                }
+            };
+            pollingTimer.schedule(doAsynchronousTask, 0, time);
+        }catch (Exception ignore){}
     }
 
     private void onPollTick(){

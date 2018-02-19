@@ -8,7 +8,7 @@
     tools:context="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
     android:orientation="vertical">
 
-        <include layout="@layout/sessions_app_bar_layout" />
+        <include layout="@layout/chat_app_bar_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,6 +49,12 @@
             android:orientation="vertical"
             android:gravity="center"
             android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_error_outline_red_33dp"
+                android:padding="5dp"/>
 
             <TextView
                 android:id="@+id/tvError"

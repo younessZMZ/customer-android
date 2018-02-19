@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
@@ -99,7 +98,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     public void networkAvailable() {
         if (internetStatusView != null && internetStatusView.getVisibility() == View.VISIBLE) {
             internetStatusView.setVisibility(View.GONE);
-            internetStatusView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_up));
+            internetStatusView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.kus_slide_up));
         }
     }
 
@@ -107,7 +106,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     public void networkUnavailable() {
         if (internetStatusView != null) {
             internetStatusView.setVisibility(View.VISIBLE);
-            internetStatusView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_down));
+            internetStatusView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.kus_slide_down));
         }
     }
     //endregion

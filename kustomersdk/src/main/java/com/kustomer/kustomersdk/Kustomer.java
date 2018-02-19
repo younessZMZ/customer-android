@@ -12,8 +12,6 @@ import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
-import junit.framework.Assert;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,8 +68,12 @@ public class Kustomer {
     }
 
     public static void showSupport(Activity activity){
-        Intent intent = new Intent(activity, KUSSessionsActivity.class);
-        activity.startActivity(intent);
+
+        if(activity != null) {
+            Intent intent = new Intent(activity, KUSSessionsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+        }
     }
 
     public static void presentKnowledgeBase(){
