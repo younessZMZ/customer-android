@@ -177,6 +177,7 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
         if(chatSettings != null) {
             URL iconURL = user != null && user.getAvatarURL() != null ? user.getAvatarURL() : chatSettings.getTeamIconURL();
 
+            if(iconURL != null)
             try {
                 Glide.with(getContext())
                         .load(iconURL.toString())

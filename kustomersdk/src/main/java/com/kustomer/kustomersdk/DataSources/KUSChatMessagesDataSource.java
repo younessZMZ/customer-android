@@ -276,7 +276,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
 
         if(firstMessage != null && chatSettings != null)
-            return ((chatSettings.getActiveFormId().length()==0 ||
+            return ((chatSettings.getActiveFormId() == null || chatSettings.getActiveFormId().length()==0 ||
                     (firstMessage.getImportedAt() == null && (secondMessage==null || secondMessage.getImportedAt() == null)))
                     && chatSettings.getAutoReply().length() > 0
                     && getSize() > 0

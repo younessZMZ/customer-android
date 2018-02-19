@@ -2,6 +2,8 @@ package com.kustomer.kustomersdk.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -56,7 +58,14 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         chatSessionsDataSource.fetchLatest();
 
         if(chatSessionsDataSource.isFetched()){
-            handleFirstLoadIfNecessary();
+            Handler handler = new Handler(Looper.getMainLooper());
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    handleFirstLoadIfNecessary();
+                }
+            };
+            handler.postDelayed(runnable,500);
         }else{
             rvSessions.setVisibility(View.INVISIBLE);
             btnNewConversation.setVisibility(View.INVISIBLE);
@@ -117,12 +126,14 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY,false);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }else if (chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 1){
             KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.getFirst();
 
             Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }
     }
     //endregion
@@ -138,6 +149,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     void newConversationClicked(){
         Intent intent = new Intent(this, KUSChatActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
     }
 
     @Override
@@ -167,6 +179,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         Intent intent = new Intent(this, KUSChatActivity.class);
         intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
         startActivity(intent);
+        overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
     }
 
     @Override

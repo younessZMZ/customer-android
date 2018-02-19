@@ -41,7 +41,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-        overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
 
         networkStateReceiver = new NetworkStateReceiver();
         setupDialog();

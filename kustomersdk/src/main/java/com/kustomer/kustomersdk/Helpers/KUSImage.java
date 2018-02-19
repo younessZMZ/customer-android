@@ -93,14 +93,16 @@ public class KUSImage {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.WHITE); // Text Color
         paint.setTextSize((int)textSize*scale);// Text Size
+        paint.setTextAlign(Paint.Align.CENTER);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)); // Text Overlapping Pattern
 
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
-        int x = (src.getWidth() - bounds.width())/6;
-        int y = (src.getHeight() + bounds.height())/6;
 
-        canvas.drawText(text, x * scale, y * scale, paint);
+        int x = (canvas.getWidth() / 2);
+        int y = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
+
+        canvas.drawText(text, x, y, paint);
 
 
         return src;

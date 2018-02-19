@@ -9,7 +9,7 @@ public class App extends Application {
 
     private static App app;
     private static final String K_KUSTOMER_API_KEY =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhNWY3MDFkMmI4ZmYwMDAxMDJkNTIxNyIsInVzZXIiOiI1YTVmNzAxY2ExNDczZjAwMDEyZjgyMDkiLCJvcmciOiI1YTVmNmNhM2I1NzNmZDAwMDFhZjczZGQiLCJvcmdOYW1lIjoienp6LWJ4LXRlY2hub2xvZ2llcyIsInVzZXJUeXBlIjoibWFjaGluZSIsInJvbGVzIjpbIm9yZy51c2VyIl0sImF1ZCI6InVybjpjb25zdW1lciIsImlzcyI6InVybjphcGkiLCJzdWIiOiI1YTVmNzAxY2ExNDczZjAwMDEyZjgyMDkifQ._a5_Lf6Xeve4ezPv-RUbcdGrWy6OvzFgkUhuKrGFFuU";
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhOGFlYzdiODQyMGM5MDAxYjc0MjJiYiIsInVzZXIiOiI1YThhZWM3YjdmZjBlOTAwMDE0YWNiOTkiLCJvcmciOiI1YThhZWM3YjdmZjBlOTAwMDE0YWNiOTQiLCJvcmdOYW1lIjoienp6LWJ4LXRlY2hub2xvZ2llcy1vcmcyIiwidXNlclR5cGUiOiJtYWNoaW5lIiwicm9sZXMiOlsib3JnLnRyYWNraW5nIl0sImF1ZCI6InVybjpjb25zdW1lciIsImlzcyI6InVybjphcGkiLCJzdWIiOiI1YThhZWM3YjdmZjBlOTAwMDE0YWNiOTkifQ._UldGeFhP6Yv0QhpEMNNfS8MuZleOXNRfgqFvNAF6ds";
 
     public App() {
         app = this;

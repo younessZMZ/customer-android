@@ -241,7 +241,7 @@ public class KUSPaginatedDataSource {
 
         fetching = false;
         fetched = true;
-        fetchedAll = (fetchedAll || response.getNextPath() == null);
+        fetchedAll = (fetchedAll || response.getNextPath() == null || response.getNextPath().equals("null"));
 
         upsertAll(response.getObjects());
         notifyAnnouncersOnLoad();
@@ -255,12 +255,11 @@ public class KUSPaginatedDataSource {
             return;
         }
 
-
         mostRecentPaginatedResponse = response;
 
         fetching = false;
         fetched = true;
-        fetchedAll = (fetchedAll || response.getNextPath() == null);
+        fetchedAll = (fetchedAll || response.getNextPath() == null || response.getNextPath().equals("null"));
 
         upsertAll(response.getObjects());
         notifyAnnouncersOnLoad();

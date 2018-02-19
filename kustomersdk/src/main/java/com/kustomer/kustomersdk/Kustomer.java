@@ -73,6 +73,7 @@ public class Kustomer {
             Intent intent = new Intent(activity, KUSSessionsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
         }
     }
 
