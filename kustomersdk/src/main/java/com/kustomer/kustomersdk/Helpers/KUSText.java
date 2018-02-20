@@ -17,6 +17,7 @@ public class KUSText {
     //region Public Methods
     public static void setMarkDownText(TextView textView, String text){
 
+        String msg = formatText(text);
         SpannableTheme theme = SpannableTheme.builderWithDefaults(textView.getContext())
                 .linkColor(textView.getTextColors().getDefaultColor())
                 .build();
@@ -26,7 +27,51 @@ public class KUSText {
                 .build();
 
         text = text.replaceAll("\n","\n\n");
-        Markwon.setMarkdown(textView,spannableConfiguration,text);
+        Markwon.setMarkdown(textView,spannableConfiguration,msg);
+    }
+
+    private static String formatText(String text) {
+        if (text == null || !text.contains("\n")) {
+            return text;
+        }
+
+        StringBuilder updatedString = new StringBuilder();
+        int nextIndex = text.contains("\n") ? text.indexOf("\n") : text.length();
+        while (nextIndex < text.length()) {
+            // if - is after \n
+            if (nextIndex + 1 < text.length() && text.charAt(nextIndex + 1) == '-') {
+                updatedString.append(text.substring(0, nextIndex + 1));
+                text = text.substring(nextIndex + 1);
+            }
+            // if number is after \n
+            else if (nextIndex + 1 < text.length() && Character.isDigit(text.charAt(nextIndex + 1))) {
+                int digitRange = nextIndex + 1;
+                // find total number length on text
+                while (digitRange < text.length() && Character.isDigit(text.charAt(digitRange))) {
+                    digitRange += 1;
+                }
+
+                // If . is after number then ignore \n as it is.
+                if (digitRange < text.length() && text.charAt(digitRange) == '.') {
+                    updatedString.append(text.substring(0, digitRange));
+                    text = text.substring(digitRange);
+                }
+                // otherwise replace it with <br />
+                else {
+                    updatedString.append(text.substring(0, nextIndex)).append("<br />");
+                    text = text.substring(nextIndex + 1);
+                }
+            }
+            // Keep replacing \n with <br />
+            else {
+                updatedString.append(text.substring(0, nextIndex)).append("<br />");
+                text = text.substring(nextIndex + 1);
+            }
+            nextIndex = text.contains("\n") ? text.indexOf("\n") : text.length();
+        }
+
+        // Replace multi occurrence of <br /> with \n
+        return (updatedString + text).replace("<br /><br />", "\n\n");
     }
     //endregion
 
