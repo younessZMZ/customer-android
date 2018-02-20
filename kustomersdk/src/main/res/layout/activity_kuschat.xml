@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context="com.kustomer.kustomersdk.Activities.KUSChatActivity">
 
-    <include layout="@layout/chat_app_bar_layout" />
+    <include layout="@layout/kus_app_bar_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,10 +40,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLines="5"
                     android:layout_gravity="center_vertical"
                     android:hint="@string/type_a_message"
                     android:background="@android:color/transparent"
-                    android:layout_marginStart="10dp"/>
+                    android:layout_marginStart="10dp"
+                    android:inputType="textMultiLine"/>
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fabSendMessage"
@@ -51,7 +53,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_upward_white_24dp"
                     android:layout_margin="10dp"
-                    app:fabSize="mini"/>
+                    app:fabSize="mini"
+                    android:layout_gravity="bottom"/>
 
             </LinearLayout>
 

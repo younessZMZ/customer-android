@@ -17,6 +17,8 @@ import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.SessionViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.UserMessageViewHolder;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by Junaid on 1/19/2018.
  */
@@ -31,14 +33,17 @@ public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int minimumRowCount = 0;
     private final int SESSION_VIEW_TYPE = 0;
     private final int DUMMY_VIEW_TYPE = 1;
+
+    private WeakReference<RecyclerView> recyclerViewWeakReference = null;
     //endregion
 
     //region LifeCycle
-    public SessionListAdapter(KUSChatSessionsDataSource chatSessionsDataSource,
+    public SessionListAdapter(RecyclerView recyclerView, KUSChatSessionsDataSource chatSessionsDataSource,
                               KUSUserSession userSession, onItemClickListener listener){
         mChatSessionsDataSource = chatSessionsDataSource;
         mUserSession = userSession;
         mListener = listener;
+        recyclerViewWeakReference = new WeakReference<>(recyclerView);
     }
 
     @Override
@@ -68,25 +73,38 @@ public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+
+        // No need to call onDetach for dummy items
+        try {
+            ((SessionViewHolder) holder).onDetached();
+        }catch (Exception ignore){}
+    }
+
+    @Override
     public int getItemCount() {
+        updateMinimumRowCount();
+
         if(mChatSessionsDataSource == null)
             return 0;
 
-        if(mChatSessionsDataSource.getSize()<minimumRowCount)
+        if(mChatSessionsDataSource.getSize()< minimumRowCount)
             return minimumRowCount;
 
         return mChatSessionsDataSource.getSize();
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+    private void updateMinimumRowCount(){
 
-        float visibleRecyclerViewHeight = recyclerView.getHeight() - recyclerView.getPaddingBottom();
-        float rowCountThatFitsHeight = visibleRecyclerViewHeight / KUSUtils.dipToPixels(recyclerView.getContext(),75);
+        float visibleRecyclerViewHeight = recyclerViewWeakReference.get().getHeight() - recyclerViewWeakReference.get().getPaddingBottom();
+        float rowCountThatFitsHeight = visibleRecyclerViewHeight / KUSUtils.dipToPixels(recyclerViewWeakReference.get().getContext(),75);
         minimumRowCount = (int)Math.floor(rowCountThatFitsHeight);
     }
 
+    public void setData(KUSChatSessionsDataSource sessionsDataSource){
+        mChatSessionsDataSource = sessionsDataSource;
+    }
     //endregion
 
     //region Listener

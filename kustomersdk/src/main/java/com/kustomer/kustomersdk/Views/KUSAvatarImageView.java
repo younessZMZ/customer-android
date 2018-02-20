@@ -70,6 +70,18 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
     public KUSAvatarImageView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        if(userSession != null && userSession.getChatSettingsDataSource() != null)
+            userSession.getChatSettingsDataSource().removeListener(this);
+
+        if(userDataSource != null)
+            userDataSource.removeListener(this);
+    }
+
     //endregion
 
     //region Public Methods
@@ -201,9 +213,23 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
     public void objectDataSourceOnLoad(final KUSObjectDataSource dataSource) {
 
         if(dataSource == userSession.getChatSettingsDataSource()){
-            updateAvatarImage();
+            Handler handler = new Handler(Looper.getMainLooper());
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    updateAvatarImage();
+                }
+            };
+            handler.post(runnable);
         }else if(dataSource == userDataSource){
-            updateAvatarImage();
+            Handler handler = new Handler(Looper.getMainLooper());
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    updateAvatarImage();
+                }
+            };
+            handler.post(runnable);
         }
 
 

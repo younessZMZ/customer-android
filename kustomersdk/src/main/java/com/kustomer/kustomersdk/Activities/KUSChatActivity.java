@@ -2,13 +2,19 @@ package com.kustomer.kustomersdk.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -28,7 +34,7 @@ import com.kustomer.kustomersdk.Views.KUSToolbar;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, TextWatcher, KUSToolbar.OnToolbarItemClickListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, TextWatcher, KUSToolbar.OnToolbarItemClickListener, TextView.OnEditorActionListener {
 
     //region Properties
     @BindView(R2.id.etTypeMessage) EditText etTypeMessage;
@@ -69,14 +75,17 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     protected void onPause() {
-        super.onPause();
-
         if(kusUserSession != null && chatSessionId != null)
             kusUserSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId,null);
+
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
+
+        if(chatMessagesDataSource != null)
+            chatMessagesDataSource.removeListener(this);
         super.onDestroy();
     }
 
@@ -128,6 +137,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         fabSendMessage.setAlpha(0.5f);
 
         etTypeMessage.addTextChangedListener(this);
+        etTypeMessage.setOnEditorActionListener(this);
+        etTypeMessage.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        etTypeMessage.setRawInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     private void setupToolbar(){
@@ -165,7 +177,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
-        progressDialog.hide();
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.hide();
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
@@ -174,19 +193,33 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
-    public void onContentChange(KUSPaginatedDataSource dataSource) {
-        if(dataSource == chatMessagesDataSource){
-            adapter.notifyDataSetChanged();
-        }
+    public void onContentChange(final KUSPaginatedDataSource dataSource) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(dataSource == chatMessagesDataSource){
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
-    public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
-        chatSessionId = sessionId;
-        //TODO: incomplete
-        kusToolbar.setSessionId(chatSessionId);
-        shouldShowBackButton = true;
-        kusToolbar.setShowBackButton(true);
+    public void onCreateSessionId(KUSChatMessagesDataSource source, final String sessionId) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                chatSessionId = sessionId;
+                //TODO: incomplete
+                kusToolbar.setSessionId(chatSessionId);
+                shouldShowBackButton = true;
+                kusToolbar.setShowBackButton(true);
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
@@ -219,6 +252,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     @Override
     public void onToolbarClosePressed() {
         clearAllLibraryActivities();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        if(i == EditorInfo.IME_ACTION_SEND){
+           fabSendMessageClick();
+        }
+        return false;
     }
     //endregion
 }

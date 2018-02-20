@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.ViewHolders;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,10 +86,23 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
         });
     }
 
+    public void onDetached(){
+        if(mUserSession != null && mUserSession.getChatSettingsDataSource() != null)
+            mUserSession.getChatSettingsDataSource().removeListener(this);
+
+        if(userDataSource != null)
+            userDataSource.removeListener(this);
+
+        if(chatMessagesDataSource != null)
+            chatMessagesDataSource.removeListener(this);
+    }
+
     //region Private Methods
     private void updateAvatar(){
+        imageLayout.removeAllViews();
+
         KUSAvatarImageView avatarImageView = new KUSAvatarImageView(itemView.getContext());
-        avatarImageView.setFontSize(13);
+        avatarImageView.setFontSize(16);
         avatarImageView.setDrawableSize(40);
 
         avatarImageView.initWithUserSession(mUserSession);
@@ -160,9 +175,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
         Date sessionLastSeenAt = mUserSession.getChatSessionsDataSource().lastSeenAtForSessionId(mChatSession.getId());
 
         int unreadCount = 0;
-
-        if(sessionLastSeenAt != null)
-            unreadCount = chatMessagesDataSource.unreadCountAfterDate(sessionLastSeenAt);
+        unreadCount = chatMessagesDataSource.unreadCountAfterDate(sessionLastSeenAt);
 
         if(unreadCount > 0){
             tvUnreadCount.setText(String.valueOf(unreadCount));
@@ -177,7 +190,14 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
     //region Listener
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
-        updateLabels();
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateLabels();
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
@@ -197,8 +217,15 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
 
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
-        updateLabels();
-        updateAvatar();
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateLabels();
+                updateAvatar();
+            }
+        };
+        handler.post(runnable);
     }
     //endregion
 }

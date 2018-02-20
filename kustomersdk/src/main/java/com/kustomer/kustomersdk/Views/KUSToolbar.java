@@ -1,6 +1,8 @@
 package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -62,6 +64,20 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         super.onFinishInflate();
         initViews();
         setListeners();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        if(userSession != null && userSession.getChatSettingsDataSource() != null)
+            userSession.getChatSettingsDataSource().removeListener(this);
+
+        if(userDataSource != null)
+            userDataSource.removeListener(this);
+
+        if(chatMessagesDataSource != null)
+            chatMessagesDataSource.removeListener(this);
     }
 
     //endregion
@@ -220,7 +236,14 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     //region Listeners
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
-        updateTextLabel();
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateTextLabel();
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
@@ -241,12 +264,20 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     @Override
     public void onContentChange(final KUSPaginatedDataSource dataSource) {
 
-        if(dataSource == chatMessagesDataSource){
-            kusMultipleAvatarsView.setUserIds((ArrayList<String>) chatMessagesDataSource.getOtherUserIds());
-            updateTextLabel();
-        }else if(dataSource == userSession.getChatSessionsDataSource()){
-            updateTextLabel();
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(dataSource == chatMessagesDataSource){
+                    kusMultipleAvatarsView.setUserIds((ArrayList<String>) chatMessagesDataSource.getOtherUserIds());
+                    updateTextLabel();
+
+                }else if(dataSource == userSession.getChatSessionsDataSource()){
+                    updateTextLabel();
+                }
+            }
+        };
+        handler.post(runnable);
     }
     //endregion
 

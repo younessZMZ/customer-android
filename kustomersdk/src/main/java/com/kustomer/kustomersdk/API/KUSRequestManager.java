@@ -272,15 +272,8 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
     }
 
-    private void safeComplete(final KUSRequestCompletionListener completionListener, final Error error, final JSONObject jsonObject){
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                completionListener.onCompletion(error, jsonObject);
-            }
-        };
-        mainHandler.post(myRunnable);
+private void safeComplete(final KUSRequestCompletionListener completionListener, final Error error, final JSONObject jsonObject){
+        completionListener.onCompletion(error, jsonObject);
     }
 
 
@@ -299,7 +292,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
         pendingTrackingTokenListeners = null;
 
         if(listeners.size() > 0){
-            Handler handler = new Handler();
+            Handler handler = new Handler(Looper.getMainLooper());
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {

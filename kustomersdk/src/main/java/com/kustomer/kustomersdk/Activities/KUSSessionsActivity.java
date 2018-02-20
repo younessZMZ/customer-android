@@ -83,6 +83,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     @Override
     protected void onDestroy() {
+        if(chatSessionsDataSource != null)
+            chatSessionsDataSource.removeListener(this);
+
         userSession.getPushClient().setSupportScreenShown(false);
         super.onDestroy();
     }
@@ -104,7 +107,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     }
 
     private void setupAdapter(){
-        adapter = new SessionListAdapter(chatSessionsDataSource, userSession, this);
+        adapter = new SessionListAdapter(rvSessions, chatSessionsDataSource, userSession, this);
         rvSessions.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
@@ -154,24 +157,46 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
-        hideProgressBar();
-        handleFirstLoadIfNecessary();
-        rvSessions.setVisibility(View.VISIBLE);
-        btnNewConversation.setVisibility(View.VISIBLE);
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                hideProgressBar();
+                handleFirstLoadIfNecessary();
+                rvSessions.setVisibility(View.VISIBLE);
+                btnNewConversation.setVisibility(View.VISIBLE);
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
     public void onError(KUSPaginatedDataSource dataSource, Error error) {
-        progressDialog.hide();
-        String errorText = getResources().getString(R.string.something_went_wrong_please_try_again);
-        showErrorWithText(errorText);
-        rvSessions.setVisibility(View.INVISIBLE);
-        btnNewConversation.setVisibility(View.INVISIBLE);
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                hideProgressBar();
+                String errorText = getResources().getString(R.string.something_went_wrong_please_try_again);
+                showErrorWithText(errorText);
+                rvSessions.setVisibility(View.INVISIBLE);
+                btnNewConversation.setVisibility(View.INVISIBLE);
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
-    public void onContentChange(KUSPaginatedDataSource dataSource) {
-        setupAdapter();
+    public void onContentChange(final KUSPaginatedDataSource dataSource) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                adapter.setData((KUSChatSessionsDataSource) dataSource);
+                adapter.notifyDataSetChanged();
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override

@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -101,7 +102,8 @@ public class KUSPaginatedDataSource {
     }
 
     public void addListener(KUSPaginatedDataSourceListener listener) {
-        listeners.add(listener);
+        if(!listeners.contains(listener))
+            listeners.add(listener);
     }
 
     public void removeListener(KUSPaginatedDataSourceListener listener) {
@@ -128,7 +130,8 @@ public class KUSPaginatedDataSource {
 
         final Object requestMarker = new Object();
         this.requestMarker = requestMarker;
-        final KUSPaginatedDataSource instance = this;
+
+        final WeakReference<KUSPaginatedDataSource> weakInstance = new WeakReference<>(this);
 
         final KUSPaginatedDataSource dataSource = this;
 
@@ -144,19 +147,11 @@ public class KUSPaginatedDataSource {
                         try {
                             final KUSPaginatedResponse pageResponse = new KUSPaginatedResponse(response, dataSource);
 
-                            Handler mainHandler = new Handler(Looper.getMainLooper());
+                            if(requestMarker != KUSPaginatedDataSource.this.requestMarker  )
+                                return;
 
-                            Runnable myRunnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(requestMarker != instance.requestMarker  )
-                                        return;
-
-                                    instance.requestMarker = null;
-                                    instance.prependResponse(pageResponse, error);
-                                }
-                            };
-                            mainHandler.post(myRunnable);
+                            KUSPaginatedDataSource.this.requestMarker = null;
+                            KUSPaginatedDataSource.this.prependResponse(pageResponse, error);
                         }
                         catch (JSONException | KUSInvalidJsonException ignore) {}
                     }
@@ -182,7 +177,7 @@ public class KUSPaginatedDataSource {
 
         final Object requestMarker = new Object();
         this.requestMarker = requestMarker;
-        final KUSPaginatedDataSource instance = this;
+        final WeakReference<KUSPaginatedDataSource> weakInstance = new WeakReference<>(this);
 
         final KUSPaginatedDataSource model = this;
 
@@ -196,20 +191,11 @@ public class KUSPaginatedDataSource {
                     public void onCompletion(final Error error, JSONObject json) {
                         try {
                             final KUSPaginatedResponse response = new KUSPaginatedResponse(json, model);
+                            if(requestMarker != KUSPaginatedDataSource.this.requestMarker  )
+                                return;
 
-                            Handler mainHandler = new Handler(Looper.getMainLooper());
-
-                            Runnable myRunnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(requestMarker != instance.requestMarker  )
-                                        return;
-
-                                    instance.requestMarker = null;
-                                    instance.appendResponse(response,error);
-                                }
-                            };
-                            mainHandler.post(myRunnable);
+                            KUSPaginatedDataSource.this.requestMarker = null;
+                            KUSPaginatedDataSource.this.appendResponse(response,error);
 
                         } catch (JSONException | KUSInvalidJsonException e) {
                             e.printStackTrace();
@@ -387,19 +373,22 @@ public class KUSPaginatedDataSource {
     // region Notifier
     public void notifyAnnouncersOnContentChange() {
         for (KUSPaginatedDataSourceListener listener : new ArrayList<>(listeners)) {
-            listener.onContentChange(this);
+            if(listener != null)
+                listener.onContentChange(this);
         }
     }
 
     private void notifyAnnouncersOnError(Error error) {
         for (KUSPaginatedDataSourceListener listener :  new ArrayList<>(listeners)) {
-            listener.onError(this, error);
+            if(listener != null)
+                listener.onError(this, error);
         }
     }
 
     private void notifyAnnouncersOnLoad() {
         for (KUSPaginatedDataSourceListener listener :  new ArrayList<>(listeners)) {
-            listener.onLoad(this);
+            if(listener != null)
+                listener.onLoad(this);
         }
     }
     //endregion

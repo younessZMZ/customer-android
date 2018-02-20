@@ -9,6 +9,7 @@ import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,14 +53,14 @@ public class KUSObjectDataSource {
         final Object requestMarker = new Object();
         this.requestMarker = requestMarker;
 
-        final KUSObjectDataSource instance = this;
+        final WeakReference<KUSObjectDataSource> weakInstance = new WeakReference<>(this);
         performRequest(new KUSRequestCompletionListener() {
             @Override
             public void onCompletion(Error errorObject, JSONObject response) {
-                if(instance.requestMarker != requestMarker)
+                if(weakInstance.get().requestMarker != requestMarker)
                     return;
 
-                instance.requestMarker = null;
+                KUSObjectDataSource.this.requestMarker = null;
 
                 KUSModel model = null;
                 try {

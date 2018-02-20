@@ -8,7 +8,7 @@
     tools:context="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
     android:orientation="vertical">
 
-        <include layout="@layout/chat_app_bar_layout" />
+        <include layout="@layout/kus_app_bar_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"

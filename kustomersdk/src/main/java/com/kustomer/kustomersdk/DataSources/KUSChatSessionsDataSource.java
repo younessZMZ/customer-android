@@ -236,7 +236,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         return mostRecentChatSession;
     }
 
-    private Date getLastMessageAt(){
+    public Date getLastMessageAt(){
         if(getMostRecentChatSession() != null)
             return getMostRecentChatSession().getLastMessageAt();
         return null;

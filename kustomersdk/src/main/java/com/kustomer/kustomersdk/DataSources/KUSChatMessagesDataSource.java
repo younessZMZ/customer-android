@@ -414,7 +414,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             }
 
             if(message.getCreatedAt() != null){
-                if(message.getCreatedAt().before(date)){
+                if(date != null && message.getCreatedAt().before(date)){
                     return count;
                 }
 

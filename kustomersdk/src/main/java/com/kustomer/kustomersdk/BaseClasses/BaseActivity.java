@@ -21,11 +21,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class BaseActivity extends AppCompatActivity implements NetworkStateReceiver.NetworkStateReceiverListener {
+public class BaseActivity extends AppCompatActivity {
 
     //region Properties
     public ProgressDialog progressDialog;
-    private NetworkStateReceiver networkStateReceiver;
     protected Toolbar toolbar;
 
     private static List<Activity> libraryActivities = new ArrayList<>();
@@ -42,7 +41,6 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        networkStateReceiver = new NetworkStateReceiver();
         setupDialog();
 
         libraryActivities.add(this);
@@ -51,16 +49,19 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-        networkStateReceiver.addListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        networkStateReceiver.removeListener(this);
-        unregisterReceiver(networkStateReceiver);
     }
+
+    @Override
+    public void onBackPressed() {
+        libraryActivities.remove(this);
+        super.onBackPressed();
+    }
+
     //endregion
 
     //region Methods
@@ -138,17 +139,8 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
         for(Activity activity : libraryActivities){
             activity.finish();
         }
-    }
-    //endregion
 
-    //region Callbacks
-    @Override
-    public void networkAvailable() {
-
-    }
-
-    @Override
-    public void networkUnavailable() {
+        libraryActivities.clear();
     }
     //endregion
 }

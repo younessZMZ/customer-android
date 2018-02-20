@@ -46,7 +46,7 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
         imageLayout.removeAllViews();
         if(showAvatar) {
             KUSAvatarImageView avatarImageView = new KUSAvatarImageView(itemView.getContext());
-            avatarImageView.setFontSize(13);
+            avatarImageView.setFontSize(16);
             avatarImageView.setDrawableSize(40);
 
             avatarImageView.initWithUserSession(userSession);
