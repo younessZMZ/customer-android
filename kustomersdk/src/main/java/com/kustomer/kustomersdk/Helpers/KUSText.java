@@ -25,7 +25,7 @@ public class KUSText {
                 .theme(theme)
                 .build();
 
-        text = text.replaceAll("\n","<br />");
+        text = text.replaceAll("\n","\n\n");
         Markwon.setMarkdown(textView,spannableConfiguration,text);
     }
     //endregion
