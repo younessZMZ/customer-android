@@ -9,15 +9,20 @@ import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSChatSessionCompletionListener;
+import com.kustomer.kustomersdk.Interfaces.KUSFormCompletionListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
+import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -169,8 +174,60 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         );
     }
 
-    public void submitFormMessages(){
-        //TODO: incomplete
+    public void submitFormMessages(final List<JSONObject> messages, String formId, final KUSFormCompletionListener listener){
+
+        final WeakReference<KUSChatSessionsDataSource> weakReference = new WeakReference<>(this);
+        getUserSession().getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_POST,
+                String.format(KUSConstants.URL.FORMS_RESPONSES_ENDPOINT, formId),
+                new HashMap<String, Object>() {{
+                    put("messages", messages);
+                }},
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+                        if(error != null){
+                            if(listener != null)
+                                listener.onComplete(error,null,null);
+
+                            return;
+                        }
+
+                        KUSChatSession chatSession = null;
+                        ArrayList<KUSModel> chatMessages = new ArrayList<>();
+                        JSONArray includedModelsJSON = JsonHelper.arrayFromKeyPath(response,"included");
+
+                        if(includedModelsJSON != null) {
+                            for (int i = 0; i < includedModelsJSON.length(); i++) {
+                                try {
+                                    JSONObject includedModelJSON = includedModelsJSON.getJSONObject(i);
+                                    String type = JsonHelper.stringFromKeyPath(includedModelJSON,"type");
+
+                                    if(type != null && type.equals(new KUSChatSession().modelType())){
+                                        chatSession = new KUSChatSession(includedModelJSON);
+                                    }else if(type != null && type.equals(new KUSChatMessage().modelType())){
+                                        KUSChatMessage chatMessage = new KUSChatMessage(includedModelJSON);
+                                        chatMessages.add(chatMessage);
+                                    }
+
+                                } catch (JSONException | KUSInvalidJsonException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        if(chatSession != null) {
+                            final KUSChatSession finalChatSession = chatSession;
+                            weakReference.get().upsertAll(new ArrayList<KUSModel>(){{add(finalChatSession);}});
+                        }
+
+                        if(listener != null)
+                            listener.onComplete(null, chatSession, chatMessages);
+
+                    }
+                }
+        );
     }
 
     public void describeActiveConversation(HashMap<String,Object> customAttributes){
@@ -313,4 +370,5 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         }
     }
     //endregion
+
 }

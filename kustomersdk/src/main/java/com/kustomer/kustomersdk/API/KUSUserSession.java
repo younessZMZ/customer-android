@@ -11,8 +11,12 @@ import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
+import com.kustomer.kustomersdk.Models.KUSTrackingToken;
+
+import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
@@ -97,11 +101,27 @@ public class KUSUserSession implements Serializable {
     }
 
     public void submitEmail(String emailAddress){
-        //TODO:
+
+        getSharedPreferences().setDidCaptureEmail(true);
+        final WeakReference<KUSUserSession> weakReference = new WeakReference<>(this);
+        KUSCustomerDescription customerDescription = new KUSCustomerDescription();
+        customerDescription.setEmail(emailAddress);
+
+        describeCustomer(customerDescription, new KUSCustomerCompletionListener() {
+            @Override
+            public void onComplete(boolean success, Error error) {
+                if(error != null || !success){
+                    //TODO: logError
+                    return;
+                }
+
+                weakReference.get().trackingTokenDataSource.fetch();
+            }
+        });
     }
 
-    public void describeCustomer(KUSCustomerDescription customerDescription, KUSRequestCompletionListener listener){
-        //TODO:
+    public void describeCustomer(KUSCustomerDescription customerDescription, KUSCustomerCompletionListener listener){
+        //TODO: Incomplete
     }
 
 
@@ -129,7 +149,7 @@ public class KUSUserSession implements Serializable {
 
     public KUSFormDataSource getFormDataSource() {
         if (formDataSource == null)
-            formDataSource = new KUSFormDataSource();
+            formDataSource = new KUSFormDataSource(this);
         return formDataSource;
     }
 
@@ -191,5 +211,24 @@ public class KUSUserSession implements Serializable {
         this.organizationName = organizationName;
     }
 
+    public boolean isShouldCaptureEmail() {
+
+        KUSTrackingToken trackingToken = (KUSTrackingToken) trackingTokenDataSource.getObject();
+        if(trackingToken != null){
+            if(trackingToken.getVerified()){
+                return false;
+            }
+
+            return !getSharedPreferences().getDidCaptureEmail();
+        }
+        return false;
+    }
+
+    //endregion
+
+    //region Interface
+    public interface KUSCustomerCompletionListener{
+        void onComplete(boolean success, Error error);
+    }
     //endregion
 }

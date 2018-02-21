@@ -150,6 +150,17 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusToolbar.setListener(this);
         kusToolbar.setShowBackButton(shouldShowBackButton);
         kusToolbar.setShowDismissButton(true);
+
+        checkShouldShowEmailInput();
+    }
+
+    private void checkShouldShowEmailInput(){
+        boolean shouldShowEmailInput = kusUserSession.isShouldCaptureEmail();
+        if(shouldShowEmailInput){
+            //TODO: visible layout
+        }else{
+            //TODO: gone layout
+        }
     }
 
     private void setupAdapter(){

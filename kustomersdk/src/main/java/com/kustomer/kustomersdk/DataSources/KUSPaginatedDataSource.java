@@ -339,23 +339,6 @@ public class KUSPaginatedDataSource {
 
         return arrayList;
     }
-
-    public List<KUSModel> objectsFromJSONArray(JSONArray jsonArray) {
-
-        ArrayList<KUSModel> objects = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-
-                KUSModel object = new KUSModel(jsonObject);
-                objects.add(object);
-            } catch (JSONException | KUSInvalidJsonException e) {
-                e.printStackTrace();
-            }
-        }
-        return objects;
-    }
     //endregion
 
     //region Accessors

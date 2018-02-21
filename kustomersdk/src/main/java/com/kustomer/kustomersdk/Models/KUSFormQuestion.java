@@ -1,9 +1,90 @@
 package com.kustomer.kustomersdk.Models;
 
+import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
+import com.kustomer.kustomersdk.Enums.KUSFormQuestionType;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
+
+import org.json.JSONObject;
+
+import java.util.List;
+
 /**
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSFormQuestion {
-    //TODO: Not Implemented
+public class KUSFormQuestion extends KUSModel {
+
+    //region Properties
+    private String name;
+    private String prompt;
+    private List values;
+    private KUSFormQuestionType type;
+    private KUSFormQuestionProperty property;
+    private Boolean skipIfSatisfied;
+    //endregion
+
+    //region LifeCycle
+    public KUSFormQuestion(JSONObject json) throws KUSInvalidJsonException {
+        super(json);
+
+        name = JsonHelper.stringFromKeyPath(json,"name");
+        prompt = JsonHelper.stringFromKeyPath(json,"prompt");
+        skipIfSatisfied = JsonHelper.boolFromKeyPath(json,"skipIfSatisfied");
+        type = KUSFormQuestionTypeFromString(JsonHelper.stringFromKeyPath(json,"type"));
+        property = KUSFormQuestionPropertyFromString(JsonHelper.stringFromKeyPath(json,"property"));
+        values = JsonHelper.arrayListFromKeyPath(json,"values");
+    }
+    //endregion
+
+    //region Class Methods
+    public String modelType(){
+        return null;
+    }
+    public boolean enforcesModelType(){
+        return false;
+    }
+    public static boolean KUSFormQuestionRequiresResponse(KUSFormQuestion question){
+        return question.type == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY;
+    }
+
+    private static KUSFormQuestionType KUSFormQuestionTypeFromString(String string){
+        if(string.equals("mesage")){
+            return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_MESSAGE;
+        }else if(string.equals("property")){
+            return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY;
+        }
+
+        return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN;
+    }
+
+    private static KUSFormQuestionProperty KUSFormQuestionPropertyFromString(String string){
+        switch (string) {
+            case "customer_name":
+                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_NAME;
+            case "customer_email":
+                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL;
+            case "conversation_team":
+                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM;
+        }
+
+        return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_UNKNOWN;
+    }
+    //endregion
+
+    //region Accessors
+
+    public KUSFormQuestionProperty getProperty() {
+        return property;
+    }
+
+    public KUSFormQuestionType getType() {
+        return type;
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+
+    //endregion
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
+import java.util.List;
+
 /**
  * Created by Junaid on 1/26/2018.
  */
@@ -33,5 +35,19 @@ public class KUSUtils {
     public static float dipToPixels(Context context, float dipValue) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
+
+    public static String listJoinedByString(List<String> list, String join){
+        StringBuilder joinedString = new StringBuilder();
+
+        for(int i = 0; i<list.size(); i++){
+
+            if(i<list.size()-1)
+                joinedString.append(list.get(i)).append(join);
+            else
+                joinedString.append(list.get(i));
+        }
+
+        return joinedString.toString();
     }
 }

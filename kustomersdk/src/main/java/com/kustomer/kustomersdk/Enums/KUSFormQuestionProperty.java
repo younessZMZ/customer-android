@@ -1,0 +1,12 @@
+package com.kustomer.kustomersdk.Enums;
+
+/**
+ * Created by Junaid on 2/21/2018.
+ */
+
+public enum KUSFormQuestionProperty {
+    KUS_FORM_QUESTION_PROPERTY_UNKNOWN,
+    KUS_FORM_QUESTION_PROPERTY_CUSTOMER_NAME,
+    KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL,
+    KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM
+}
