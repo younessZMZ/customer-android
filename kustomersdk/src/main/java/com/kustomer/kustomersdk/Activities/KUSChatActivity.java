@@ -1,7 +1,6 @@
 package com.kustomer.kustomersdk.Activities;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +11,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,25 +24,30 @@ import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Utils.KUSUtils;
+import com.kustomer.kustomersdk.Views.KUSEmailInputView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, TextWatcher, KUSToolbar.OnToolbarItemClickListener, TextView.OnEditorActionListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, TextWatcher, KUSToolbar.OnToolbarItemClickListener, TextView.OnEditorActionListener, KUSEmailInputViewListener {
 
     //region Properties
     @BindView(R2.id.etTypeMessage) EditText etTypeMessage;
     @BindView(R2.id.rvMessages) RecyclerView rvMessages;
     @BindView(R2.id.fabSendMessage) FloatingActionButton fabSendMessage;
+    @BindView(R2.id.emailInputView)
+    KUSEmailInputView emailInputView;
 
     KUSChatSession kusChatSession;
-    KUSUserSession kusUserSession;
+    KUSUserSession userSession;
     KUSChatMessagesDataSource chatMessagesDataSource;
     KUSUserDataSource userDataSource;
     String chatSessionId;
@@ -61,22 +66,21 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         initData();
         initViews();
         setupAdapter();
-        setupToolbar();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(kusUserSession != null && chatSessionId != null)
-            kusUserSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId,null);
+        if(userSession != null && chatSessionId != null)
+            userSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId,null);
     }
 
 
     @Override
     protected void onPause() {
-        if(kusUserSession != null && chatSessionId != null)
-            kusUserSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId,null);
+        if(userSession != null && chatSessionId != null)
+            userSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId,null);
 
         super.onPause();
     }
@@ -110,19 +114,27 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             overridePendingTransition(R.anim.stay, R.anim.kus_slide_down);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        checkShouldShowEmailInput();
+
+    }
+
     //endregion
 
     //region Initializer
     private void initData(){
-        kusUserSession = Kustomer.getSharedInstance().getUserSession();
+        userSession = Kustomer.getSharedInstance().getUserSession();
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY);
         shouldShowBackButton = getIntent().getBooleanExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY,true);
 
         if(kusChatSession != null) {
             chatSessionId = kusChatSession.getId();
-            chatMessagesDataSource = kusUserSession.chatMessageDataSourceForSessionId(chatSessionId);
+            chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
         }else{
-            chatMessagesDataSource = new KUSChatMessagesDataSource(kusUserSession,true);
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession,true);
         }
 
         chatMessagesDataSource.addListener(this);
@@ -140,31 +152,41 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         etTypeMessage.setOnEditorActionListener(this);
         etTypeMessage.setImeOptions(EditorInfo.IME_ACTION_SEND);
         etTypeMessage.setRawInputType(InputType.TYPE_CLASS_TEXT);
+
+        setupToolbar();
     }
 
     private void setupToolbar(){
         kusToolbar = (KUSToolbar)toolbar;
-        kusToolbar.initWithUserSession(kusUserSession);
+        kusToolbar.initWithUserSession(userSession);
         kusToolbar.setSessionId(chatSessionId);
         kusToolbar.setShowLabel(true);
         kusToolbar.setListener(this);
         kusToolbar.setShowBackButton(shouldShowBackButton);
         kusToolbar.setShowDismissButton(true);
+        kusToolbar.setExtraLargeSize(chatMessagesDataSource.getSize() == 0);
 
         checkShouldShowEmailInput();
     }
 
     private void checkShouldShowEmailInput(){
-        boolean shouldShowEmailInput = kusUserSession.isShouldCaptureEmail();
-        if(shouldShowEmailInput){
-            //TODO: visible layout
+        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+        if(isLandscape && KUSUtils.isPhone(this)) {
+            emailInputView.setVisibility(View.GONE);
         }else{
-            //TODO: gone layout
+            boolean shouldShowEmailInput = userSession.isShouldCaptureEmail() && chatSessionId != null;
+            if (shouldShowEmailInput) {
+                emailInputView.setVisibility(View.VISIBLE);
+                emailInputView.setListener(this);
+            } else {
+                emailInputView.setVisibility(View.GONE);
+            }
         }
     }
 
     private void setupAdapter(){
-        adapter = new MessageListAdapter(chatMessagesDataSource, kusUserSession, chatMessagesDataSource);
+        adapter = new MessageListAdapter(chatMessagesDataSource, userSession, chatMessagesDataSource);
         rvMessages.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,true);
@@ -210,6 +232,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             @Override
             public void run() {
                 if(dataSource == chatMessagesDataSource){
+
+                    if(dataSource.getSize() > 1)
+                        initViews();
+
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -218,16 +244,17 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
-    public void onCreateSessionId(KUSChatMessagesDataSource source, final String sessionId) {
+    public void onCreateSessionId(final KUSChatMessagesDataSource source, final String sessionId) {
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 chatSessionId = sessionId;
-                //TODO: incomplete
                 kusToolbar.setSessionId(chatSessionId);
                 shouldShowBackButton = true;
                 kusToolbar.setShowBackButton(true);
+                initViews();
+                checkShouldShowEmailInput();
             }
         };
         handler.post(runnable);
@@ -271,6 +298,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
            fabSendMessageClick();
         }
         return false;
+    }
+
+    @Override
+    public void onSubmitEmail(String email) {
+        userSession.submitEmail(email);
+        checkShouldShowEmailInput();
     }
     //endregion
 }

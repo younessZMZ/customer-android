@@ -4,6 +4,8 @@ import android.widget.TextView;
 
 import org.commonmark.parser.Parser;
 
+import java.util.regex.Pattern;
+
 import ru.noties.markwon.Markwon;
 import ru.noties.markwon.SpannableConfiguration;
 import ru.noties.markwon.spans.SpannableTheme;
@@ -13,6 +15,10 @@ import ru.noties.markwon.spans.SpannableTheme;
  */
 
 public class KUSText {
+
+    //region Properties
+    private static final String EMAIL_REGEX = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,5}";
+    //endregion
 
     //region Public Methods
     public static void setMarkDownText(TextView textView, String text){
@@ -72,6 +78,12 @@ public class KUSText {
 
         // Replace multi occurrence of <br /> with \n
         return (updatedString + text).replace("<br /><br />", "\n\n");
+    }
+
+    public static boolean isValidEmail(String email){
+        if(email.length() == 0)
+            return false;
+        return Pattern.compile(EMAIL_REGEX).matcher(email).matches();
     }
     //endregion
 

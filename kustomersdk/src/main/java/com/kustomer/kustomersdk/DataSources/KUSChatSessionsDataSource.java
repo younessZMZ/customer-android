@@ -314,7 +314,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             return localDate;
     }
 
-    private int totalUnreadCountExcludingSessionId(String excludedSessionId){
+    public int totalUnreadCountExcludingSessionId(String excludedSessionId){
         int count = 0;
         for(KUSModel model : getList()){
             KUSChatSession session = (KUSChatSession) model;

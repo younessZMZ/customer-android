@@ -76,7 +76,7 @@
                         android:paddingRight="4dp"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:background="@drawable/shape_unread_count_background"
                         android:visibility="invisible"/>
                 </FrameLayout>

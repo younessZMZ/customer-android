@@ -6,19 +6,6 @@ package com.kustomer.kustomersdk.Utils;
 
 public class KUSConstants {
 
-    public interface MockedData {
-        String PUSHER_API_KEY = "55af7c7423b80da74f5d";
-
-        String CHAT_SESSION_OID = "5a62e560f3fbb800014f7a27";
-        String CHAT_SESSION_ORG_ID = "5a5f6ca3b573fd0001af73dd";
-        String CHAT_SESSION_CUSTOMER_ID = "5a62e55cf3fbb800014f7a11";
-        String CHAT_SESSION_PREVIEW = "Yt";
-        String CHAT_SESSION_TRACKING_ID = "5a62e559a64a1d0010b2ced5";
-        String CHAT_SESSION_SESSION_ID = "5a6083aff105640001c8f96c";
-
-        String TRACKING_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhNjJlNTU5YTY0YTFkMDAxMGIyY2VkNSIsIm9yZyI6IjVhNWY2Y2EzYjU3M2ZkMDAwMWFmNzNkZCIsImV4cCI6MTUxOTAyMjY4MSwiYXVkIjoidXJuOmNvbnN1bWVyIiwiaXNzIjoidXJuOmFwaSJ9.qjTqfCcAFwk8OlK0rWbalcp1i667-vFLPcgudnIRcK4";
-    }
-
     public interface URL{
         String HOST_NAME = "kustomerapp.com";
         String PUSHER_AUTH = "/c/v1/pusher/auth";
@@ -33,6 +20,7 @@ public class KUSConstants {
         String TEAMS_ENDPOINT = "/c/v1/chat/teams/%s";
         String FORMS_ENDPOINT = "/c/v1/chat/forms/%s";
         String FORMS_RESPONSES_ENDPOINT = "/c/v1/chat/forms/%s/responses";
+        String CURRENT_CUSTOMER_ENDPOINT = "/c/v1/customers/current";
     }
 
     public interface Keys {

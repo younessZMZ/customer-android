@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -11,6 +12,9 @@ import java.util.List;
  */
 
 public class KUSUtils {
+
+    public static final double MIN_TABLET_SIZE_IN_INCH = 6.5;
+
     public static String KUSUnescapeBackslashesFromString (String string){
         String updatedString = "";
 
@@ -49,5 +53,16 @@ public class KUSUtils {
         }
 
         return joinedString.toString();
+    }
+
+    public static boolean isPhone(Activity activity){
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        float yInches= metrics.heightPixels/metrics.ydpi;
+        float xInches= metrics.widthPixels/metrics.xdpi;
+        double diagonalInches = Math.sqrt(xInches*xInches + yInches*yInches);
+
+        return diagonalInches < MIN_TABLET_SIZE_IN_INCH;
     }
 }

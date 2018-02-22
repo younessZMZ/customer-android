@@ -392,7 +392,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     private void insertFormMessageIfNecessary(){
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if(chatSettings.getActiveFormId() == null)
+        if(chatSettings != null && chatSettings.getActiveFormId() == null)
             return;
 
         if(getSize() == 0)

@@ -36,7 +36,7 @@ public class KUSSharedPreferences {
     }
 
     private boolean getBoolean(String key) {
-        return sharedPref.getBoolean(key, true);
+        return sharedPref.getBoolean(key, false);
     }
 
     private void saveString(String key, String value) {

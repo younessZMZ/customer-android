@@ -1,5 +1,9 @@
 package com.kustomer.kustomersdk.Models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,55 +29,80 @@ public class KUSCustomerDescription {
         HashMap<String, Object> formData = new HashMap<>();
 
         if(email != null){
-            formData.put("emails", new ArrayList<HashMap<String,Object>>(){{
-                add(new HashMap<String, Object>(){{
-                    put("email",email);
-                }});
-            }});
+            JSONObject object = new JSONObject();
+            JSONArray array = new JSONArray();
+            try {
+                object.put("email",email);
+                array.put(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            formData.put("emails", array );
         }
 
         if(phone != null){
-            formData.put("phones", new ArrayList<HashMap<String,Object>>(){{
-                add(new HashMap<String, Object>(){{
-                    put("phone",phone);
-                }});
-            }});
+            JSONObject object = new JSONObject();
+            JSONArray array = new JSONArray();
+            try {
+                object.put("phone",phone);
+                array.put(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            formData.put("phones", array);
         }
 
-        List<HashMap<String,String>> socials = new ArrayList<>();
+        List<JSONObject> socials = new ArrayList<>();
         if(twitter != null){
-            socials.add(new HashMap<String, String>(){{
-                put("username",twitter);
-                put("type","twitter");
-            }});
+            JSONObject object = new JSONObject();
+            try {
+                object.put("username",twitter);
+                object.put("type","twitter");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socials.add(object);
         }
 
         if(facebook != null){
-            socials.add(new HashMap<String, String>(){{
-                put("username",facebook);
-                put("type","facebook");
-            }});
+            JSONObject object = new JSONObject();
+            try {
+                object.put("username",twitter);
+                object.put("type","facebook");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socials.add(object);
         }
 
         if(instagram != null){
-            socials.add(new HashMap<String, String>(){{
-                put("username",instagram);
-                put("type","instagram");
-            }});
+            JSONObject object = new JSONObject();
+            try {
+                object.put("username",twitter);
+                object.put("type","instagram");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socials.add(object);
         }
 
         if(linkedin != null){
-            socials.add(new HashMap<String, String>(){{
-                put("username",linkedin);
-                put("type","linkedin");
-            }});
+            JSONObject object = new JSONObject();
+            try {
+                object.put("username",twitter);
+                object.put("type","linkedin");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socials.add(object);
         }
 
         if(socials.size() > 0){
             formData.put("socials",socials);
         }
 
-        if(custom.size() > 0)
+        if(custom != null && custom.size() > 0)
             formData().put("custom",custom);
 
         return formData;

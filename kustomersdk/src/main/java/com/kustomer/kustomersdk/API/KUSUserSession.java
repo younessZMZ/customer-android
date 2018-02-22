@@ -7,11 +7,13 @@ import com.kustomer.kustomersdk.DataSources.KUSDelegateProxy;
 import com.kustomer.kustomersdk.DataSources.KUSFormDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTrackingTokenDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
+import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
 
@@ -120,8 +122,26 @@ public class KUSUserSession implements Serializable {
         });
     }
 
-    public void describeCustomer(KUSCustomerDescription customerDescription, KUSCustomerCompletionListener listener){
-        //TODO: Incomplete
+    public void describeCustomer(KUSCustomerDescription customerDescription, final KUSCustomerCompletionListener listener){
+
+        HashMap<String, Object> formData = customerDescription.formData();
+
+        if(formData.size() == 0)
+            return;
+
+        getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_PATCH,
+                KUSConstants.URL.CURRENT_CUSTOMER_ENDPOINT,
+                formData,
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+                        if(listener != null)
+                            listener.onComplete(error == null, error);
+                    }
+                }
+        );
     }
 
 
