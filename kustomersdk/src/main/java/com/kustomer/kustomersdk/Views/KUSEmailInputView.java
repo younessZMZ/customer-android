@@ -6,12 +6,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
 import com.kustomer.kustomersdk.R;
+import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 /**
  * Created by Junaid on 2/22/2018.
@@ -99,6 +101,8 @@ public class KUSEmailInputView extends LinearLayout {
 
         if(isValidEmail && listener != null)
             listener.onSubmitEmail(getSanitizedText());
+
+        KUSUtils.hideKeyboard(etEmail);
     }
 
     private String getSanitizedText(){

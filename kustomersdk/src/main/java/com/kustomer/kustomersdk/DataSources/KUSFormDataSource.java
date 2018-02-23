@@ -4,10 +4,15 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
+import com.kustomer.kustomersdk.Models.KUSForm;
+import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+
+import org.json.JSONObject;
 
 
 /**
@@ -20,6 +25,10 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
     public KUSFormDataSource (KUSUserSession userSession){
         super(userSession);
         userSession.getChatSettingsDataSource().addListener(this);
+    }
+
+    KUSModel objectFromJson(JSONObject jsonObject) throws KUSInvalidJsonException {
+        return new KUSForm(jsonObject);
     }
     //endregion
 

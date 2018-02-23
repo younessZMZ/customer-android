@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.Utils;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
@@ -10,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class JsonHelper {
         }
     }
 
-    public static ArrayList arrayListFromKeyPath(JSONObject jsonObject, String keyPath) {
+    public static ArrayList<String> arrayListFromKeyPath(JSONObject jsonObject, String keyPath) {
         try {
             Gson googleJson = new Gson();
             String[] keys = keyPath.split("[.]");
@@ -69,7 +71,9 @@ public class JsonHelper {
                 jsonObject = jsonObject.getJSONObject(keys[i]);
             }
             JSONArray jsonArray = keys.length > 0 ? jsonObject.getJSONArray(keys[keys.length - 1]) : jsonObject.getJSONArray(keyPath);
-            return googleJson.fromJson(jsonArray.toString(), ArrayList.class);
+
+            Type listType = new TypeToken<ArrayList<String>>(){}.getType();
+            return googleJson.fromJson(jsonArray.toString(), listType);
         } catch (Exception e) {
             return null;
         }

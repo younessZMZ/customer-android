@@ -39,6 +39,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     private boolean didHandleFirstLoad = false;
     private SessionListAdapter adapter;
+    private boolean animateChatScreen = false;
     //endregion
 
     //region LifeCycle
@@ -50,22 +51,22 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         userSession = Kustomer.getSharedInstance().getUserSession();
         userSession.getPushClient().setSupportScreenShown(true);
 
-        setupAdapter();
-        setupToolbar();
-
         chatSessionsDataSource = userSession.getChatSessionsDataSource();
         chatSessionsDataSource.addListener(this);
         chatSessionsDataSource.fetchLatest();
 
+        if(!chatSessionsDataSource.isFetched() || chatSessionsDataSource.getSize() > 1) {
+            animateChatScreen = false;
+        }
+        else {
+            animateChatScreen = true;
+        }
+
+        setupAdapter();
+        setupToolbar();
+
         if(chatSessionsDataSource.isFetched()){
-            Handler handler = new Handler(Looper.getMainLooper());
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    handleFirstLoadIfNecessary();
-                }
-            };
-            handler.postDelayed(runnable,500);
+            handleFirstLoadIfNecessary();
         }else{
             rvSessions.setVisibility(View.INVISIBLE);
             btnNewConversation.setVisibility(View.INVISIBLE);
@@ -129,15 +130,24 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY,false);
             startActivity(intent);
-            overridePendingTransition(0, 0);
+
+            if(animateChatScreen)
+                overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
+            else
+                overridePendingTransition(0, 0);
         }else if (chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 1){
             KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.getFirst();
 
             Intent intent = new Intent(this, KUSChatActivity.class);
-            intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
+            intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY,chatSession);
             startActivity(intent);
-            overridePendingTransition(0, 0);
+
+            if(animateChatScreen)
+                overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
+            else
+                overridePendingTransition(0, 0);
         }
+
     }
     //endregion
 
@@ -202,7 +212,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     @Override
     public void onSessionItemClicked(KUSChatSession chatSession) {
         Intent intent = new Intent(this, KUSChatActivity.class);
-        intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE__KEY,chatSession);
+        intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY,chatSession);
         startActivity(intent);
         overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
     }

@@ -91,7 +91,8 @@ public class KUSObjectDataSource {
     }
 
     public void addListener(KUSObjectDataSourceListener listener){
-        listeners.add(listener);
+        if(!listeners.contains(listener))
+            listeners.add(listener);
     }
 
     public void removeListener(KUSObjectDataSourceListener listener){

@@ -39,7 +39,7 @@ import butterknife.ButterKnife;
  */
 
 public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObjectDataSourceListener,
-        KUSPaginatedDataSourceListener {
+        KUSChatMessagesDataSourceListener {
 
     //region Properties
     @BindView(R2.id.tvSessionTitle)
@@ -226,6 +226,11 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
             }
         };
         handler.post(runnable);
+    }
+
+    @Override
+    public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
+
     }
     //endregion
 }

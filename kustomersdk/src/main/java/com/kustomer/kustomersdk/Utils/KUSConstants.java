@@ -34,7 +34,7 @@ public class KUSConstants {
     }
 
     public interface BundleName{
-        String CHAT_SESSION_BUNDLE__KEY = "Chat_Session_bundle";
+        String CHAT_SESSION_BUNDLE_KEY = "Chat_Session_bundle";
         String CHAT_SCREEN_BACK_BUTTON_KEY = "Chat_back_button_bundle";
         String USER_SESSION_BUNDLE__KEY = "User_Session_bundle";
     }

@@ -45,16 +45,32 @@
                     android:hint="@string/type_a_message"
                     android:background="@android:color/transparent"
                     android:layout_marginStart="10dp"
-                    android:inputType="textMultiLine"/>
+                    android:inputType="textMultiLine"
+                    android:textSize="16sp"/>
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fabSendMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_upward_white_24dp"
+                <FrameLayout
+                    android:id="@+id/btnSendMessage"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_margin="10dp"
-                    app:fabSize="mini"
-                    android:layout_gravity="bottom"/>
+                    android:layout_gravity="bottom">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/shape_circle_green"
+                        android:tint="@color/kusColorAccent"
+                        tools:ignore="ContentDescription" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_arrow_upward_white_24dp"
+                        tools:ignore="ContentDescription" />
+                </FrameLayout>
+
+
 
             </LinearLayout>
 

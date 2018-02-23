@@ -267,13 +267,17 @@ public class KUSPaginatedDataSource {
         return fetching;
     }
 
+    public Error getError() {
+        return error;
+    }
+
     public void removeAll(List<KUSModel> objects) {
         if (objects == null || objects.size() == 0) {
             return;
         }
 
         boolean didChange = false;
-        for (KUSModel obj : objects) {
+        for (KUSModel obj : new ArrayList<>(objects)) {
             int index = indexOf(obj);
             if (index != -1) {
                 didChange = true;

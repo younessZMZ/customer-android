@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.transition.Scene;
+import android.support.transition.TransitionManager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -19,6 +21,7 @@ import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
+import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
@@ -32,7 +35,7 @@ import java.util.ArrayList;
  * Created by Junaid on 1/30/2018.
  */
 
-public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
+public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, KUSChatMessagesDataSourceListener {
     //region Properties
     private String sessionId;
     private boolean showLabel;
@@ -50,7 +53,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     KUSMultipleAvatarsView kusMultipleAvatarsView;
     View ivBack;
     View ivClose;
-    View toolbarInnerLayout;
+    ViewGroup toolbarInnerLayout;
     OnToolbarItemClickListener listener;
     //endregion
 
@@ -140,13 +143,12 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         );
         vlp.gravity = Gravity.CENTER;
 
-
         if (extraLargeSize) {
             tvName.setTextSize(15f);
             tvGreetingMessage.setTextSize(13f);
 
-            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),50),
-                    0, (int) KUSUtils.dipToPixels(getContext(),50));
+            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),40),
+                    0, (int) KUSUtils.dipToPixels(getContext(),40));
 
             avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),4),
                     0,(int) KUSUtils.dipToPixels(getContext(),4));
@@ -155,17 +157,17 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
                     0,(int) KUSUtils.dipToPixels(getContext(),4));
 
 
-            toolbarInnerLayout.setLayoutParams(lp);
             kusMultipleAvatarsView.setLayoutParams(avatarlp);
             tvName.setLayoutParams(vlp);
             tvGreetingMessage.setLayoutParams(vlp);
+            toolbarInnerLayout.setLayoutParams(lp);
 
         } else {
             tvName.setTextSize(13f);
             tvGreetingMessage.setTextSize(11f);
 
             lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),10),
-                    0, (int) KUSUtils.dipToPixels(getContext(),10));
+                    0, (int) KUSUtils.dipToPixels(getContext(),5));
 
             avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),2),
                     0,(int) KUSUtils.dipToPixels(getContext(),2));
@@ -174,9 +176,9 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
                     0,0);
 
             kusMultipleAvatarsView.setLayoutParams(avatarlp);
-            toolbarInnerLayout.setLayoutParams(lp);
             tvName.setLayoutParams(vlp);
             tvGreetingMessage.setLayoutParams(vlp);
+            toolbarInnerLayout.setLayoutParams(lp);
         }
 
     }
@@ -361,6 +363,35 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             }
         };
         handler.post(runnable);
+    }
+
+    @Override
+    public void onCreateSessionId(KUSChatMessagesDataSource source, final String mSessionId) {
+
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(sessionId.equals(mSessionId))
+                    return;
+
+                sessionId = mSessionId;
+                chatMessagesDataSource.removeListener(KUSToolbar.this);
+                chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(sessionId);
+                chatMessagesDataSource.addListener(KUSToolbar.this);
+                kusMultipleAvatarsView.setUserIds(chatMessagesDataSource.getOtherUserIds());
+
+                updateTextLabel();
+                updateBackButtonBadge();
+
+            }
+        };
+        handler.post(runnable);
+
+
+
+
     }
     //endregion
 

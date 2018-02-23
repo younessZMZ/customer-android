@@ -8,6 +8,7 @@ import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
+import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSChatSessionCompletionListener;
 import com.kustomer.kustomersdk.Interfaces.KUSFormCompletionListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
@@ -34,7 +35,7 @@ import java.util.List;
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements KUSPaginatedDataSourceListener {
+public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener {
 
     //region Properties
     private HashMap<String, Object> pendingCustomChatSessionAttributes;
@@ -174,7 +175,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         );
     }
 
-    public void submitFormMessages(final List<JSONObject> messages, String formId, final KUSFormCompletionListener listener){
+    public void submitFormMessages(final JSONArray messages, String formId, final KUSFormCompletionListener listener){
 
         final WeakReference<KUSChatSessionsDataSource> weakReference = new WeakReference<>(this);
         getUserSession().getRequestManager().performRequestType(
@@ -368,6 +369,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             sort();
             notifyAnnouncersOnContentChange();
         }
+    }
+
+    @Override
+    public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
+
     }
     //endregion
 

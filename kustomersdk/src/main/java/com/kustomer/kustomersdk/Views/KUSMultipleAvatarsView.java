@@ -11,6 +11,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Junaid on 1/30/2018.
@@ -25,7 +26,7 @@ public class KUSMultipleAvatarsView extends FrameLayout {
 
     private int maximumAvatarsToDisplay;
     private ArrayList<KUSAvatarImageView> avatarImageViews;
-    private ArrayList<String> userIds;
+    private List<String> userIds;
     KUSUserSession userSession;
     //endregion
 
@@ -60,7 +61,7 @@ public class KUSMultipleAvatarsView extends FrameLayout {
         rebuildAvatarViews();
     }
 
-    public void setUserIds(ArrayList<String> userIds){
+    public void setUserIds(List<String> userIds){
         if(this.userIds != null && this.userIds.equals(userIds))
             return;
 

@@ -18,7 +18,7 @@ public class KUSFormQuestion extends KUSModel {
     //region Properties
     private String name;
     private String prompt;
-    private List values;
+    private List<String> values;
     private KUSFormQuestionType type;
     private KUSFormQuestionProperty property;
     private Boolean skipIfSatisfied;
@@ -45,6 +45,9 @@ public class KUSFormQuestion extends KUSModel {
         return false;
     }
     public static boolean KUSFormQuestionRequiresResponse(KUSFormQuestion question){
+        if(question == null || question.type == null)
+            return false;
+
         return question.type == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY;
     }
 
@@ -59,6 +62,9 @@ public class KUSFormQuestion extends KUSModel {
     }
 
     private static KUSFormQuestionProperty KUSFormQuestionPropertyFromString(String string){
+        if(string == null)
+            return null;
+
         switch (string) {
             case "customer_name":
                 return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_NAME;
@@ -84,6 +90,18 @@ public class KUSFormQuestion extends KUSModel {
 
     public String getPrompt() {
         return prompt;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public Boolean getSkipIfSatisfied() {
+        return skipIfSatisfied;
     }
 
     //endregion

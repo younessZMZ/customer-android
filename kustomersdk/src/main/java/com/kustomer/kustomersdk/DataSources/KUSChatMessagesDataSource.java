@@ -29,6 +29,7 @@ import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -341,8 +342,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
 
         if(firstMessage != null && chatSettings != null)
-            return ((chatSettings.getActiveFormId() == null || chatSettings.getActiveFormId().length()==0 ||
-                    (firstMessage.getImportedAt() == null && (secondMessage==null || secondMessage.getImportedAt() == null)))
+            return (((chatSettings.getActiveFormId() == null || chatSettings.getActiveFormId().length()==0)
+                    || (firstMessage.getImportedAt() == null && (secondMessage != null && secondMessage.getImportedAt() == null)))
                     && chatSettings.getAutoReply().length() > 0
                     && getSize() > 0
                     && isFetchedAll()
@@ -416,7 +417,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         long additionalInsertDelay = 0;
         int latestQuestionIndex = questionIndex;
         int startingOffset = formQuestion != null ? 1 : 0;
-        for(int i = questionIndex + startingOffset; i > form.getQuestions().size(); i++){
+        for(int i = questionIndex + startingOffset; i < form.getQuestions().size(); i++){
             KUSFormQuestion question = form.getQuestions().get(i);
             if(question.getType() == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN)
                 continue;
@@ -459,7 +460,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     private void submitFormResponses(){
-        List<JSONObject> messagesJSON = new ArrayList<>();
+        JSONArray messagesJSON = new JSONArray();
 
         int currentMessageIndex = getSize() - 1;
         KUSChatMessage firstUserMessage = (KUSChatMessage) get(currentMessageIndex);
@@ -473,9 +474,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             e.printStackTrace();
         }
 
-        messagesJSON.add(message);
+        messagesJSON.put(message);
 
         for(KUSFormQuestion question : form.getQuestions()){
+
+            if(currentMessageIndex < 0 )
+                continue;
+
             KUSChatMessage questionMessage = (KUSChatMessage) get(currentMessageIndex);
             currentMessageIndex --;
 
@@ -490,18 +495,20 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
                 if(KUSFormQuestion.KUSFormQuestionRequiresResponse(question)){
 
-                    KUSChatMessage responseMessage = (KUSChatMessage) get(currentMessageIndex);
-                    currentMessageIndex--;
+                    if(currentMessageIndex > 0) {
+                        KUSChatMessage responseMessage = (KUSChatMessage) get(currentMessageIndex);
+                        currentMessageIndex--;
 
-                    formMessage.put("input",responseMessage.getBody());
-                    formMessage.put("inputAt",KUSDate.stringFromDate(responseMessage.getCreatedAt()));
-                    if(responseMessage.getValue() != null)
-                        formMessage.put("value",responseMessage.getValue());
+                        formMessage.put("input", responseMessage.getBody());
+                        formMessage.put("inputAt", KUSDate.stringFromDate(responseMessage.getCreatedAt()));
+                        if (responseMessage.getValue() != null)
+                            formMessage.put("value", responseMessage.getValue());
+                    }
                 }
             }
             catch (JSONException ignore) {}
 
-            messagesJSON.add(formMessage);
+            messagesJSON.put(formMessage);
         }
 
         submittingForm = true;
@@ -519,7 +526,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         actuallySubmitForm(messagesJSON,form.getId(),lastUserChatMessage);
     }
 
-    private void actuallySubmitForm(final List<JSONObject> messagesJSON, String formId,
+    private void actuallySubmitForm(final JSONArray messagesJSON, String formId,
                                     final KUSChatMessage lastUserChatMessage){
         getUserSession().getChatSessionsDataSource().submitFormMessages(
                 messagesJSON,
@@ -538,7 +545,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                             getUserSession().getSharedPreferences().setDidCaptureEmail(true);
 
                         // Grab the session id
-                        sessionId = chatSession.getId();
+                        sessionId = chatSession != null ? chatSession.getId() : null;
                         form = null;
                         questionIndex = 0;
                         formQuestion = null;

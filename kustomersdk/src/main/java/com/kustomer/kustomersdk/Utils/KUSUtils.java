@@ -2,8 +2,12 @@ package com.kustomer.kustomersdk.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -64,5 +68,26 @@ public class KUSUtils {
         double diagonalInches = Math.sqrt(xInches*xInches + yInches*yInches);
 
         return diagonalInches < MIN_TABLET_SIZE_IN_INCH;
+    }
+
+    public static void showKeyboard(final View view, long delay){
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.showSoftInput(view, 0);
+                }
+            }
+        };
+        handler.postDelayed(runnable,delay);
+    }
+
+    public static void hideKeyboard (final View view){
+        InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

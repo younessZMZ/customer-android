@@ -27,6 +27,10 @@ public class KUSForm extends KUSModel{
 
         questions = getQuestionsFromJsonArray(JsonHelper.arrayFromKeyPath(jsonObject,"attributes.questions"));
     }
+
+    public String modelType(){
+        return "form";
+    }
     //endregion
 
     //region Public Methods
