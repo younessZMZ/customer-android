@@ -55,6 +55,7 @@ public class KUSChatMessage extends KUSModel {
     private KUSChatMessage(JSONObject json, KUSChatMessageType type, URL imageUrl) throws KUSInvalidJsonException {
         super(json);
 
+        state = KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT;
         trackingId = stringFromKeyPath(json,"attributes.trackingId");
         body = stringFromKeyPath(json,"attributes.body");
         this.type = type;

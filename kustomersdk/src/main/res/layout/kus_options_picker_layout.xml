@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.kustomer.kustomersdk.Views.KUSOptionsPickerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/colorLightGrey" />
+
+        <com.nex3z.flowlayout.FlowLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/optionsFlowLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flChildSpacing="5dp"
+            app:flChildSpacingForLastRow="align"
+            app:flRowSpacing="5dp"/>
+
+    </FrameLayout>
+
+
+</com.kustomer.kustomersdk.Views.KUSOptionsPickerView>

@@ -52,7 +52,7 @@ public class KUSFormQuestion extends KUSModel {
     }
 
     private static KUSFormQuestionType KUSFormQuestionTypeFromString(String string){
-        if(string.equals("mesage")){
+        if(string.equals("message")){
             return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_MESSAGE;
         }else if(string.equals("property")){
             return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY;

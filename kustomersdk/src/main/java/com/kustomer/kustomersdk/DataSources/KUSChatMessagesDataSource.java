@@ -60,8 +60,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private Set<String> delayedChatMessageIds;
     private int questionIndex;
     private KUSFormQuestion formQuestion;
-    private boolean submittingForm;
-    private boolean creatingSession;
+    private boolean submittingForm = false;
+    private boolean creatingSession = false;
 
     private String firstOtherUserId;
     private ArrayList<String> otherUserIds;
@@ -71,6 +71,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     //region Initializer
     public KUSChatMessagesDataSource(KUSUserSession userSession) {
         super(userSession);
+
+        questionIndex = -1;
         delayedChatMessageIds = new HashSet<>();
 
 
@@ -255,11 +257,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public KUSFormQuestion currentQuestion(){
-        if(sessionId != null)
-            return null;
+//        if(sessionId != null)
+//            return null;
 
         KUSChatMessage latestMessage = getSize() > 0 ? (KUSChatMessage) get(0) : null;
-        if(KUSChatMessageSentByUser(latestMessage))
+        if(latestMessage == null || KUSChatMessageSentByUser(latestMessage))
             return null;
 
         return formQuestion;
@@ -342,16 +344,17 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
 
         if(firstMessage != null && chatSettings != null)
-            return (((chatSettings.getActiveFormId() == null || chatSettings.getActiveFormId().length()==0)
-                    || (firstMessage.getImportedAt() == null && (secondMessage != null && secondMessage.getImportedAt() == null)))
+            return (
+                    ((chatSettings.getActiveFormId() == null || chatSettings.getActiveFormId().length()==0)
+                    || (firstMessage.getImportedAt() == null && secondMessage != null && secondMessage.getImportedAt() == null))
                     && chatSettings.getAutoReply().length() > 0
                     && getSize() > 0
                     && isFetchedAll()
-                    && (sessionId == null || sessionId.length() > 0)
-                    && (firstMessage.getState() == null || firstMessage.getState() == KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT)
+                    && (sessionId != null && sessionId.length() > 0)
+                    && firstMessage.getState() == KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT
             );
         else
-            return true;
+            return false;
     }
 
     private void insertAutoReplyIfNecessary(){
@@ -399,6 +402,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if(getSize() == 0)
             return;
 
+        if(sessionId != null)
+            return;
+
         if(form == null)
             return;
 
@@ -417,7 +423,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         long additionalInsertDelay = 0;
         int latestQuestionIndex = questionIndex;
         int startingOffset = formQuestion != null ? 1 : 0;
-        for(int i = questionIndex + startingOffset; i < form.getQuestions().size(); i++){
+        for(int i = Math.max(questionIndex + startingOffset,0); i < form.getQuestions().size(); i++){
             KUSFormQuestion question = form.getQuestions().get(i);
             if(question.getType() == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN)
                 continue;
@@ -495,7 +501,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
                 if(KUSFormQuestion.KUSFormQuestionRequiresResponse(question)){
 
-                    if(currentMessageIndex > 0) {
+                    if(currentMessageIndex >= 0) {
                         KUSChatMessage responseMessage = (KUSChatMessage) get(currentMessageIndex);
                         currentMessageIndex--;
 
@@ -547,7 +553,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         // Grab the session id
                         sessionId = chatSession != null ? chatSession.getId() : null;
                         form = null;
-                        questionIndex = 0;
+                        questionIndex = -1;
                         formQuestion = null;
                         submittingForm = false;
 

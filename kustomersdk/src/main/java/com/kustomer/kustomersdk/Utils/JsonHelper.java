@@ -45,7 +45,9 @@ public class JsonHelper {
             for (int i = 0; i < keys.length - 1; i++) {
                 jsonObject = jsonObject.getJSONObject(keys[i]);
             }
-            return keys.length > 0 ? jsonObject.getString(keys[keys.length - 1]) : jsonObject.getString(keyPath);
+
+            String value = keys.length > 0 ? jsonObject.getString(keys[keys.length - 1]) : jsonObject.getString(keyPath);
+            return value.equals("null") ? null : value;
         } catch (Exception e) {
             return null;
         }

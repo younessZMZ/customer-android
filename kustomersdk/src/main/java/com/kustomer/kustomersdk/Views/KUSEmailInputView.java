@@ -13,7 +13,12 @@ import android.widget.LinearLayout;
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
 import com.kustomer.kustomersdk.R;
+import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Junaid on 2/22/2018.
@@ -22,8 +27,8 @@ import com.kustomer.kustomersdk.Utils.KUSUtils;
 public class KUSEmailInputView extends LinearLayout {
 
     //region Properties
-    EditText etEmail;
-    View submitButton;
+    @BindView(R2.id.etEmail) EditText etEmail;
+    @BindView(R2.id.sendEmailButton) View submitButton;
 
     KUSEmailInputViewListener listener;
     //endregion
@@ -48,6 +53,8 @@ public class KUSEmailInputView extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+
+        ButterKnife.bind(this);
         initViews();
         setListener();
     }
@@ -55,9 +62,6 @@ public class KUSEmailInputView extends LinearLayout {
 
     //region Initializer
     private void initViews(){
-        etEmail = findViewById(R.id.etEmail);
-        submitButton = findViewById(R.id.sendEmailButton);
-
         updateSubmitButton();
     }
 
@@ -78,14 +82,6 @@ public class KUSEmailInputView extends LinearLayout {
 
             }
         });
-
-
-        submitButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                userWantsToSubmit();
-            }
-        });
     }
     //endregion
 
@@ -96,7 +92,8 @@ public class KUSEmailInputView extends LinearLayout {
     //endregion
 
     //region Private Methods
-    private void userWantsToSubmit(){
+    @OnClick(R2.id.sendEmailButton)
+    void userWantsToSubmit(){
         boolean isValidEmail = KUSText.isValidEmail(getSanitizedText());
 
         if(isValidEmail && listener != null)
