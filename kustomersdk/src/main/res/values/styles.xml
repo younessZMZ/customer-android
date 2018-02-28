@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="KusAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/kusPrimaryColor</item>
-        <item name="colorPrimaryDark">@color/kusPrimaryDarkColor</item>
+        <item name="colorPrimary">@color/kusToolbarBackgroundColor</item>
+        <item name="colorPrimaryDark">@color/kusStatusBarColor</item>
         <item name="colorAccent">@color/kusColorAccent</item>
     </style>
 

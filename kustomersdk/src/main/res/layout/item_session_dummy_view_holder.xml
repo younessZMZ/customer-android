@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:orientation="vertical"
+    android:background="@color/kusSessionPlaceholderBackground"
     android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
@@ -24,7 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="8dp"
                 android:layout_weight="0.15"
-                android:background="@color/colorDummyLines" />
+                android:background="@color/kusSessionPlaceholderLineColor" />
             <View
                 android:layout_width="0dp"
                 android:layout_height="8dp"
@@ -39,7 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="8dp"
                 android:layout_weight="0.98"
-                android:background="@color/colorDummyLines"
+                android:background="@color/kusSessionPlaceholderLineColor"
                  />
             <View
                 android:layout_width="0dp"
@@ -55,7 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="8dp"
                 android:layout_weight="0.8"
-                android:background="@color/colorDummyLines"
+                android:background="@color/kusSessionPlaceholderLineColor"
                 android:layout_marginEnd="50dp"/>
             <View
                 android:layout_width="0dp"

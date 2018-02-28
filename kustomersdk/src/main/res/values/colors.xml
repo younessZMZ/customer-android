@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="kusPrimaryColor">#E0E0E0</color>
-    <color name="kusPrimaryDarkColor">#BDBDBD</color>
+    <color name="kusToolbarBackgroundColor">#E0E0E0</color>
+    <color name="kusStatusBarColor">#BDBDBD</color>
+    <color name="kusToolbarTintColor">#000000</color>
+    <color name="kusSessionListBackground">#FFFFFF</color>
+    <color name="kusSessionItemBackground">#FFFFFF</color>
+    <color name="kusSessionItemSelectedBackground">#E0E0E0</color>
+    <color name="kusSessionTitleColor">#000000</color>
+    <color name="kusSessionDateColor">#000000</color>
+    <color name="kusSessionSubtitleColor">#000000</color>
+    <color name="kusSessionPlaceholderBackground">#FFFFFF</color>
+    <color name="kusSessionPlaceholderLineColor">#EEEEEE</color>
+    <color name="kusNewSessionButtonColor">#2962FF</color>
+    
+    <color name="kusToolbarNameColor">#000000</color>
+    <color name="kusToolbarGreetingColor">#000000</color>
+    <color name="kusEmailInputBackground">#E0E0E0</color>
+    <color name="kusEmailInputBorderColor">#4CAF50</color>
+    <color name="kusEmailInputPromptColor">#000000</color>
+    <color name="kusChatListBackground">#FFFFFF</color>
+    <color name="kusChatItemBackground">#FFFFFF</color>
+    <color name="kusCompanyBubbleColor">#E0E0E0</color>
+    <color name="kusCompanyTextColor">#000000</color>
+    <color name="kusUserBubbleColor">#2962FF</color>
+    <color name="kusSendButtonColor">#2962FF</color>
+    <color name="kusInputBarTintColor">#2962FF</color>
+    <color name="kusInputBarHintColor">#E0E0E0</color>
+    <color name="kusInputBarTextColor">#000000</color>
+    <color name="kusInputBarBackground">#FFFFFF</color>
+    
+
+
+
+
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>
-    <color name="colorLightGrey">#E0E0E0</color>
-    <color name="colorDummyLines">#EEEEEE</color>
     <color name="colorOffWhite">#F5F5F5</color>
     <color name="colorBlueMessage">#2962FF</color>
-    <color name="colorLightGreen">#4CAF50</color>
+    <color name="colorLightGrey">#E0E0E0</color>
 
 
     <color name="defaultNameColor1">#d73d32</color>

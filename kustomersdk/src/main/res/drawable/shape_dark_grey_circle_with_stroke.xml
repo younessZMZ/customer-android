@@ -11,6 +11,6 @@
         android:height="120dp"/>
 
     <stroke
-        android:color="@color/kusPrimaryColor"
+        android:color="@color/kusToolbarBackgroundColor"
         android:width="10dp"/>
 </shape>

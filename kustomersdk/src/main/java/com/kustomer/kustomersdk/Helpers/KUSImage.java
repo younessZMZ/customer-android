@@ -10,12 +10,10 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.util.Size;
 
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +125,7 @@ public class KUSImage {
                 context,
                 size,
                 ContextCompat.getColor(context,getDefaultNameColors().get(colorIndex)),
-                ContextCompat.getColor(context,R.color.kusPrimaryColor),
+                ContextCompat.getColor(context,R.color.kusToolbarBackgroundColor),
                 strokeWidth,
                 text.toString(),
                 fontSize);

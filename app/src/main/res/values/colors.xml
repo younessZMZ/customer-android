@@ -4,4 +4,36 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="color_red_semi">#aacc0000</color>
+
+    <color name="kusToolbarBackgroundColor">#000000</color>
+    <color name="kusStatusBarColor">#000000</color>
+    <color name="kusToolbarTintColor">#DD2C00</color>
+    <color name="kusSessionListBackground">#909090</color>
+    <color name="kusSessionItemBackground">#909090</color>
+    <color name="kusSessionItemSelectedBackground">#55FFFFFF</color>
+    <color name="kusSessionTitleColor">#FFFFFF</color>
+    <color name="kusSessionDateColor">#FFFFFF</color>
+    <color name="kusSessionSubtitleColor">#FFFFFF</color>
+    <color name="kusSessionPlaceholderBackground">#909090</color>
+    <color name="kusSessionPlaceholderLineColor">#55FFFFFF</color>
+    <color name="kusNewSessionButtonColor">#DD2C00</color>
+
+    <color name="kusToolbarNameColor">#FFFFFF</color>
+    <color name="kusToolbarGreetingColor">#FFFFFF</color>
+    <color name="kusEmailInputBackground">#000000</color>
+    <color name="kusEmailInputBorderColor">#DD2C00</color>
+    <color name="kusEmailInputPromptColor">#FFFFFF</color>
+    <color name="kusChatListBackground">#909090</color>
+    <color name="kusChatItemBackground">#909090</color>
+    <color name="kusCompanyBubbleColor">#000000</color>
+    <color name="kusCompanyTextColor">#FFFFFF</color>
+    <color name="kusUserBubbleColor">#DD2C00</color>
+    <color name="kusSendButtonColor">#DD2C00</color>
+    <color name="kusInputBarTintColor">#DD2C00</color>
+    <color name="kusInputBarHintColor">#EEEEEE</color>
+    <color name="kusInputBarTextColor">#FFFFFF</color>
+    <color name="kusInputBarBackground">#000000</color>
+
+
+
 </resources>

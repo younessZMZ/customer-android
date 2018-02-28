@@ -5,13 +5,15 @@
     android:layout_height="wrap_content"
     android:gravity="end"
     android:orientation="vertical"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:background="@color/kusChatItemBackground">
 
     <TextView
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_user_message_background"
+        android:backgroundTint="@color/kusUserBubbleColor"
         android:padding="10dp"
         android:layout_gravity="end"
         android:layout_marginStart="60dp"

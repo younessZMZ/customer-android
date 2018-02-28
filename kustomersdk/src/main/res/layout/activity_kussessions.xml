@@ -21,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="80dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            android:background="@color/kusSessionListBackground"/>
 
         <Button
             android:id="@+id/btnNewConversation"
@@ -38,7 +39,7 @@
             android:drawablePadding="5dp"
             android:textAllCaps="false"
             android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/colorBlueMessage"
+            android:backgroundTint="@color/kusNewSessionButtonColor"
             android:textColor="@android:color/white"/>
 
         <LinearLayout
@@ -80,7 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="16dp"
         android:orientation="vertical"
-        android:background="@color/kusPrimaryColor">
+        android:background="@color/colorLightGrey">
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

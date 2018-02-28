@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:orientation="vertical"
-    android:foreground="?attr/selectableItemBackground">
+    android:background="@drawable/session_item_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:lines="1"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/kusSessionTitleColor"
                     android:textStyle="bold"
                     android:textSize="12sp"/>
 
@@ -44,6 +44,7 @@
                     android:id="@+id/tvSessionDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/kusSessionDateColor"
                     android:textSize="12sp"/>
             </LinearLayout>
 
@@ -57,8 +58,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:autoLink="web|email"
-                    android:textColor="@android:color/black"
-                    android:textColorLink="@android:color/black"
+                    android:textColor="@color/kusSessionSubtitleColor"
+                    android:textColorLink="@color/kusSessionSubtitleColor"
                     android:layout_weight="1"
                     android:lines="1"
                     android:textSize="12sp"/>

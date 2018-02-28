@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/kusInputBarBackground"
     xmlns:tools="http://schemas.android.com/tools">
 
     <EditText
@@ -13,10 +14,13 @@
         android:maxLines="5"
         android:layout_gravity="center_vertical"
         android:hint="@string/type_a_message"
+        android:textColorHint="@color/kusInputBarHintColor"
+        android:textColor="@color/kusInputBarTextColor"
         android:background="@android:color/transparent"
         android:layout_marginStart="10dp"
         android:inputType="textMultiLine"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textCursorDrawable="@drawable/input_bar_cursor"/>
 
     <FrameLayout
         android:id="@+id/btnSendMessage"
@@ -28,8 +32,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/shape_circle_green"
-            android:tint="@color/kusColorAccent"
+            android:src="@drawable/shape_circle_white"
+            android:tint="@color/kusSendButtonColor"
             tools:ignore="ContentDescription" />
 
         <ImageView
