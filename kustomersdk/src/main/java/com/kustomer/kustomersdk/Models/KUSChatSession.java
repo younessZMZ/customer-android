@@ -5,13 +5,16 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
+import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -49,6 +52,27 @@ public class KUSChatSession extends KUSModel implements Serializable {
     //endregion
 
     //region Public Methods
+    public static KUSChatSession tempSessionFromChatMessage(KUSChatMessage message) throws KUSInvalidJsonException {
+
+        String jsonString = "{" +
+                "\"id\":\""+ (message.getSessionId() != null ? message.getSessionId() : "") +"\"," +
+                "\"type\":\"chat_session\"," +
+                "\"attributes\":{" +
+                "\"preview\":\"" + (message.getBody() != null ? message.getBody() : "")  + "\"," +
+                "\"createdAt\":\"" + (message.getCreatedAt() != null ? message.getCreatedAt()
+                                    : KUSDate.stringFromDate(Calendar.getInstance().getTime())) + "\""+
+                "\"lastSeenAt\":\"" + (message.getCreatedAt() != null ? message.getCreatedAt()
+                                    : KUSDate.stringFromDate(Calendar.getInstance().getTime())) + "\""+
+                "\"lastMessageAt\":\"" + (message.getCreatedAt() != null ? message.getCreatedAt()
+                                    : KUSDate.stringFromDate(Calendar.getInstance().getTime())) + "\""+
+
+                "}" +
+                "}";
+
+
+        JSONObject json = JsonHelper.stringToJson(jsonString);
+        return new KUSChatSession(json);
+    }
     @Override
     public String toString() {
         //Missing %p (this)

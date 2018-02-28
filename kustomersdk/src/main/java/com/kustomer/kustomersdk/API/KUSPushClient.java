@@ -7,6 +7,7 @@ import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
+import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
@@ -176,8 +177,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
                         final KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
 
-                        boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getOrgId()) == null;
-                        messagesDataSource.upsertAll(chatMessages);
+                        boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getId()) == null;
+                        messagesDataSource.upsertNewMessages(chatMessages);
 
                         if (doesNotAlreadyContainMessage)
                             notifyForUpdatedChatSession(chatMessage.getSessionId());
@@ -250,8 +251,28 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void notifyForUpdatedChatSession(String sessionId){
-        //TODO: Incomplete
-        KUSAudio.playMessageReceivedSound();
+
+        if(isSupportScreenShown())
+            KUSAudio.playMessageReceivedSound();
+        else{
+            KUSChatMessagesDataSource chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(sessionId);
+            KUSChatMessage latestMessage = chatMessagesDataSource.getLatestMessage();
+            KUSChatSession chatSession = (KUSChatSession) userSession.getChatSessionsDataSource().findById(sessionId);
+            if(chatSession == null){
+                try {
+                    chatSession = KUSChatSession.tempSessionFromChatMessage(latestMessage);
+                } catch (KUSInvalidJsonException e) {
+                    e.printStackTrace();
+                }
+                userSession.getChatSessionsDataSource().fetchLatest();
+            }
+
+            if( chatSession != null){
+                boolean shouldAutoDismiss = latestMessage.getCampaignId().length() == 0;
+                KUSAudio.playMessageReceivedSound();
+                //TODO: show notification
+            }
+        }
     }
 
     private boolean shouldBeConnectedToPusher(){

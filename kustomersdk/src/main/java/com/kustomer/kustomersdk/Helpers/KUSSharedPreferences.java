@@ -6,6 +6,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 
+import java.util.UUID;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -14,9 +16,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class KUSSharedPreferences {
     //region Properties
-    private static String PREFERENCE_FILE_KEY = "kustomer_app_preferences";
-    private static String TRACKING_TOKEN_PREFERENCE = "tracking_token_pref";
-    private static String DID_CAPTURE_EMAIL_PREFERENCE = "email_capture_pref";
+    private static final String PREFERENCE_FILE_KEY = "kustomer_app_preferences";
+    private static final String TRACKING_TOKEN_PREFERENCE = "tracking_token_pref";
+    private static final String DID_CAPTURE_EMAIL_PREFERENCE = "email_capture_pref";
     private SharedPreferences sharedPref = null;
     //endregion
 
@@ -71,6 +73,7 @@ public class KUSSharedPreferences {
     public void reset() {
         sharedPref.edit().clear().apply();
     }
+
     //endregion
 
 }

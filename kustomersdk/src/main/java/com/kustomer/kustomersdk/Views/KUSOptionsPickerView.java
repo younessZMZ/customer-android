@@ -111,11 +111,9 @@ public class KUSOptionsPickerView extends LinearLayout implements View.OnClickLi
                 textView.setOnClickListener(this);
 
                 optionButtons.add(textView);
+                flowLayout.addView(textView);
             }
 
-            for (int i = options.size() -1 ; i >= 0; i--){
-                flowLayout.addView(optionButtons.get(i));
-            }
         }
 
         this.optionButtons = optionButtons;

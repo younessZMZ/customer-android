@@ -11,6 +11,7 @@ import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Helpers.KUSUpload;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSChatSessionCompletionListener;
@@ -42,6 +43,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static com.kustomer.kustomersdk.Models.KUSChatMessage.KUSChatMessageSentByUser;
 
@@ -103,6 +105,20 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     //endregion
 
     //region Public Methods
+    public void upsertNewMessages(List<KUSModel> chatMessages){
+        if(chatMessages.size()>1)
+            Collections.reverse(chatMessages);
+
+        upsertAll(chatMessages);
+    }
+
+    public KUSChatMessage getLatestMessage(){
+        if(getSize() > 0)
+            return (KUSChatMessage) get(0);
+
+        return null;
+    }
+
     public void addListener(KUSChatMessagesDataSourceListener listener) {
         super.addListener(listener);
     }
@@ -120,7 +136,33 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public void sendMessageWithText(String text, List<Bitmap> attachments, String value){
-        //TODO: Incomplete
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        if(sessionId == null && chatSettings.getActiveFormId() != null){
+            //TODO: assert & add UUID
+
+            String jsonString = "{" +
+                    "\"type\":\"chat_message\"," +
+                    "\"id\":\""+ UUID.randomUUID().toString() +"\"," +
+                    "\"attributes\":{" +
+                                "\"body\":\"" + text + "\"," +
+                                "\"direction\":\"in\"," +
+                                "\"createdAt\":\"" + KUSDate.stringFromDate(Calendar.getInstance().getTime()) + "\""+
+                        "}" +
+                    "}";
+
+
+            JSONObject json = JsonHelper.stringToJson(jsonString);
+            List<KUSModel> temporaryMessages = objectsFromJSON(json);
+            for(KUSModel model : temporaryMessages){
+                KUSChatMessage message = (KUSChatMessage) model;
+                message.setValue(value);
+            }
+
+            upsertNewMessages(temporaryMessages);
+
+            return;
+
+        }
 
         actuallySendMessage(text,attachments);
     }
@@ -184,7 +226,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         String jsonString = "{" +
                 "\"type\":\"chat_message\"," +
-                "\"id\":\"\"," +
+                "\"id\":\""+ UUID.randomUUID().toString()+ "\"," +
                 "\"attributes\":{" +
                             "\"body\":\"" + text + "\"," +
                             "\"direction\":\"in\"," +
@@ -257,8 +299,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public KUSFormQuestion currentQuestion(){
-//        if(sessionId != null)
-//            return null;
+        if(sessionId != null)
+            return null;
 
         KUSChatMessage latestMessage = getSize() > 0 ? (KUSChatMessage) get(0) : null;
         if(latestMessage == null || KUSChatMessageSentByUser(latestMessage))
@@ -269,13 +311,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     //endregion
 
     //region Private Methods
-    private void upsertNewMessages(List<KUSModel> chatMessages){
-        if(chatMessages.size()>1)
-            Collections.reverse(chatMessages);
-
-        upsertAll(chatMessages);
-    }
-
     private void fullySendMessage(final List<KUSModel> temporaryMessages, final List<Bitmap> attachments, final String text){
         insertMessagesWithState(KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENDING, temporaryMessages);
 

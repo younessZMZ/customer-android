@@ -105,6 +105,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     public void clearInputFocus(){
         etTypeMessage.clearFocus();
+        KUSUtils.hideKeyboard(this);
     }
     //endregion
 

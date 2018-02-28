@@ -37,6 +37,7 @@ public class KUSChatMessage extends KUSModel {
     private Date importedAt;
     private KUSChatMessageDirection direction;
     private String sentById;
+    private String campaignId;
 
     private KUSChatMessageType type;
     private KUSChatMessageState state;
@@ -66,6 +67,7 @@ public class KUSChatMessage extends KUSModel {
         this.importedAt = dateFromKeyPath(json,"attributes.importedAt");
         this.direction = KUSChatMessageDirectionFromString(stringFromKeyPath(json,"attributes.direction"));
         this.sentById = stringFromKeyPath(json, "relationships.sentBy.data.id");
+        this.campaignId = stringFromKeyPath(json, "relationships.campaign.data.id");
     }
     //endregion
 
@@ -232,6 +234,10 @@ public class KUSChatMessage extends KUSModel {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getCampaignId() {
+        return campaignId;
     }
 
     //endregion

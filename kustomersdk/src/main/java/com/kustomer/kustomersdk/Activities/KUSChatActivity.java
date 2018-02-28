@@ -221,8 +221,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM
                 && currentQuestion.getValues().size() > 0);
 
-        boolean teamOptionsDidFail = teamOptionsDatasource == null || teamOptionsDatasource.getError() != null
-                || (teamOptionsDatasource.isFetched() && teamOptionsDatasource.getSize() == 0);
+        boolean teamOptionsDidFail = teamOptionsDatasource != null && (teamOptionsDatasource.getError() != null
+                || (teamOptionsDatasource.isFetched() && teamOptionsDatasource.getSize() == 0));
         if (wantsOptionPicker && !teamOptionsDidFail) {
             kusInputBarView.setVisibility(View.GONE);
             kusInputBarView.clearInputFocus();
