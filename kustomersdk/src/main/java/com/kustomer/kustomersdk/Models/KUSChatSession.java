@@ -54,24 +54,29 @@ public class KUSChatSession extends KUSModel implements Serializable {
     //region Public Methods
     public static KUSChatSession tempSessionFromChatMessage(KUSChatMessage message) throws KUSInvalidJsonException {
 
-        String jsonString = "{" +
-                "\"id\":\""+ (message.getSessionId() != null ? message.getSessionId() : "") +"\"," +
-                "\"type\":\"chat_session\"," +
-                "\"attributes\":{" +
-                "\"preview\":\"" + (message.getBody() != null ? message.getBody() : "")  + "\"," +
-                "\"createdAt\":\"" + (message.getCreatedAt() != null ? message.getCreatedAt()
-                                    : KUSDate.stringFromDate(Calendar.getInstance().getTime())) + "\""+
-                "\"lastSeenAt\":\"" + (message.getCreatedAt() != null ? message.getCreatedAt()
-                                    : KUSDate.stringFromDate(Calendar.getInstance().getTime())) + "\""+
-                "\"lastMessageAt\":\"" + (message.getCreatedAt() != null ? message.getCreatedAt()
-                                    : KUSDate.stringFromDate(Calendar.getInstance().getTime())) + "\""+
+        JSONObject attributes = new JSONObject();
+        try {
+            attributes.put("preview",message.getBody() != null ? message.getBody() : "");
+            attributes.put("createdAt",message.getCreatedAt() != null ? message.getCreatedAt()
+                    : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+            attributes.put("lastSeenAt",message.getCreatedAt() != null ? message.getCreatedAt()
+                    : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+            attributes.put("lastMessageAt",message.getCreatedAt() != null ? message.getCreatedAt()
+                    : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-                "}" +
-                "}";
+        JSONObject messageJSON = new JSONObject();
+        try {
+            messageJSON.put("type","chat_session");
+            messageJSON.put("id",message.getSessionId() != null ? message.getSessionId() : "");
+            messageJSON.put("attributes",attributes);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-
-        JSONObject json = JsonHelper.stringToJson(jsonString);
-        return new KUSChatSession(json);
+        return new KUSChatSession(messageJSON);
     }
     @Override
     public String toString() {

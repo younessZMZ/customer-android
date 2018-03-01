@@ -138,27 +138,37 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void sendMessageWithText(String text, List<Bitmap> attachments, String value){
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
         if(sessionId == null && chatSettings.getActiveFormId() != null){
-            //TODO: assert & add UUID
+            //TODO: assert
 
-            String jsonString = "{" +
-                    "\"type\":\"chat_message\"," +
-                    "\"id\":\""+ UUID.randomUUID().toString() +"\"," +
-                    "\"attributes\":{" +
-                                "\"body\":\"" + text + "\"," +
-                                "\"direction\":\"in\"," +
-                                "\"createdAt\":\"" + KUSDate.stringFromDate(Calendar.getInstance().getTime()) + "\""+
-                        "}" +
-                    "}";
-
-
-            JSONObject json = JsonHelper.stringToJson(jsonString);
-            List<KUSModel> temporaryMessages = objectsFromJSON(json);
-            for(KUSModel model : temporaryMessages){
-                KUSChatMessage message = (KUSChatMessage) model;
-                message.setValue(value);
+            JSONObject attributes = new JSONObject();
+            try {
+                attributes.put("body",text);
+                attributes.put("direction","in");
+                attributes.put("createdAt",KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            upsertNewMessages(temporaryMessages);
+            JSONObject messageJSON = new JSONObject();
+            try {
+                messageJSON.put("type","chat_message");
+                messageJSON.put("id",UUID.randomUUID().toString());
+                messageJSON.put("attributes",attributes);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            List<KUSModel> temporaryMessages = objectsFromJSON(messageJSON);
+
+            if(temporaryMessages != null) {
+
+                for (KUSModel model : temporaryMessages) {
+                    KUSChatMessage message = (KUSChatMessage) model;
+                    message.setValue(value);
+                }
+
+                upsertNewMessages(temporaryMessages);
+            }
 
             return;
 
@@ -224,26 +234,45 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void actuallySendMessage(String text, List<Bitmap> attachments){
         //TODO: incomplete
 
-        String jsonString = "{" +
-                "\"type\":\"chat_message\"," +
-                "\"id\":\""+ UUID.randomUUID().toString()+ "\"," +
-                "\"attributes\":{" +
-                            "\"body\":\"" + text + "\"," +
-                            "\"direction\":\"in\"," +
-                            "\"createdAt\":\"" + KUSDate.stringFromDate(Calendar.getInstance().getTime()) + "\""+
-                            "}," +
-                "\"relationships\":{" +
-                                "\"attachments\":{" +
-                                                "\"data\": null" +
-                                                "}" +
-                                "}" +
-                "}";
+        JSONObject attachment = new JSONObject();
+        try {
+            attachment.put("data",null);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
-        JSONObject json = JsonHelper.stringToJson(jsonString);
-        List<KUSModel> temporaryMessages = objectsFromJSON(json);
+        JSONObject relationships = new JSONObject();
+        try {
+            relationships.put("attachments",attachment);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        fullySendMessage(temporaryMessages,attachments,text);
+        JSONObject attributes = new JSONObject();
+        try {
+            attributes.put("body",text);
+            attributes.put("direction","in");
+            attributes.put("createdAt",KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject messageJSON = new JSONObject();
+        try {
+            messageJSON.put("type","chat_message");
+            messageJSON.put("id",UUID.randomUUID().toString());
+            messageJSON.put("attributes",attributes);
+            messageJSON.put("relationships",relationships);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        List<KUSModel> temporaryMessages = objectsFromJSON(messageJSON);
+
+        if(temporaryMessages != null)
+            fullySendMessage(temporaryMessages,attachments,text);
     }
 
     public int unreadCountAfterDate(Date date){
@@ -407,19 +436,27 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
             if(firstMessage != null && chatSettings != null) {
                 Date createdAt = new Date(firstMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
-                String jsonString = "{" +
-                        "\"type\":\"chat_message\"," +
-                        "\"id\":\"" + autoreplyId + "\"," +
-                        "\"attributes\":{" +
-                        "\"body\":\"" + chatSettings.getAutoReply() + "\"," +
-                        "\"direction\":\"out\"," +
-                        "\"createdAt\":\"" + KUSDate.stringFromDate(createdAt) + "\"" +
-                        "}" +
-                        "}";
 
-                JSONObject json = JsonHelper.stringToJson(jsonString);
+                JSONObject attributes = new JSONObject();
                 try {
-                    KUSChatMessage autoReplyMessage = new KUSChatMessage(json);
+                    attributes.put("body",chatSettings.getAutoReply());
+                    attributes.put("direction","out");
+                    attributes.put("createdAt",KUSDate.stringFromDate(createdAt));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JSONObject messageJSON = new JSONObject();
+                try {
+                    messageJSON.put("type","chat_message");
+                    messageJSON.put("id",autoreplyId);
+                    messageJSON.put("attributes",attributes);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    KUSChatMessage autoReplyMessage = new KUSChatMessage(messageJSON);
                     insertDelayedMessage(autoReplyMessage);
                 } catch (KUSInvalidJsonException e) {
                     e.printStackTrace();
@@ -467,20 +504,27 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                     + KUS_CHAT_AUTO_REPLY_DELAY + additionalInsertDelay);
 
             String questionId = String.format("question_%s",question.getId());
-            String jsonString = "{" +
-                    "\"type\":\"chat_message\"," +
-                    "\"id\":\"" + questionId + "\"," +
-                    "\"attributes\":{" +
-                    "\"body\":\"" + question.getPrompt() + "\"," +
-                    "\"direction\":\"out\"," +
-                    "\"createdAt\":\"" + KUSDate.stringFromDate(createdAt) + "\"" +
-                    "}" +
-                    "}";
 
-            JSONObject json = JsonHelper.stringToJson(jsonString);
+            JSONObject attributes = new JSONObject();
+            try {
+                attributes.put("body",question.getPrompt());
+                attributes.put("direction","out");
+                attributes.put("createdAt",KUSDate.stringFromDate(createdAt));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JSONObject messageJSON = new JSONObject();
+            try {
+                messageJSON.put("type","chat_message");
+                messageJSON.put("id",questionId);
+                messageJSON.put("attributes",attributes);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             try {
-                KUSChatMessage formMessage = new KUSChatMessage(json);
+                KUSChatMessage formMessage = new KUSChatMessage(messageJSON);
                 insertDelayedMessage(formMessage);
                 additionalInsertDelay += KUS_CHAT_AUTO_REPLY_DELAY;
 
@@ -582,7 +626,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         }
 
                         // If the form contained an email prompt, mark the local session as having submitted email
-                        if(form.containsEmailQuestion())
+                        if(form != null && form.containsEmailQuestion())
                             getUserSession().getSharedPreferences().setDidCaptureEmail(true);
 
                         // Grab the session id

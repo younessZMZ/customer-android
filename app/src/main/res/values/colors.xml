@@ -19,14 +19,19 @@
     <!--<color name="kusSessionPlaceholderBackground">#909090</color>-->
     <!--<color name="kusSessionPlaceholderLineColor">#55FFFFFF</color>-->
     <!--<color name="kusNewSessionButtonColor">#DD2C00</color>-->
+    <!--<color name="kusNewSessionTextColor">#FFFFFF</color>-->
 
     <!--<color name="kusToolbarNameColor">#FFFFFF</color>-->
     <!--<color name="kusToolbarGreetingColor">#FFFFFF</color>-->
-    <!--<color name="kusEmailInputBackground">#000000</color>-->
+    <!--<color name="kusToolbarSeparatorColor">#BDBDBD</color>-->
+    <!--<color name="kusUnreadTextColor">#FFFFFF</color>-->
+    <!--<color name="kusUnreadBackground">#aacc0000</color>-->
+    <!--<color name="kusEmailInputBackground">#FFFFFF</color>-->
     <!--<color name="kusEmailInputBorderColor">#DD2C00</color>-->
     <!--<color name="kusEmailInputPromptColor">#FFFFFF</color>-->
     <!--<color name="kusChatListBackground">#909090</color>-->
     <!--<color name="kusChatItemBackground">#909090</color>-->
+    <!--<color name="kusChatTimestampTextColor">#FFFFFF</color>-->
     <!--<color name="kusCompanyBubbleColor">#000000</color>-->
     <!--<color name="kusCompanyTextColor">#FFFFFF</color>-->
     <!--<color name="kusUserBubbleColor">#DD2C00</color>-->
@@ -35,6 +40,11 @@
     <!--<color name="kusInputBarHintColor">#EEEEEE</color>-->
     <!--<color name="kusInputBarTextColor">#FFFFFF</color>-->
     <!--<color name="kusInputBarBackground">#000000</color>-->
+    <!--<color name="kusInputBarSeparatorColor">#BDBDBD</color>-->
+    <!--<color name="kusOptionPickerSeparatorColor">#BDBDBD</color>-->
+    <!--<color name="kusOptionPickerButtonBorderColor">#2962FF</color>-->
+    <!--<color name="kusOptionPickerButtonTextColor">#2962FF</color>-->
+    <!--<color name="kusOptionPickerButtonBackground">#F5F5F5</color>-->
 
 
 

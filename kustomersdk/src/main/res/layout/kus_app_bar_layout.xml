@@ -48,10 +48,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/shape_unread_count_background"
+                    android:backgroundTint="@color/kusUnreadBackground"
                     android:gravity="center"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/kusUnreadTextColor"
                     android:textSize="10sp"
                     android:maxLength="2"
                     android:visibility="invisible" />
@@ -121,7 +122,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/kusEmailInputBackground">
+        android:background="?attr/colorPrimary">
 
 
         <View
@@ -129,7 +130,7 @@
             android:layout_height="0.5dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
-            android:background="@android:color/darker_gray" />
+            android:background="@color/kusToolbarSeparatorColor" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -164,6 +165,7 @@
                 android:inputType="textEmailAddress"
                 android:padding="5dp"
                 android:textColorHint="@color/colorLightGrey"
+                android:textCursorDrawable="@drawable/email_bar_cursor"
                 android:textSize="14sp" />
 
             <FrameLayout

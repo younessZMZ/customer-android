@@ -4,45 +4,56 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/kusInputBarBackground"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etTypeMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:maxLines="5"
-        android:layout_gravity="center_vertical"
-        android:hint="@string/type_a_message"
-        android:textColorHint="@color/kusInputBarHintColor"
-        android:textColor="@color/kusInputBarTextColor"
-        android:background="@android:color/transparent"
-        android:layout_marginStart="10dp"
-        android:inputType="textMultiLine"
-        android:textSize="16sp"
-        android:textCursorDrawable="@drawable/input_bar_cursor"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/kusInputBarSeparatorColor"/>
 
-    <FrameLayout
-        android:id="@+id/btnSendMessage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="10dp"
-        android:layout_gravity="bottom">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/shape_circle_white"
-            android:tint="@color/kusSendButtonColor"
-            tools:ignore="ContentDescription" />
+        <EditText
+            android:id="@+id/etTypeMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="5"
+            android:layout_gravity="center_vertical"
+            android:hint="@string/type_a_message"
+            android:textColorHint="@color/kusInputBarHintColor"
+            android:textColor="@color/kusInputBarTextColor"
+            android:background="@android:color/transparent"
+            android:layout_marginStart="10dp"
+            android:inputType="textMultiLine"
+            android:textSize="16sp"
+            android:textCursorDrawable="@drawable/input_bar_cursor"/>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"
-            android:src="@drawable/ic_arrow_upward_white_24dp"
-            tools:ignore="ContentDescription" />
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/btnSendMessage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="bottom">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/shape_circle_white"
+                android:tint="@color/kusSendButtonColor"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:src="@drawable/ic_arrow_upward_white_24dp"
+                tools:ignore="ContentDescription" />
+        </FrameLayout>
+
+    </LinearLayout>
 
 </com.kustomer.kustomersdk.Views.KUSInputBarView>

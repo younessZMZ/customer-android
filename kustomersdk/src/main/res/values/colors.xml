@@ -12,14 +12,19 @@
     <color name="kusSessionPlaceholderBackground">#FFFFFF</color>
     <color name="kusSessionPlaceholderLineColor">#EEEEEE</color>
     <color name="kusNewSessionButtonColor">#2962FF</color>
+    <color name="kusNewSessionTextColor">#FFFFFF</color>
     
     <color name="kusToolbarNameColor">#000000</color>
     <color name="kusToolbarGreetingColor">#000000</color>
-    <color name="kusEmailInputBackground">#E0E0E0</color>
+    <color name="kusToolbarSeparatorColor">#BDBDBD</color>
+    <color name="kusUnreadTextColor">#FFFFFF</color>
+    <color name="kusUnreadBackground">#aacc0000</color>
+    <color name="kusEmailInputBackground">#FFFFFF</color>
     <color name="kusEmailInputBorderColor">#4CAF50</color>
     <color name="kusEmailInputPromptColor">#000000</color>
     <color name="kusChatListBackground">#FFFFFF</color>
     <color name="kusChatItemBackground">#FFFFFF</color>
+    <color name="kusChatTimestampTextColor">#BDBDBD</color>
     <color name="kusCompanyBubbleColor">#E0E0E0</color>
     <color name="kusCompanyTextColor">#000000</color>
     <color name="kusUserBubbleColor">#2962FF</color>
@@ -28,10 +33,11 @@
     <color name="kusInputBarHintColor">#E0E0E0</color>
     <color name="kusInputBarTextColor">#000000</color>
     <color name="kusInputBarBackground">#FFFFFF</color>
-    
-
-
-
+    <color name="kusInputBarSeparatorColor">#BDBDBD</color>
+    <color name="kusOptionPickerSeparatorColor">#BDBDBD</color>
+    <color name="kusOptionPickerButtonBorderColor">#2962FF</color>
+    <color name="kusOptionPickerButtonTextColor">#2962FF</color>
+    <color name="kusOptionPickerButtonBackground">#F5F5F5</color>
 
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>

@@ -94,9 +94,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         initData();
         initViews();
         setupAdapter();
-
-        //TODO: DUMMY Data. Remove
-        //updateOptionsPickerOptions();
     }
 
     @Override
@@ -247,22 +244,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     private void updateOptionsPickerOptions() {
         List<String> options = new ArrayList<>();
 
-//        List<String> dummyList = new ArrayList<>();
-//        dummyList.add("asd1 hkjhkkjhkh kjhkjhkjhjk kjhkj kj hhasjdhaksjh askjdhkajs daksjd ha");
-//        dummyList.add("asd2");
-//        dummyList.add("asd3 asdasda");
-//        dummyList.add("asd4");
-//        dummyList.add("asd5");
-//        dummyList.add("asd6");
-//        dummyList.add("asd7");
-//        options.addAll(dummyList);
-
         for(KUSModel model : teamOptionsDatasource.getList()){
             KUSTeam team = (KUSTeam) model;
             options.add(team.fullDisplay());
         }
-
-
 
         kusOptionPickerView.setOptions(options);
     }

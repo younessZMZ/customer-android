@@ -3,7 +3,14 @@
 <com.kustomer.kustomersdk.Views.KUSOptionsPickerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/kusOptionPickerSeparatorColor"/>
 
     <FrameLayout
         android:layout_width="match_parent"

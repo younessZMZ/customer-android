@@ -40,7 +40,7 @@
             android:textAllCaps="false"
             android:layout_marginBottom="20dp"
             android:backgroundTint="@color/kusNewSessionButtonColor"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/kusNewSessionTextColor"/>
 
         <LinearLayout
             android:id="@+id/retryView"
