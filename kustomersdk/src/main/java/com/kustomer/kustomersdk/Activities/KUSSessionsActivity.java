@@ -65,6 +65,11 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         setupAdapter();
         setupToolbar();
 
+        if(!getResources().getBoolean(R.bool.kusNewSessionButtonHasShadow)) {
+            btnNewConversation.setElevation(0);
+            btnNewConversation.setStateListAnimator(null);
+        }
+
         if(chatSessionsDataSource.isFetched()){
             handleFirstLoadIfNecessary();
         }else{

@@ -38,21 +38,22 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_back_black_24dp"
+                    android:src="?attr/kus_back_image"
                     android:tint="@color/kusToolbarTintColor"
                     tools:ignore="ContentDescription" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tvToolbarUnreadCount"
+                    style="@style/KUSToolbarUnreadTextAppearance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/shape_unread_count_background"
-                    android:backgroundTint="@color/kusUnreadBackground"
+                    android:backgroundTint="@color/kusToolbarUnreadBackground"
                     android:gravity="center"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:textColor="@color/kusUnreadTextColor"
+                    android:textColor="@color/kusToolbarUnreadTextColor"
                     android:textSize="10sp"
                     android:maxLength="2"
                     android:visibility="invisible" />
@@ -77,20 +78,23 @@
                     android:layout_margin="2dp"
                     android:layout_gravity="center" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/KUSToolbarNameTextAppearance"
                     android:layout_gravity="center"
                     android:text="@string/example"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:textColor="@color/kusToolbarNameColor"/>
+                    android:textColor="@color/kusToolbarNameColor"
+                     />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tvGreetingMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/KUSToolbarGreetingTextAppearance"
                     android:layout_gravity="center"
                     android:text="@string/we_re_here_let_us_know_if_we_can_help"
                     android:textSize="11sp"
@@ -107,7 +111,7 @@
                 android:layout_alignParentEnd="true"
                 android:foregroundGravity="right"
                 android:tint="@color/kusToolbarTintColor"
-                android:src="@drawable/ic_close_black_24dp"
+                android:src="?attr/kus_dismiss_image"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
@@ -132,10 +136,11 @@
             android:layout_marginTop="5dp"
             android:background="@color/kusToolbarSeparatorColor" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
+            style="@style/kusEmailInputPromptTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/don_t_miss_a_response_get_notified_by_email"
+            android:text="@string/kus_email_input_prompt_text"
             android:textSize="13sp"
             android:textColor="@color/kusEmailInputPromptColor"/>
 
@@ -152,8 +157,9 @@
                 android:layout_height="30dp"
                 android:background="@drawable/shape_email_view_background" />
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/etEmail"
+                style="@style/kusEmailInputTextAppearance"
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
@@ -161,7 +167,7 @@
                 android:layout_marginRight="35dp"
                 android:background="@android:color/transparent"
                 android:gravity="center"
-                android:hint="@string/example_domain_com"
+                android:hint="@string/kus_email_input_hint_text"
                 android:inputType="textEmailAddress"
                 android:padding="5dp"
                 android:textColorHint="@color/colorLightGrey"

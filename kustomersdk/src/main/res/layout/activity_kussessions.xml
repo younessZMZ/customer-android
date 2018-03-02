@@ -24,18 +24,19 @@
             android:clipToPadding="false"
             android:background="@color/kusSessionListBackground"/>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnNewConversation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/new_conversation"
+            style="@style/KUSNewSessionButtonAppearance"
+            android:text="@string/kus_new_session_button_text"
             android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:paddingRight="25dp"
             android:paddingLeft="25dp"
-            android:drawableStart="@drawable/ic_edit_white_20dp"
+            android:drawableStart="?attr/kus_new_session_button_image"
             android:drawablePadding="5dp"
             android:textAllCaps="false"
             android:layout_marginBottom="20dp"

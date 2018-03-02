@@ -32,6 +32,7 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/tvSessionTitle"
+                    style="@style/KUSChatSessionTitleTextAppearance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -42,6 +43,7 @@
 
                 <TextView
                     android:id="@+id/tvSessionDate"
+                    style="@style/KUSChatSessionDateTextAppearance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/kusSessionDateColor"
@@ -55,6 +57,7 @@
 
                 <TextView
                     android:id="@+id/tvSessionSubtitle"
+                    style="@style/KUSChatSessionSubtitleTextAppearance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:autoLink="web|email"
@@ -70,14 +73,16 @@
 
                     <TextView
                         android:id="@+id/tvUnreadCount"
+                        style="@style/KUSChatSessionUnreadTextAppearance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/kusSessionUnreadColor"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textSize="10sp"
+                        android:backgroundTint="@color/kusSessionUnreadBackground"
                         android:background="@drawable/shape_unread_count_background"
                         android:visibility="invisible"/>
                 </FrameLayout>

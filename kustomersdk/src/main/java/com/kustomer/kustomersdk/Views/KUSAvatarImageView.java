@@ -1,14 +1,18 @@
 package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Size;
+import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,7 +43,6 @@ import java.net.URL;
 public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSourceListener {
 
     //region Properties
-    private Bitmap companyAvatarImage;
     private String userId;
 
     private KUSUserSession userSession;
@@ -114,11 +117,6 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
         updateAvatarImage();
     }
 
-    public void setCompanyAvatarImage(Bitmap bitmap){
-        companyAvatarImage = bitmap;
-        updateAvatarImage();
-    }
-
     public void setUserId(String userId){
         if(this.userId != null && this.userId.equals(userId))
             return;
@@ -150,10 +148,20 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
 
     //region Private Methods
     private void updateAvatarImage(){
-        if(this.userId == null && companyAvatarImage != null){
-            staticImageView.setImageBitmap(companyAvatarImage);
-            return;
-        }
+        try {
+            TypedValue typedValue = new TypedValue();
+            getContext().getTheme().resolveAttribute(R.attr.kus_company_image, typedValue, true);
+            int drawableRes = typedValue.resourceId;
+
+            Drawable companyAvatarImage = null;
+
+            companyAvatarImage = getContext().getResources().getDrawable(drawableRes);
+            if(this.userId == null && companyAvatarImage != null){
+                staticImageView.setImageDrawable(companyAvatarImage);
+                return;
+            }
+
+        } catch (Exception e) {}
 
         KUSUser user = null;
         if(userDataSource != null) {

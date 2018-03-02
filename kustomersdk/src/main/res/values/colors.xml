@@ -9,6 +9,8 @@
     <color name="kusSessionTitleColor">#000000</color>
     <color name="kusSessionDateColor">#000000</color>
     <color name="kusSessionSubtitleColor">#000000</color>
+    <color name="kusSessionUnreadColor">#FFFFFF</color>
+    <color name="kusSessionUnreadBackground">#aacc0000</color>
     <color name="kusSessionPlaceholderBackground">#FFFFFF</color>
     <color name="kusSessionPlaceholderLineColor">#EEEEEE</color>
     <color name="kusNewSessionButtonColor">#2962FF</color>
@@ -17,8 +19,8 @@
     <color name="kusToolbarNameColor">#000000</color>
     <color name="kusToolbarGreetingColor">#000000</color>
     <color name="kusToolbarSeparatorColor">#BDBDBD</color>
-    <color name="kusUnreadTextColor">#FFFFFF</color>
-    <color name="kusUnreadBackground">#aacc0000</color>
+    <color name="kusToolbarUnreadTextColor">#FFFFFF</color>
+    <color name="kusToolbarUnreadBackground">#aacc0000</color>
     <color name="kusEmailInputBackground">#FFFFFF</color>
     <color name="kusEmailInputBorderColor">#4CAF50</color>
     <color name="kusEmailInputPromptColor">#000000</color>
@@ -28,6 +30,7 @@
     <color name="kusCompanyBubbleColor">#E0E0E0</color>
     <color name="kusCompanyTextColor">#000000</color>
     <color name="kusUserBubbleColor">#2962FF</color>
+    <color name="kusUserTextColor">#FFFFFF</color>
     <color name="kusSendButtonColor">#2962FF</color>
     <color name="kusInputBarTintColor">#2962FF</color>
     <color name="kusInputBarHintColor">#E0E0E0</color>

@@ -21,4 +21,65 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="MySupportTheme" parent="KusAppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/kusToolbarBackgroundColor</item>
+        <item name="colorPrimaryDark">@color/kusStatusBarColor</item>
+        <item name="colorAccent">@color/kusColorAccent</item>
+        <item name="kus_back_image">@drawable/ic_arrow_back_black_24dp</item>
+        <item name="kus_dismiss_image">@drawable/ic_close_black_24dp</item>
+        <item name="kus_new_session_button_image">@drawable/ic_edit_white_20dp</item>
+    </style>
+
+
+    <style name="KUSChatMessageTimeStampTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="KUSChatMessageTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="KUSChatSessionTitleTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+    <style name="KUSChatSessionSubtitleTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+    <style name="KUSChatSessionDateTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+    <style name="KUSChatSessionUnreadTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="KUSToolbarNameTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+    <style name="KUSToolbarGreetingTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+    <style name="KUSToolbarUnreadTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="KUSNewSessionButtonAppearance" parent="@style/TextAppearance.AppCompat.Button">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="kusEmailInputPromptTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+    <style name="kusEmailInputTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="kusInputBarTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+    <style name="kusOptionPickerTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
 </resources>

@@ -3,6 +3,9 @@ package com.kustomer.kustomersdk.Views;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
+import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -99,7 +102,8 @@ public class KUSOptionsPickerView extends LinearLayout implements View.OnClickLi
         ArrayList<TextView> optionButtons = new ArrayList<>();
         if(options != null) {
             for (String option : options){
-                TextView textView = new TextView(getContext());
+                AppCompatTextView textView = new AppCompatTextView(getContext());
+                TextViewCompat.setTextAppearance(textView,R.style.kusOptionPickerTextAppearance);
                 textView.setLayoutParams(vlp);
                 textView.setText(option);
                 textView.setBackgroundResource(R.drawable.shape_option_view_background);

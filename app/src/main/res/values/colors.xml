@@ -16,6 +16,8 @@
     <!--<color name="kusSessionTitleColor">#FFFFFF</color>-->
     <!--<color name="kusSessionDateColor">#FFFFFF</color>-->
     <!--<color name="kusSessionSubtitleColor">#FFFFFF</color>-->
+    <!--<color name="kusSessionUnreadColor">#FFFFFF</color>-->
+    <!--<color name="kusSessionUnreadBackground">#3F51B5</color>-->
     <!--<color name="kusSessionPlaceholderBackground">#909090</color>-->
     <!--<color name="kusSessionPlaceholderLineColor">#55FFFFFF</color>-->
     <!--<color name="kusNewSessionButtonColor">#DD2C00</color>-->
@@ -24,8 +26,8 @@
     <!--<color name="kusToolbarNameColor">#FFFFFF</color>-->
     <!--<color name="kusToolbarGreetingColor">#FFFFFF</color>-->
     <!--<color name="kusToolbarSeparatorColor">#BDBDBD</color>-->
-    <!--<color name="kusUnreadTextColor">#FFFFFF</color>-->
-    <!--<color name="kusUnreadBackground">#aacc0000</color>-->
+    <!--<color name="kusToolbarUnreadTextColor">#FFFFFF</color>-->
+    <!--<color name="kusToolbarUnreadBackground">#aacc0000</color>-->
     <!--<color name="kusEmailInputBackground">#FFFFFF</color>-->
     <!--<color name="kusEmailInputBorderColor">#DD2C00</color>-->
     <!--<color name="kusEmailInputPromptColor">#FFFFFF</color>-->
@@ -35,6 +37,7 @@
     <!--<color name="kusCompanyBubbleColor">#000000</color>-->
     <!--<color name="kusCompanyTextColor">#FFFFFF</color>-->
     <!--<color name="kusUserBubbleColor">#DD2C00</color>-->
+    <!--<color name="kusUserTextColor">#000000</color>-->
     <!--<color name="kusSendButtonColor">#DD2C00</color>-->
     <!--<color name="kusInputBarTintColor">#DD2C00</color>-->
     <!--<color name="kusInputBarHintColor">#EEEEEE</color>-->

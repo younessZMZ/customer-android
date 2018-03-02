@@ -16,14 +16,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/etTypeMessage"
+            style="@style/kusInputBarTextAppearance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="5"
             android:layout_gravity="center_vertical"
-            android:hint="@string/type_a_message"
+            android:hint="@string/kus_input_bar_hint_text"
             android:textColorHint="@color/kusInputBarHintColor"
             android:textColor="@color/kusInputBarTextColor"
             android:background="@android:color/transparent"
