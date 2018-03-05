@@ -8,6 +8,12 @@ import android.widget.ImageView;
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -25,6 +31,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         initViews();
         setListeners();
+
+
+        KUSCustomerDescription customerDescription = new KUSCustomerDescription();
+        customerDescription.setEmail("xyz@brainxtech.com");
+
+        JSONObject customObject = new JSONObject();
+        try {
+            customObject.put("ageNum",19);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        customerDescription.setCustom(customObject);
+        Kustomer.describeCustomer(customerDescription);
+
+
+        JSONObject conversationObject = new JSONObject();
+        try {
+            conversationObject.put("companyStr","brainxTech");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Kustomer.describeConversation(conversationObject);
     }
     //endregion
 

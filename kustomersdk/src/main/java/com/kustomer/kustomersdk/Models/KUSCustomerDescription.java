@@ -21,7 +21,7 @@ public class KUSCustomerDescription {
     private String facebook;
     private String instagram;
     private String linkedin;
-    private HashMap <String, Object> custom;
+    private JSONObject custom;
     //endregion
 
     //region Methods
@@ -102,8 +102,8 @@ public class KUSCustomerDescription {
             formData.put("socials",socials);
         }
 
-        if(custom != null && custom.size() > 0)
-            formData().put("custom",custom);
+        if(custom != null)
+            formData.put("custom",custom);
 
         return formData;
     }
@@ -159,11 +159,11 @@ public class KUSCustomerDescription {
         this.linkedin = linkedin;
     }
 
-    public HashMap<String, Object> getCustom() {
+    public JSONObject getCustom() {
         return custom;
     }
 
-    public void setCustom(HashMap<String, Object> custom) {
+    public void setCustom(JSONObject custom) {
         this.custom = custom;
     }
 

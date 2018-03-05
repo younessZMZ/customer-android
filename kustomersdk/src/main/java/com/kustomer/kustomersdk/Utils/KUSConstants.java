@@ -12,7 +12,7 @@ public class KUSConstants {
         String MESSAGES_LIST_ENDPOINT = "/c/v1/chat/sessions/%s/messages";
         String SEND_MESSAGE_ENDPOINT = "/c/v1/chat/messages";
         String CHAT_SESSIONS_ENDPOINT = "/c/v1/chat/sessions";
-        String CHAT_CONVERSATIONS_ENDPOINT = "/c/v1/chat/conversations";
+        String CONVERSATIONS_ENDPOINT = "/c/v1/conversations";
         String TRACKING_TOKEN_ENDPOINT = "/c/v1/tracking/tokens";
         String CURRENT_TRACKING_TOKEN_ENDPOINT = "/c/v1/tracking/tokens/current";
         String IDENTITY_ENDPOINT = "/c/v1/identity";

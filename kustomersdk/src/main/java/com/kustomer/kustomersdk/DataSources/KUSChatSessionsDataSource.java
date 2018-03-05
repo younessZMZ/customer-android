@@ -7,11 +7,9 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSChatSessionCompletionListener;
 import com.kustomer.kustomersdk.Interfaces.KUSFormCompletionListener;
-import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -29,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ import java.util.List;
 public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener {
 
     //region Properties
-    private HashMap<String, Object> pendingCustomChatSessionAttributes;
+    private JSONObject pendingCustomChatSessionAttributes;
     private HashMap<String, Date> localLastSeenAtBySessionId;
     //endregion
 
@@ -231,19 +230,41 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         );
     }
 
-    public void describeActiveConversation(HashMap<String,Object> customAttributes){
+    public void describeActiveConversation(JSONObject customAttributes){
         KUSChatSession mostRecentChatSession = getMostRecentChatSession();
-        String mostRecentChatSessionId = mostRecentChatSession.getId();
+
+        String mostRecentChatSessionId = null;
+        if(mostRecentChatSession != null)
+            mostRecentChatSessionId = mostRecentChatSession.getId();
 
         if(mostRecentChatSessionId != null)
             flushCustomAttributes(customAttributes,mostRecentChatSessionId);
         else{
             // Merge previously queued custom attributes with the latest custom attributes
-            HashMap<String,Object> pendingCustomChatSessionAttributes = new HashMap<>();
+            JSONObject pendingCustomChatSessionAttributes = new JSONObject();
 
-            if(this.pendingCustomChatSessionAttributes != null)
-                pendingCustomChatSessionAttributes.putAll(this.pendingCustomChatSessionAttributes);
-            pendingCustomChatSessionAttributes.putAll(customAttributes);
+            if(this.pendingCustomChatSessionAttributes != null) {
+                Iterator iterator = this.pendingCustomChatSessionAttributes.keys();
+                while(iterator.hasNext()){
+                    String key = iterator.next().toString();
+                    try {
+                        pendingCustomChatSessionAttributes.put(key,this.pendingCustomChatSessionAttributes.get(key));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            Iterator iterator = customAttributes.keys();
+            while(iterator.hasNext()){
+                String key = iterator.next().toString();
+                try {
+                    pendingCustomChatSessionAttributes.put(key,customAttributes.get(key));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             this.pendingCustomChatSessionAttributes = pendingCustomChatSessionAttributes;
 
             fetchLatest();
@@ -252,12 +273,12 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     //endregion
 
     //region Private Methods
-    private void flushCustomAttributes(final HashMap<String,Object> customAttributes, String chatSessionId){
+    private void flushCustomAttributes(final JSONObject customAttributes, String chatSessionId){
         HashMap<String,Object>  formData = new HashMap<String,Object>(){{
             put("custom",customAttributes);
         }};
 
-        String endpoint = String.format(KUSConstants.URL.CHAT_CONVERSATIONS_ENDPOINT + "/%s",chatSessionId);
+        String endpoint = String.format(KUSConstants.URL.CONVERSATIONS_ENDPOINT + "/%s",chatSessionId);
         getUserSession().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_PATCH,
                 endpoint,

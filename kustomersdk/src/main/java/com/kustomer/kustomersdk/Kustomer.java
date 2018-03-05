@@ -15,6 +15,7 @@ import com.kustomer.kustomersdk.Utils.KUSConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
@@ -51,7 +52,7 @@ public class Kustomer {
     //endregion
 
     //region Class Methods
-    public static void describeConversation(HashMap<String,Object> customAttributes){
+    public static void describeConversation(JSONObject customAttributes){
         getSharedInstance().mDescribeConversation(customAttributes);
     }
 
@@ -83,11 +84,11 @@ public class Kustomer {
     //endregion
 
     //region Private Methods
-    private void mDescribeConversation(HashMap<String,Object> customAttributes){
+    private void mDescribeConversation(JSONObject customAttributes){
         if (customAttributes==null)
             throw new AssertionError("Attempted to describe a conversation with no attributes set");
 
-        if(customAttributes.keySet().size() == 0)
+        if(!customAttributes.keys().hasNext())
             return;
 
         userSession.getChatSessionsDataSource().describeActiveConversation(customAttributes);
@@ -98,14 +99,18 @@ public class Kustomer {
     }
 
     private void mIdentify(final String externalToken){
-        if(externalToken == null)
+        if(externalToken == null) {
+            throw new AssertionError("Kustomer expects externalToken to be non-nil");
+        }
+
+        if(externalToken.length() <= 0)
             return;
 
         HashMap<String , Object> params = new HashMap<String , Object>(){{
             put("externalToken",externalToken);
         }};
 
-        final KUSUserSession instance = this.userSession;
+        final WeakReference<KUSUserSession> instance = new WeakReference<>(this.userSession);
         userSession.getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_POST,
                 KUSConstants.URL.IDENTITY_ENDPOINT,
@@ -114,7 +119,7 @@ public class Kustomer {
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
-                        instance.getTrackingTokenDataSource().fetch();
+                        instance.get().getTrackingTokenDataSource().fetch();
                     }
                 }
         );
@@ -172,6 +177,9 @@ public class Kustomer {
     }
 
     public KUSUserSession getUserSession() {
+        if(userSession == null)
+            throw new AssertionError("Kustomer needs to be initialized before use");
+
         return userSession;
     }
     //endregion
