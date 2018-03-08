@@ -1,27 +1,26 @@
 package com.kustomer.kustomersdk.Activities;
 
+import android.Manifest;
 import android.animation.LayoutTransition;
-import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
-import android.support.transition.Scene;
-import android.support.transition.TransitionManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -30,8 +29,8 @@ import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
-import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
+import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
@@ -51,16 +50,24 @@ import com.kustomer.kustomersdk.Views.KUSInputBarView;
 import com.kustomer.kustomersdk.Views.KUSOptionsPickerView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener {
 
     //region Properties
+    private static final int REQUEST_IMAGE_CAPTURE = 1122;
+    private static final int GALLERY_INTENT = 1123;
+    private static final int REQUEST_CAMERA_PERMISSION = 1133;
+    private static final int REQUEST_STORAGE_PERMISSION = 1134;
 
     @BindView(R2.id.rvMessages)
     RecyclerView rvMessages;
@@ -82,6 +89,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     KUSToolbar kusToolbar;
     boolean shouldShowBackButton = true;
     boolean backPressed = false;
+
+    String mCurrentPhotoPath;
     //endregion
 
     //region LifeCycle
@@ -151,6 +160,54 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         checkShouldShowEmailInput();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if(resultCode == RESULT_OK){
+                String photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath)).toString();
+
+                if(photoUri.startsWith("file://"))
+                    photoUri = photoUri.replace("file://","");
+
+                kusInputBarView.attachImage(photoUri);
+                mCurrentPhotoPath = null;
+            }else{
+                mCurrentPhotoPath = null;
+            }
+        }else if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
+            if (data != null) {
+                String photoUri = data.getDataString();
+                kusInputBarView.attachImage(photoUri);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CAMERA_PERMISSION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openCamera();
+                } else {
+                    Toast.makeText(this, R.string.camera_permission_denied,Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case REQUEST_STORAGE_PERMISSION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openGallery();
+                } else {
+                    Toast.makeText(this, R.string.storage_permission_denied,Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
     //endregion
 
     //region Initializer
@@ -175,6 +232,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     private void initViews() {
         kusInputBarView.setListener(this);
+        kusInputBarView.setAllowsAttachment(chatSessionId != null);
         kusOptionPickerView.setListener(this);
         setupToolbar();
     }
@@ -261,6 +319,83 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         adapter.notifyDataSetChanged();
     }
+
+    private void openCamera(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!KUSPermission.isCameraPermissionAvailable(this)) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        REQUEST_CAMERA_PERMISSION);
+
+            } else {
+                dispatchTakePictureIntent();
+            }
+        } else {
+            dispatchTakePictureIntent();
+        }
+    }
+
+    private void dispatchTakePictureIntent(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ignored) {
+            }
+
+            if (photoFile != null) {
+                Uri photoURI = KUSUtils.getUriFromFile(this, photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void openGallery() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!KUSPermission.isStoragePermissionAvailable(this)) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_STORAGE_PERMISSION);
+
+            } else {
+                startGalleryIntent();
+            }
+        } else {
+            startGalleryIntent();
+        }
+    }
+
+
+
+    private void startGalleryIntent(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_INTENT);
+    }
     //endregion
 
     //region Listeners
@@ -331,6 +466,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             @Override
             public void run() {
                 chatSessionId = sessionId;
+                kusInputBarView.setAllowsAttachment(true);
                 kusToolbar.setSessionId(chatSessionId);
                 shouldShowBackButton = true;
                 kusToolbar.setShowBackButton(true);
@@ -360,7 +496,39 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void inputBarAttachmentClicked() {
+        ArrayList<String> itemsList = new ArrayList<>();
+        String[] items = null;
 
+        if(KUSPermission.isCameraPermissionDeclared(this))
+            itemsList.add(getString(R.string.camera));
+        if(KUSPermission.isReadPermissionDeclared(this))
+            itemsList.add(getString(R.string.gallery));
+
+        if(itemsList.size() > 0) {
+            items = new String[itemsList.size()];
+            items = itemsList.toArray(items);
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: // camera
+                        openCamera();
+                    break;
+
+                    case 1: // gallery
+                        openGallery();
+                    break;
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
@@ -370,7 +538,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         chatMessagesDataSource.sendMessageWithText(kusInputBarView.getText(), null);
         kusInputBarView.setText("");
-        kusInputBarView.setImageAttachments(null);
+        kusInputBarView.removeAllAttachments();
     }
 
     @Override

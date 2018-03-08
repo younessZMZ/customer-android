@@ -97,6 +97,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public KUSChatMessagesDataSource(KUSUserSession userSession, String sessionId){
         this(userSession);
 
+        if(sessionId == null || sessionId.length() < 0)
+            throw new AssertionError("Cannot create messages datasource without valid sessionId");
+
         if(sessionId.length() > 0)
             this.sessionId = sessionId;
     }
@@ -139,6 +142,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
         if(sessionId == null && chatSettings.getActiveFormId() != null){
             //TODO: assert
+            if(attachments.size() > 0)
+                throw new AssertionError("Should not have been able to send attachments without a sessionId");
+
 
             JSONObject attributes = new JSONObject();
             try {
@@ -370,7 +376,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private void sendMessage(List<Bitmap> attachments, final List<KUSModel> temporaryMessages , final String text){
 
         //TODO: send attachmentIds
-        KUSUpload.uploadImages(attachments, getUserSession(), new KUSImageUploadListener() {
+        new KUSUpload().uploadImages(attachments, getUserSession(), new KUSImageUploadListener() {
             @Override
             public void onCompletion(Error error, List<KUSChatAttachment> attachments) {
                 getUserSession().getRequestManager().performRequestType(

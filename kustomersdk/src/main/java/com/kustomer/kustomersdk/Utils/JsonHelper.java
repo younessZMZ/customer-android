@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -76,6 +77,22 @@ public class JsonHelper {
 
             Type listType = new TypeToken<ArrayList<String>>(){}.getType();
             return googleJson.fromJson(jsonArray.toString(), listType);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static HashMap<String,String> hashMapFromKeyPath(JSONObject jsonObject, String keyPath) {
+        try {
+            Gson googleJson = new Gson();
+            String[] keys = keyPath.split("[.]");
+            for (int i = 0; i < keys.length - 1; i++) {
+                jsonObject = jsonObject.getJSONObject(keys[i]);
+            }
+            JSONArray jsonArray = keys.length > 0 ? jsonObject.getJSONArray(keys[keys.length - 1]) : jsonObject.getJSONArray(keyPath);
+
+            Type hashMapType = new TypeToken<HashMap<String,String>>(){}.getType();
+            return googleJson.fromJson(jsonArray.toString(), hashMapType);
         } catch (Exception e) {
             return null;
         }

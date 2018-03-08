@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Base64;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
@@ -48,6 +51,12 @@ public class Kustomer {
     public static void init(Context context, String apiKey) {
         mContext = context.getApplicationContext();
         getSharedInstance().setApiKey(apiKey);
+
+        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
+                .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
+                .setDownsampleEnabled(true)
+                .build();
+        Fresco.initialize(context, config);
     }
     //endregion
 
@@ -100,7 +109,7 @@ public class Kustomer {
 
     private void mIdentify(final String externalToken){
         if(externalToken == null) {
-            throw new AssertionError("Kustomer expects externalToken to be non-nil");
+            throw new AssertionError("Kustomer expects externalToken to be non-null");
         }
 
         if(externalToken.length() <= 0)
@@ -130,13 +139,18 @@ public class Kustomer {
     }
 
     private void setApiKey(String apiKey){
+        if(apiKey == null) {
+            throw new AssertionError("Kustomer requires a valid API key");
+        }
+
         if(apiKey.length()==0){
             return;
         }
 
         String []apiKeyParts = apiKey.split("[.]");
+
         if(apiKeyParts.length<=2)
-            return;
+            throw new AssertionError("Kustomer API key has unexpected format");
 
         JSONObject tokenPayload = null;
         try {
@@ -146,7 +160,7 @@ public class Kustomer {
             orgName = tokenPayload.getString(KUSConstants.Keys.K_KUSTOMER_ORG_NAME_KEY);
 
             if(orgName.length()==0)
-                return;
+                throw new AssertionError("Kustomer API key missing expected field: orgName");
 
             userSession = new KUSUserSession(orgName,orgId);
         } catch (JSONException ignore) {}

@@ -6,10 +6,15 @@ import com.kustomer.kustomersdk.Enums.KUSChatMessageDirection;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -89,9 +94,14 @@ public class KUSChatMessage extends KUSModel {
                 : KUSChatMessageDirection.KUS_CHAT_MESSAGE_DIRECTION_OUT;
     }
 
-    public static URL attachmentURLForMessageId(String messageId, String attachmentId){
-        //TODO: Not Implemented yet
-        return null;
+    public static URL attachmentUrlForMessageId(String messageId, String attachmentId) throws MalformedURLException {
+        String imageUrlString = String.format(KUSConstants.URL.ATTACHMENT_ENDPOINT,
+                Kustomer.getSharedInstance().getUserSession().getOrgName(),
+                Kustomer.hostDomain(),
+                messageId,
+                attachmentId);
+
+        return new URL(imageUrlString);
     }
 
     @Override

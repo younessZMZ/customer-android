@@ -127,7 +127,8 @@ public class KUSUserSession implements Serializable {
         HashMap<String, Object> formData = customerDescription.formData();
 
         if(formData.size() == 0)
-            return;
+            throw new AssertionError("Attempted to describe a customer with no attributes se");
+
 
         getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_PATCH,

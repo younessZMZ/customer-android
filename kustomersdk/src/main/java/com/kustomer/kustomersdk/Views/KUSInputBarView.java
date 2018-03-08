@@ -3,6 +3,8 @@ package com.kustomer.kustomersdk.Views;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -11,14 +13,19 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kustomer.kustomersdk.Adapters.ImageAttachmentListAdapter;
+import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
+import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.List;
 
@@ -30,13 +37,17 @@ import butterknife.OnClick;
  * Created by Junaid on 2/27/2018.
  */
 
-public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener {
+public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener, ImageAttachmentListAdapter.onItemClickListener {
 
     //region Properties
     @BindView(R2.id.etTypeMessage) EditText etTypeMessage;
     @BindView(R2.id.btnSendMessage) View btnSendMessage;
+    @BindView(R2.id.ivAttachment) ImageView ivAttachment;
+    @BindView(R2.id.rvImageAttachment)
+    RecyclerView rvImageAttachment;
 
     KUSInputBarViewListener listener;
+    ImageAttachmentListAdapter adapter;
     //endregion
 
     //region LifeCycle
@@ -63,6 +74,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
         initViews();
         setListeners();
+        setupAdapter();
     }
     //endregion
 
@@ -80,6 +92,16 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         etTypeMessage.addTextChangedListener(this);
         etTypeMessage.setOnEditorActionListener(this);
     }
+
+    private void setupAdapter(){
+        adapter = new ImageAttachmentListAdapter(this);
+        rvImageAttachment.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvImageAttachment.setLayoutManager(layoutManager);
+
+        adapter.notifyDataSetChanged();
+    }
     //endregion
 
     //region Public Methods
@@ -95,8 +117,32 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         return etTypeMessage.getText().toString().trim();
     }
 
-    public void setImageAttachments(List<Bitmap> imageAttachments){
-        //TODO:
+    public void setAllowsAttachment(boolean allowAttachment){
+        if(!allowAttachment)
+            ivAttachment.setVisibility(GONE);
+        else{
+            boolean shouldBeHidden = !KUSPermission.isCameraPermissionDeclared(getContext())
+                    && !KUSPermission.isReadPermissionDeclared(getContext());
+
+            ivAttachment.setVisibility(shouldBeHidden ? GONE : VISIBLE);
+        }
+    }
+
+    public void removeAllAttachments(){
+        adapter.removeAll();
+    }
+
+    public void attachImage(String imageUri){
+        adapter.attachImage(imageUri);
+
+        if(adapter.getItemCount() == 1)
+            rvImageAttachment.setVisibility(VISIBLE);
+
+        rvImageAttachment.scrollToPosition(adapter.getItemCount()-1);
+    }
+
+    public List<Bitmap> getAllImages(){
+        return null;
     }
 
     public void requestInputFocus(){
@@ -110,7 +156,8 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     //endregion
 
     //region Interface element methods
-    private void attachPressed(){
+    @OnClick(R2.id.ivAttachment)
+    void attachmentClicked(){
         if(listener != null)
             listener.inputBarAttachmentClicked();
     }
@@ -159,6 +206,20 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
             sendPressed();
         }
         return false;
+    }
+
+    @Override
+    public void onAttachmentImageClicked(int position, List<String> imageURIs) {
+        new ImageViewer.Builder<>(getContext(), imageURIs)
+                .setStartPosition(position)
+                .setImageMarginPx((int) KUSUtils.dipToPixels(getContext(),10))
+                .show();
+    }
+
+    @Override
+    public void onAttachmentImageRemoved() {
+        if(adapter.getItemCount() == 0)
+            rvImageAttachment.setVisibility(GONE);
     }
     //endregion
 }

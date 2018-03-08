@@ -21,5 +21,12 @@
     <string name="kus_email_input_prompt_text">Don\'t miss a response! Get notified by email:</string>
     <string name="kus_email_input_hint_text">example@domain.com</string>
     <string name="kus_new_session_button_text">New Conversation</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="camera_permission_denied">Camera permission is denied.</string>
+    <string name="storage_permission_denied">Storage permission is denied.</string>
+
+    <string name="authorities">authority</string>
 
 </resources>

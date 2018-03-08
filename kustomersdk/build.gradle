@@ -66,6 +66,8 @@ dependencies {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
-    compile 'ru.noties:markwon:1.0.3'
-    compile 'com.nex3z:flow-layout:1.1.0'
+    implementation 'ru.noties:markwon:1.0.3'
+    implementation 'com.nex3z:flow-layout:1.1.0'
+    implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
+    implementation 'com.facebook.fresco:fresco:1.8.1'
 }

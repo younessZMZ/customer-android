@@ -15,6 +15,7 @@ import android.util.Size;
 
 import com.kustomer.kustomersdk.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,6 +176,16 @@ public class KUSImage {
         }
 
         return defaultNameColors;
+    }
+
+    public static byte[] getByteArrayFromBitmap(Bitmap bitmap){
+        if(bitmap != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            return stream.toByteArray();
+        }
+
+        return null;
     }
     //endregion
 

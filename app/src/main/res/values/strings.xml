@@ -4,4 +4,5 @@
     <string name="manually_present_support">Manually Present Support</string>
     <string name="reset_tracking_token">Reset Tracking Token</string>
     <string name="present_knowledgebase">Present KnowledgeBase</string>
+    <string name="authorities">com.kustomer.kustomer.fileprovider</string>
 </resources>

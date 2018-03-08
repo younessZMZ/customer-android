@@ -21,6 +21,8 @@ public class KUSConstants {
         String FORMS_ENDPOINT = "/c/v1/chat/forms/%s";
         String FORMS_RESPONSES_ENDPOINT = "/c/v1/chat/forms/%s/responses";
         String CURRENT_CUSTOMER_ENDPOINT = "/c/v1/customers/current";
+        String ATTACHMENT_ENDPOINT = "https://%s.api.%s/c/v1/chat/messages/%s/attachments/%s?redirect=true";
+        String CHAT_ATTACHMENT_ENDPOINT = "/c/v1/chat/attachments";
     }
 
     public interface Keys {

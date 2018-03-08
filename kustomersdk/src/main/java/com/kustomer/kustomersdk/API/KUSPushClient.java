@@ -268,7 +268,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             }
 
             if( chatSession != null){
-                boolean shouldAutoDismiss = latestMessage.getCampaignId().length() == 0;
+                boolean shouldAutoDismiss = latestMessage.getCampaignId() == null
+                        || latestMessage.getCampaignId().length() == 0;
+
                 KUSAudio.playMessageReceivedSound();
                 //TODO: show notification
             }

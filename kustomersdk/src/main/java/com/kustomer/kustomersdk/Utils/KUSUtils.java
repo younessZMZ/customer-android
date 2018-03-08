@@ -2,13 +2,20 @@ package com.kustomer.kustomersdk.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.kustomer.kustomersdk.Activities.KUSChatActivity;
+import com.kustomer.kustomersdk.R;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -88,6 +95,16 @@ public class KUSUtils {
         InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public static Uri getUriFromFile(Context context, File file) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return Uri.fromFile(file);
+        } else {
+            return FileProvider.getUriForFile(context,
+                    context.getResources().getString(R.string.authorities),
+                    file);
         }
     }
 }

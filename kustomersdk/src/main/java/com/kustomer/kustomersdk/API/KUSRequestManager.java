@@ -1,10 +1,12 @@
 package com.kustomer.kustomersdk.API;
 
 
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.os.ConfigurationCompat;
 import android.util.Log;
 
 import com.kustomer.kustomersdk.BuildConfig;
@@ -23,7 +25,9 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -133,7 +137,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
     }
 
-    private void performRequestType(final KUSRequestType type,
+    public void performRequestType(final KUSRequestType type,
                                     final URL url,
                                     final HashMap<String, Object> params,
                                     final byte[] bodyData,
@@ -307,14 +311,12 @@ private void safeComplete(final KUSRequestCompletionListener completionListener,
 
 
     private static String KUSAcceptLanguageHeaderValue(){
-        //TODO: To be changed Later
-        return "en-us";
+        return ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0).toString();
     }
 
     private static String KUSUserAgentHeaderValue(){
 
-        //Screen Scale not passed
-        return String.format(Locale.US,"%s/%s (%s; android %s; Scale/ 0.2f)",
+        return String.format(Locale.US,"%s/%s (%s; android %s;)",
                 BuildConfig.APPLICATION_ID,
                 BuildConfig.VERSION_NAME,
                 Build.MODEL,
