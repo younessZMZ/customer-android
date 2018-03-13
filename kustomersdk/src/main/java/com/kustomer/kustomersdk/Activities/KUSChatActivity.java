@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
@@ -49,6 +50,7 @@ import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 import com.kustomer.kustomersdk.Views.KUSEmailInputView;
 import com.kustomer.kustomersdk.Views.KUSInputBarView;
+import com.kustomer.kustomersdk.Views.KUSLargeImageViewer;
 import com.kustomer.kustomersdk.Views.KUSOptionsPickerView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 import com.stfalcon.frescoimageviewer.ImageViewer;
@@ -574,7 +576,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onChatMessageImageClicked(KUSChatMessage chatMessage) {
-        int position = 0;
+        int startingIndex = 0;
 
         List<String> imageURIs = new ArrayList<>();
 
@@ -585,12 +587,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             }
         }
 
-        position = imageURIs.indexOf(chatMessage.getImageUrl().toString());
+        startingIndex = imageURIs.indexOf(chatMessage.getImageUrl().toString());
 
-        new ImageViewer.Builder<>(this, imageURIs)
-                .setStartPosition(position)
-                .setImageMarginPx((int) KUSUtils.dipToPixels(this,10))
-                .show();
+        new KUSLargeImageViewer(this).showImages(imageURIs,startingIndex);
     }
     //endregion
 }

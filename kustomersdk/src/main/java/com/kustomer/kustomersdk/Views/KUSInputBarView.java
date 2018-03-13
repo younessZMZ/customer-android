@@ -242,10 +242,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     @Override
     public void onAttachmentImageClicked(int position, List<String> imageURIs) {
-        new ImageViewer.Builder<>(getContext(), imageURIs)
-                .setStartPosition(position)
-                .setImageMarginPx((int) KUSUtils.dipToPixels(getContext(),10))
-                .show();
+        new KUSLargeImageViewer(getContext()).showImages(imageURIs,position);
     }
 
     @Override

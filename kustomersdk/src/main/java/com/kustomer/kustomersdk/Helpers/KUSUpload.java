@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.Helpers;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -11,8 +12,10 @@ import com.kustomer.kustomersdk.Models.KUSChatAttachment;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +25,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -127,26 +141,46 @@ public class KUSUpload {
                                 HashMap<String, String> uploadFields =
                                         JsonHelper.hashMapFromKeyPath(response,"meta.upload.fields");
 
-                                String boundary = "----FormBoundary";
-                                final String contentType = String.format("multipart/form-data; boundary=%s",boundary);
-                                final byte[] bodyData = uploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(
-                                        imageBytes,
+//                                String boundary = "----FormBoundary";
+//                                final String contentType = String.format("multipart/form-data; boundary=%s",boundary);
+//                                final byte[] bodyData = uploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(
+//                                        imageBytes,
+//                                        filename,
+//                                        uploadFields,
+//                                        boundary
+//                                );
+//
+//                                userSession.getRequestManager().performRequestType(
+//                                        KUSRequestType.KUS_REQUEST_TYPE_POST,
+//                                        uploadURL,
+//                                        null,
+//                                        bodyData,
+//                                        false,
+//                                        new HashMap<String,String>(){{
+//                                                put("Content-Type",contentType);
+//                                            }},
+//                                        new KUSRequestCompletionListener(){
+//
+//                                            @Override
+//                                            public void onCompletion(Error error, JSONObject response) {
+//                                                if(error != null){
+//                                                    if(listener != null)
+//                                                        listener.onUploadComplete(error, null);
+//
+//                                                    return;
+//                                                }
+//
+//                                                if(listener != null)
+//                                                    listener.onUploadComplete(null,chatAttachment);
+//                                            }
+//                                        }
+//                                );
+
+                                uploadImageOnS3(uploadURL,
                                         filename,
+                                        imageBytes,
                                         uploadFields,
-                                        boundary
-                                );
-
-                                userSession.getRequestManager().performRequestType(
-                                        KUSRequestType.KUS_REQUEST_TYPE_POST,
-                                        uploadURL,
-                                        null,
-                                        bodyData,
-                                        false,
-                                        new HashMap<String,String>(){{
-                                                put("Content-Type",contentType);
-                                            }},
-                                        new KUSRequestCompletionListener(){
-
+                                        new KUSRequestCompletionListener() {
                                             @Override
                                             public void onCompletion(Error error, JSONObject response) {
                                                 if(error != null){
@@ -159,8 +193,7 @@ public class KUSUpload {
                                                 if(listener != null)
                                                     listener.onUploadComplete(null,chatAttachment);
                                             }
-                                        }
-                                );
+                                        });
 
 
                             } catch (MalformedURLException e) {
@@ -225,6 +258,66 @@ public class KUSUpload {
         }
 
         return bodyData;
+    }
+
+    public void uploadImageOnS3(URL url, String filename, byte[] imageBytes,
+                                HashMap<String, String> uploadFields,
+                                final KUSRequestCompletionListener completionListener){
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(180, TimeUnit.SECONDS)
+                .readTimeout(180, TimeUnit.SECONDS)
+                .addInterceptor(logging)
+                .build();
+
+        String [] fieldArrays = new String[uploadFields.keySet().size()];
+        fieldArrays = uploadFields.keySet().toArray(fieldArrays);
+
+        List<String> fieldKeys = new ArrayList<>(Arrays.asList(fieldArrays));
+        if(fieldKeys.contains("key")){
+            fieldKeys.remove("key");
+            fieldKeys.add(0,"key");
+        }
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+
+        for(String field : fieldKeys){
+            String value = uploadFields.get(field);
+
+            builder.addFormDataPart(field,value);
+        }
+
+        builder.addFormDataPart("file", filename);
+        builder.addPart(RequestBody.create(MediaType.parse("image/jpeg"), imageBytes));
+
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder().url(url).post(requestBody).build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                completionListener.onCompletion(new Error(e.getMessage()), null);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.body() != null) {
+                    String body = response.body().string();
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(body);
+                        completionListener.onCompletion(null, jsonObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     private static byte[] concatByteArrays(byte[]... inputs) {

@@ -29,5 +29,6 @@
 
     <string name="authorities">authority</string>
     <string name="attachment">Attachment</string>
+    <string name="share_via">Share Via</string>
 
 </resources>

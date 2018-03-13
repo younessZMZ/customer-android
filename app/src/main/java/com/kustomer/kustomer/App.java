@@ -3,7 +3,10 @@ package com.kustomer.kustomer;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.kustomer.kustomersdk.Kustomer;
+
+import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
 
@@ -20,6 +23,7 @@ public class App extends Application {
         super.onCreate();
 
         Kustomer.init(getAppContext(),K_KUSTOMER_API_KEY);
+        Fabric.with(this, new Crashlytics());
     }
 
     public static App getApplication() {

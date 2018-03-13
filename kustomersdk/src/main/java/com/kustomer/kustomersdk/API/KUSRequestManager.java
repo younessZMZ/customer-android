@@ -68,7 +68,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                 put("X-Kustomer","kustomer");
                 put("Accept-Language",KUSAcceptLanguageHeaderValue());
                 put("User_Agent",KUSUserAgentHeaderValue());
-                put("x-kustomer-client","android");
+                put("x-kustomer-client","iOS");
                 put("x-kustomer-version", Kustomer.sdkVersion());
             }
         };
@@ -176,8 +176,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC
-        );
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(logging)
                 .build();

@@ -26,6 +26,10 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="6dbb8ae533f157ede8dc0c0db6977bb1fce54878" />
+
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
