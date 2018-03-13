@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -186,6 +187,24 @@ public class KUSImage {
         }
 
         return null;
+    }
+
+    public static Bitmap getScaledImage(Bitmap bitmap, int maxPixelCount) throws OutOfMemoryError {
+
+        int srcWidth = bitmap.getWidth();
+        int srcHeight = bitmap.getHeight();
+
+        float imagePixelCount =  srcWidth * srcHeight;
+        float scaleDown = (float) Math.min(Math.sqrt(maxPixelCount/imagePixelCount),1.0);
+
+        if (scaleDown < 1) {
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleDown, scaleDown);
+
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } else {
+            return bitmap;
+        }
     }
     //endregion
 

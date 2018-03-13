@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="end"
@@ -21,6 +22,32 @@
         android:autoLink="web|email"
         android:textColorLink="@android:color/black"
         android:textColor="@color/kusUserTextColor" />
+
+    <com.kustomer.kustomersdk.Views.KUSSquareFrameLayout
+        android:id="@+id/attachmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="75dp"
+        android:visibility="gone"
+        android:background="@drawable/shape_user_message_background"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/ivAttachmentImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+
+        <ProgressBar
+            android:id="@+id/progressBarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+    </com.kustomer.kustomersdk.Views.KUSSquareFrameLayout>
 
     <TextView
         android:id="@+id/tvDate"

@@ -10,6 +10,7 @@ import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
+import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
@@ -172,7 +173,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     public void onEvent(String channelName, String eventName, String data) {
                         JSONObject jsonObject = JsonHelper.stringToJson(data);
 
-                        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+                        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(
+                                Kustomer.getContext(),JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
                         KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
                         final KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());

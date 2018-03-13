@@ -28,5 +28,6 @@
     <string name="storage_permission_denied">Storage permission is denied.</string>
 
     <string name="authorities">authority</string>
+    <string name="attachment">Attachment</string>
 
 </resources>

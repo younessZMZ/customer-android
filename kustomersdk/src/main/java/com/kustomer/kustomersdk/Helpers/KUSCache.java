@@ -41,4 +41,9 @@ public class KUSCache {
         return mMemoryCache.get(key);
     }
 
+    public void removeBitmapFromMemCache(String key){
+        if(key != null)
+            mMemoryCache.remove(key);
+    }
+
 }

@@ -28,15 +28,18 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     private KUSPaginatedDataSource mPaginatedDataSource;
     private KUSUserSession mUserSession;
     private KUSChatMessagesDataSource mChatMessagesDataSource;
+    private ChatMessageItemListener mListener;
     //endregion
 
     //region LifeCycle
     public MessageListAdapter(KUSPaginatedDataSource paginatedDataSource,
                               KUSUserSession userSession,
-                              KUSChatMessagesDataSource chatMessagesDataSource){
+                              KUSChatMessagesDataSource chatMessagesDataSource,
+                              ChatMessageItemListener listener){
         mPaginatedDataSource = paginatedDataSource;
         mUserSession = userSession;
         mChatMessagesDataSource = chatMessagesDataSource;
+        mListener = listener;
     }
 
     @Override
@@ -63,11 +66,11 @@ public class MessageListAdapter extends RecyclerView.Adapter{
                 nextChatMessage.getCreatedAt().getTime()-chatMessage.getCreatedAt().getTime() > K_5_MINUTE;
 
         if (holder.getItemViewType() == USER_VIEW) {
-            ((UserMessageViewHolder)holder).onBind(chatMessage,nextMessageOlderThan5Min);
+            ((UserMessageViewHolder)holder).onBind(chatMessage,nextMessageOlderThan5Min,mListener);
         }else{
             boolean previousMessageDiffSender = !KUSChatMessage.KUSMessagesSameSender(previousChatMessage,chatMessage);
             ((AgentMessageViewHolder)holder).onBind(chatMessage, mUserSession,
-                    previousMessageDiffSender, nextMessageOlderThan5Min);
+                    previousMessageDiffSender, nextMessageOlderThan5Min,mListener);
         }
     }
 
@@ -108,6 +111,12 @@ public class MessageListAdapter extends RecyclerView.Adapter{
         }else{
             return null;
         }
+    }
+    //endregion
+
+    //region Interface
+    public interface ChatMessageItemListener{
+        void onChatMessageImageClicked(KUSChatMessage chatMessage);
     }
     //endregion
 }

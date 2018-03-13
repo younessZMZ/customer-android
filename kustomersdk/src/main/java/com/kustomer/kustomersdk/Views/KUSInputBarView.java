@@ -2,6 +2,9 @@ package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,17 +19,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kustomer.kustomersdk.Adapters.ImageAttachmentListAdapter;
+import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
-import com.kustomer.kustomersdk.Models.KUSChatSession;
-import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,6 +44,8 @@ import butterknife.OnClick;
 public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener, ImageAttachmentListAdapter.onItemClickListener {
 
     //region Properties
+    private static final int MAX_BITMAP_PIXELS = 1000000;
+
     @BindView(R2.id.etTypeMessage) EditText etTypeMessage;
     @BindView(R2.id.btnSendMessage) View btnSendMessage;
     @BindView(R2.id.ivAttachment) ImageView ivAttachment;
@@ -142,7 +148,33 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     }
 
     public List<Bitmap> getAllImages(){
-        return null;
+
+        if(adapter.getImageURIs().size() != 0) {
+            List<Bitmap> images = new ArrayList<>();
+
+            for (String uri : adapter.getImageURIs()) {
+                if (!uri.startsWith("content")) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(new File(uri).getAbsolutePath());
+
+                    if (bitmap != null)
+                        images.add(KUSImage.getScaledImage(bitmap, MAX_BITMAP_PIXELS));
+
+                    bitmap = null;
+                } else {
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(uri));
+                        if (bitmap != null)
+                            images.add(KUSImage.getScaledImage(bitmap, MAX_BITMAP_PIXELS));
+
+                        bitmap = null;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return images;
+        }else
+            return null;
     }
 
     public void requestInputFocus(){

@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
         KUSCustomerDescription customerDescription = new KUSCustomerDescription();
-        customerDescription.setEmail("xyz@brainxtech.com");
+        customerDescription.setEmail("xasd@brainxtech.com");
 
         JSONObject customObject = new JSONObject();
         try {

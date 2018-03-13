@@ -39,6 +39,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -174,7 +175,13 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                                  final KUSRequestCompletionListener completionListener){
 
 
-        OkHttpClient client = new OkHttpClient();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC
+        );
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
         HttpUrl httpUrl = HttpUrl.parse(url.toString());
         HttpUrl.Builder httpBuilder = null;
         Request request = null;
@@ -191,7 +198,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                     }
             }
 
-            Request.Builder requestBuilder = requestBuilder = new Request.Builder()
+            Request.Builder requestBuilder = new Request.Builder()
                     .url(httpBuilder.build());
 
             //Adding headers

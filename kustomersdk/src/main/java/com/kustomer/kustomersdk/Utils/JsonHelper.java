@@ -1,11 +1,15 @@
 package com.kustomer.kustomersdk.Utils;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -89,10 +95,10 @@ public class JsonHelper {
             for (int i = 0; i < keys.length - 1; i++) {
                 jsonObject = jsonObject.getJSONObject(keys[i]);
             }
-            JSONArray jsonArray = keys.length > 0 ? jsonObject.getJSONArray(keys[keys.length - 1]) : jsonObject.getJSONArray(keyPath);
+            JSONObject jsonObject1 = keys.length > 0 ? jsonObject.getJSONObject(keys[keys.length - 1]) : jsonObject.getJSONObject(keyPath);
 
             Type hashMapType = new TypeToken<HashMap<String,String>>(){}.getType();
-            return googleJson.fromJson(jsonArray.toString(), hashMapType);
+            return googleJson.fromJson(jsonObject1.toString(), hashMapType);
         } catch (Exception e) {
             return null;
         }
@@ -159,7 +165,7 @@ public class JsonHelper {
         return null;
     }
 
-    public static List<KUSModel> kusChatModelsFromJSON(JSONObject jsonObject) {
+    public static List<KUSModel> kusChatModelsFromJSON(Context context, JSONObject jsonObject) {
         if(jsonObject == null)
             return null;
 
@@ -183,10 +189,104 @@ public class JsonHelper {
 
         Pattern regex = Pattern.compile(imagePattern);
 
+        int lastId = 0;
+        int lastLocation = 0;
 
-        // TODO: Incomplete
+        Matcher matcher = regex.matcher(body);
 
-        chatMessages.add(standardChatMessage);
+        while(matcher.find()){
+
+            String urlPattern = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+            Matcher urlMatcher = Pattern.compile(urlPattern).matcher(matcher.group());
+
+            if(urlMatcher.find()){
+                String matchedText = KUSUtils.KUSUnescapeBackslashesFromString(urlMatcher.group());
+                try {
+                    URL matchedURL = new URL(matchedText);
+                    JSONObject previousJSON = new JSONObject(jsonObject.toString());
+                    previousJSON.put("id",String.format(Locale.getDefault(),
+                            "%s_%d",standardChatMessage.getId(),lastId));
+
+                    String previousText = body.substring(lastLocation,matcher.start());
+                    previousText = previousText.trim();
+                    if(previousText.length() > 0){
+                        try {
+                            KUSChatMessage previousChatMessage = new KUSChatMessage(previousJSON);
+                            previousChatMessage.setBody(previousText);
+                            chatMessages.add(previousChatMessage);
+                            lastId++;
+                        } catch (KUSInvalidJsonException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    JSONObject imageJSON = new JSONObject(jsonObject.toString());
+                    imageJSON.put("id",String.format(Locale.getDefault(),
+                            "%s_%d",standardChatMessage.getId(),lastId));
+                    KUSChatMessage imageMessage = new KUSChatMessage(imageJSON,
+                            KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_IMAGE,matchedURL);
+                    imageMessage.setBody(matchedText);
+                    chatMessages.add(imageMessage);
+                    lastId++;
+                    lastLocation = matcher.end();
+
+
+                } catch (MalformedURLException | JSONException | KUSInvalidJsonException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        if(chatMessages.size() == 0)
+            chatMessages.add(standardChatMessage);
+        else{
+            JSONObject previousJSON = null;
+            try {
+
+                previousJSON = new JSONObject(jsonObject.toString());
+                previousJSON.put("id",String.format(Locale.getDefault(),
+                        "%s_%d",standardChatMessage.getId(),lastId));
+
+                String previousText = body.substring(lastLocation,body.length());
+                previousText = previousText.trim();
+                if(previousText.length() > 0){
+                    try {
+                        KUSChatMessage previousMessage = new KUSChatMessage(previousJSON);
+                        previousMessage.setBody(previousText);
+                        chatMessages.add(previousMessage);
+                        lastId++;
+                    } catch (KUSInvalidJsonException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(standardChatMessage.getAttachmentIds() != null) {
+            for (Object id : standardChatMessage.getAttachmentIds()) {
+                String attachmentId = (String) id;
+                try {
+                    URL imageUrl = KUSChatMessage.attachmentUrlForMessageId(standardChatMessage.getId(), attachmentId);
+
+                    JSONObject imageJson = new JSONObject(jsonObject.toString());
+                    imageJson.put("id", String.format(Locale.getDefault(),
+                            "%s_%d", standardChatMessage.getId(), lastId));
+                    KUSChatMessage imageMessage = new KUSChatMessage(imageJson,
+                            KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_IMAGE, imageUrl);
+
+                    imageMessage.setBody(context.getString(R.string.attachment));
+                    chatMessages.add(imageMessage);
+                    lastId++;
+                } catch (MalformedURLException | JSONException | KUSInvalidJsonException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
 
         return chatMessages;
     }

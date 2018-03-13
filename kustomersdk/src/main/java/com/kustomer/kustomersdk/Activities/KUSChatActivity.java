@@ -29,6 +29,7 @@ import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
+import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Helpers.KUSText;
@@ -37,6 +38,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSOptionPickerViewListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSFormQuestion;
 import com.kustomer.kustomersdk.Models.KUSModel;
@@ -49,6 +51,7 @@ import com.kustomer.kustomersdk.Views.KUSEmailInputView;
 import com.kustomer.kustomersdk.Views.KUSInputBarView;
 import com.kustomer.kustomersdk.Views.KUSOptionsPickerView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +64,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener, MessageListAdapter.ChatMessageItemListener {
 
     //region Properties
     private static final int REQUEST_IMAGE_CAPTURE = 1122;
@@ -311,7 +314,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void setupAdapter() {
-        adapter = new MessageListAdapter(chatMessagesDataSource, userSession, chatMessagesDataSource);
+        adapter = new MessageListAdapter(chatMessagesDataSource, userSession, chatMessagesDataSource, this);
         rvMessages.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
@@ -536,7 +539,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         if (chatMessagesDataSource.shouldPreventSendingMessage())
             return;
 
-        chatMessagesDataSource.sendMessageWithText(kusInputBarView.getText(), null);
+        chatMessagesDataSource.sendMessageWithText(kusInputBarView.getText(), kusInputBarView.getAllImages());
         kusInputBarView.setText("");
         kusInputBarView.removeAllAttachments();
     }
@@ -567,6 +570,27 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 team != null && team.displayName != null ? team.displayName : option,
                 null,
                 value != null ? value : team != null ? team.getId() : null);
+    }
+
+    @Override
+    public void onChatMessageImageClicked(KUSChatMessage chatMessage) {
+        int position = 0;
+
+        List<String> imageURIs = new ArrayList<>();
+
+        for(int i = chatMessagesDataSource.getSize() -1 ; i >= 0; i--){
+            KUSChatMessage kusChatMessage = (KUSChatMessage) chatMessagesDataSource.get(i);
+            if(kusChatMessage.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_IMAGE){
+                imageURIs.add(kusChatMessage.getImageUrl().toString());
+            }
+        }
+
+        position = imageURIs.indexOf(chatMessage.getImageUrl().toString());
+
+        new ImageViewer.Builder<>(this, imageURIs)
+                .setStartPosition(position)
+                .setImageMarginPx((int) KUSUtils.dipToPixels(this,10))
+                .show();
     }
     //endregion
 }

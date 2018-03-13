@@ -58,7 +58,7 @@ public class KUSChatMessage extends KUSModel {
         this(json, KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT, null);
     }
 
-    private KUSChatMessage(JSONObject json, KUSChatMessageType type, URL imageUrl) throws KUSInvalidJsonException {
+    public KUSChatMessage(JSONObject json, KUSChatMessageType type, URL imageUrl) throws KUSInvalidJsonException {
         super(json);
 
         state = KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT;

@@ -59,6 +59,10 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         imageURIs.clear();
         notifyDataSetChanged();
     }
+
+    public List<String> getImageURIs(){
+        return imageURIs;
+    }
     //endreigon
 
     //region Callbacks

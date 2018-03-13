@@ -115,8 +115,13 @@ public class KUSUpload {
                                 return;
                             }
 
-                            final KUSChatAttachment chatAttachment =
-                                    new KUSChatAttachment(JsonHelper.jsonObjectFromKeyPath(response,"data"));
+                            final KUSChatAttachment chatAttachment;
+                            try {
+                                chatAttachment = new KUSChatAttachment(JsonHelper.jsonObjectFromKeyPath(response,"data"));
+                            } catch (KUSInvalidJsonException e) {
+                                return;
+                            }
+
                             try {
                                 URL uploadURL = new URL(JsonHelper.stringFromKeyPath(response,"meta.upload.url"));
                                 HashMap<String, String> uploadFields =
@@ -173,6 +178,8 @@ public class KUSUpload {
                                                                         HashMap<String, String> uploadFields,
                                                                         String boundary){
 
+        byte[] bodyData = null;
+
         String [] fieldArrays = new String[uploadFields.keySet().size()];
         fieldArrays = uploadFields.keySet().toArray(fieldArrays);
 
@@ -183,14 +190,55 @@ public class KUSUpload {
         }
 
         try {
-            byte []bytes = String.format("\\r\\n--%s\\r\\n",boundary).getBytes("UTF-8");
-            //TODO: append bytes
+            bodyData = String.format("\r\n--%s\r\n",boundary).getBytes("UTF-8");
+
+            for(String field : fieldKeys){
+                String value = uploadFields.get(field);
+                bodyData = concatByteArrays(
+                        bodyData,
+                        String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s",field,value)
+                                .getBytes("UTF-8"));
+
+                bodyData = concatByteArrays(
+                        bodyData,
+                        String.format("\r\n--%s\r\n",boundary)
+                                .getBytes("UTF-8"));
+            }
+
+            bodyData = concatByteArrays(
+                    bodyData,
+                    String.format("Content-Disposition: form-data; name=\"file\"; filename=\"%s\"\r\n",
+                            fileName).getBytes("UTF-8"));
+
+            bodyData = concatByteArrays(
+                    bodyData,
+                    "Content-Type: image/jpeg\r\n\r\n".getBytes("UTF-8"));
+
+            bodyData = concatByteArrays(bodyData, imageBytes);
+
+            bodyData = concatByteArrays(
+                    bodyData,
+                    String.format("\r\n--%s--", boundary).getBytes("UTF-8"));
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return bodyData;
+    }
+
+    private static byte[] concatByteArrays(byte[]... inputs) {
+        int i = 0;
+        for (byte[] b : inputs) {
+            i += b.length;
+        }
+        byte[] r = new byte[i];
+        i = 0;
+        for (byte[] b : inputs) {
+            System.arraycopy(b, 0, r, i, b.length);
+            i += b.length;
+        }
+        return r;
     }
     //endregion
 
