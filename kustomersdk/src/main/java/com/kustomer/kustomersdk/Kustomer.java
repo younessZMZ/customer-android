@@ -9,6 +9,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
@@ -87,8 +88,11 @@ public class Kustomer {
         }
     }
 
-    public static void presentKnowledgeBase(){
-        //TODO:
+    public static void presentKnowledgeBase(Activity activity){
+        Intent intent = new Intent(activity, KUSKnowledgeBaseActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
     }
     //endregion
 

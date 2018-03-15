@@ -42,6 +42,12 @@
     <color name="kusOptionPickerButtonTextColor">#2962FF</color>
     <color name="kusOptionPickerButtonBackground">#F5F5F5</color>
 
+    <color name="kusWebBackTintColor">#000000</color>
+    <color name="kusWebForwardTintColor">#000000</color>
+    <color name="kusWebRefreshTintColor">#000000</color>
+    <color name="kusWebToolbarTitleColor">#000000</color>
+    <color name="kusWebToolbarBackTintColor">#000000</color>
+
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>
     <color name="colorOffWhite">#F5F5F5</color>

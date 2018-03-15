@@ -20,14 +20,14 @@
         android:layout_gravity="end"
         android:layout_marginStart="60dp"
         android:autoLink="web|email"
-        android:textColorLink="@android:color/black"
+        android:textColorLink="@color/kusUserTextColor"
         android:textColor="@color/kusUserTextColor" />
 
     <com.kustomer.kustomersdk.Views.KUSSquareFrameLayout
         android:id="@+id/attachmentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="75dp"
+        android:layout_marginStart="120dp"
         android:visibility="gone"
         android:background="@drawable/shape_user_message_background"
         android:padding="10dp">

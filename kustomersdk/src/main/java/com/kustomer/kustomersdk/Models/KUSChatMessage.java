@@ -7,9 +7,12 @@ import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -36,7 +39,7 @@ public class KUSChatMessage extends KUSModel {
     private String trackingId;
     private String body;
     private URL imageUrl;
-    private ArrayList attachmentIds;
+    private List attachmentIds;
 
     private Date createdAt;
     private Date importedAt;
@@ -66,7 +69,11 @@ public class KUSChatMessage extends KUSModel {
         body = stringFromKeyPath(json,"attributes.body");
         this.type = type;
         this.imageUrl = imageUrl;
-        this.attachmentIds = arrayListFromKeyPath(json,"relationships.attachments.data.@unionOfObjects.id");
+
+        JSONArray attachmentArray = JsonHelper.arrayFromKeyPath(json,"relationships.attachments.data");
+
+        if(attachmentArray != null)
+            this.attachmentIds = arrayListFromJsonArray(attachmentArray,"id");
 
         this.createdAt = dateFromKeyPath(json,"attributes.createdAt");
         this.importedAt = dateFromKeyPath(json,"attributes.importedAt");
@@ -74,6 +81,7 @@ public class KUSChatMessage extends KUSModel {
         this.sentById = stringFromKeyPath(json, "relationships.sentBy.data.id");
         this.campaignId = stringFromKeyPath(json, "relationships.campaign.data.id");
     }
+
     //endregion
 
     //region Public Methods
@@ -156,6 +164,23 @@ public class KUSChatMessage extends KUSModel {
     }
     //endregion
 
+    //region Private Methods
+    private List<String> arrayListFromJsonArray(JSONArray array, String id) {
+        List<String> list = new ArrayList<>();
+
+        for(int i = 0 ; i<array.length() ; i++){
+            try {
+                JSONObject jsonObject = array.getJSONObject(i);
+                list.add(jsonObject.getString(id));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+    }
+    //endregion
+
     //region Accessors
 
     public String getTrackingId() {
@@ -182,7 +207,7 @@ public class KUSChatMessage extends KUSModel {
         this.imageUrl = imageUrl;
     }
 
-    public ArrayList getAttachmentIds() {
+    public List getAttachmentIds() {
         return attachmentIds;
     }
 

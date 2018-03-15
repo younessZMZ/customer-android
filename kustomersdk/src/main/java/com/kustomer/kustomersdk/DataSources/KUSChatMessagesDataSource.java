@@ -12,6 +12,7 @@ import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
+import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Helpers.KUSUpload;
@@ -32,6 +33,7 @@ import com.kustomer.kustomersdk.Models.KUSFormQuestion;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +61,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     //region Properties
     private static final int KUS_CHAT_AUTO_REPLY_DELAY = 2 * 1000;
+    private static final int MAX_PIXEL_COUNT_FOR_CACHED_IMAGES = 400000;
 
     private String sessionId;
     private boolean createdLocally;
@@ -146,7 +149,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
         if (sessionId == null && chatSettings.getActiveFormId() != null) {
 
-            if (attachments.size() > 0)
+            if (attachments != null && attachments.size() > 0)
                 throw new AssertionError("Should not have been able to send attachments without a sessionId");
 
 
@@ -259,7 +262,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
                     URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(tempMessageId, attachmentId);
                     String imageKey = attachmentURL.toString();
-                    new KUSCache().addBitmapToMemoryCache(imageKey, bitmap);
+                    new KUSCache().addBitmapToMemoryCache(imageKey, KUSImage.getScaledImage(bitmap,MAX_PIXEL_COUNT_FOR_CACHED_IMAGES));
                     attachmentObjects.put(new JSONObject() {{
                         put("id", attachmentId);
                     }});
@@ -765,7 +768,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         //Store the local image data in our cache for the remote image urls
         KUSChatMessage firstMessage = (KUSChatMessage) finalMessages.get(0);
         for (int i = 0; i < (firstMessage.getAttachmentIds() != null ? firstMessage.getAttachmentIds().size() : 0); i++) {
-            Bitmap attachment = attachments.get(i);
+            Bitmap attachment = KUSImage.getScaledImage(attachments.get(i),MAX_PIXEL_COUNT_FOR_CACHED_IMAGES);
             String attachmentId = (String) firstMessage.getAttachmentIds().get(i);
             try {
                 URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(firstMessage.getId(), attachmentId);

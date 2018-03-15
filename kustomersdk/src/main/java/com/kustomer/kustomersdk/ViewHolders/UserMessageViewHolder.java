@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk.ViewHolders;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,10 @@ import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Views.KUSSquareFrameLayout;
 
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,6 +41,8 @@ import butterknife.ButterKnife;
 public class UserMessageViewHolder extends RecyclerView.ViewHolder {
 
     //region Properties
+    private static final long OPTIMISTIC_SEND_LOADING_DELAY = 750;
+
     @BindView(R2.id.tvMessage)
     TextView tvMessage;
     @BindView(R2.id.tvDate)
@@ -46,8 +53,11 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
     KUSSquareFrameLayout attachmentLayout;
     @BindView(R2.id.progressBarImage)
     ProgressBar progressBarImage;
+    private Timer sendingFadingTimer;
 
     private boolean imageLoadedSuccessfully = false;
+    private KUSChatMessage chatMessage;
+    private MessageListAdapter.ChatMessageItemListener mListener;
     //endregion
 
     //region LifeCycle
@@ -56,7 +66,9 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this,itemView);
     }
 
-    public void onBind(final KUSChatMessage chatMessage, boolean showDate, final MessageListAdapter.ChatMessageItemListener mListener){
+    public void onBind(final KUSChatMessage chatMessage, boolean showDate, final MessageListAdapter.ChatMessageItemListener listener){
+        this.chatMessage = chatMessage;
+        this.mListener = listener;
 
         if(chatMessage.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT){
             tvMessage.setVisibility(View.VISIBLE);
@@ -66,7 +78,7 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             tvMessage.setVisibility(View.GONE);
             attachmentLayout.setVisibility(View.VISIBLE);
 
-            updateImageForMessage(chatMessage,mListener);
+            updateImageForMessage();
         }
 
         if(showDate){
@@ -76,10 +88,13 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             tvDate.setText("");
             tvDate.setVisibility(View.GONE);
         }
-    }
 
-    private void updateImageForMessage(final KUSChatMessage chatMessage,
-                                       final MessageListAdapter.ChatMessageItemListener mListener){
+        updateAlphaForState();
+    }
+    //endregion
+
+    //region Private Methods
+    private void updateImageForMessage(){
 
 
         progressBarImage.setVisibility(View.VISIBLE);
@@ -117,11 +132,61 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if(!imageLoadedSuccessfully)
-                    updateImageForMessage(chatMessage,mListener);
-
-                mListener.onChatMessageImageClicked(chatMessage);
+                    updateImageForMessage();
+                else
+                    mListener.onChatMessageImageClicked(chatMessage);
             }
         });
+    }
+
+    private void updateAlphaForState(){
+        switch (chatMessage.getState()){
+            case KUS_CHAT_MESSAGE_STATE_SENT:
+                tvMessage.setAlpha(1.0f);
+                attachmentLayout.setAlpha(1.0f);
+                break;
+            case KUS_CHAT_MESSAGE_STATE_SENDING:{
+                long timeElapsed = Calendar.getInstance().getTimeInMillis() - chatMessage.getCreatedAt().getTime();
+                if(timeElapsed >= OPTIMISTIC_SEND_LOADING_DELAY){
+                    tvMessage.setAlpha(0.5f);
+                    attachmentLayout.setAlpha(0.5f);
+                }else{
+                    tvMessage.setAlpha(1.0f);
+                    attachmentLayout.setAlpha(1.0f);
+
+                    if(sendingFadingTimer != null)
+                        sendingFadingTimer.cancel();
+                    sendingFadingTimer = null;
+
+                    long timeInterval = OPTIMISTIC_SEND_LOADING_DELAY - timeElapsed;
+                    startTimer(timeInterval);
+
+                }
+
+            }   break;
+            case KUS_CHAT_MESSAGE_STATE_FAILED:
+                tvMessage.setAlpha(0.5f);
+                attachmentLayout.setAlpha(0.5f);
+                break;
+        }
+    }
+
+    private void startTimer(long time) {
+        try {
+            final Handler handler = new Handler();
+            sendingFadingTimer = new Timer();
+            TimerTask doAsynchronousTask = new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            updateAlphaForState();
+                        }
+                    });
+                }
+            };
+            sendingFadingTimer.schedule(doAsynchronousTask, 0, time);
+        }catch (Exception ignore){}
     }
     //endregion
 

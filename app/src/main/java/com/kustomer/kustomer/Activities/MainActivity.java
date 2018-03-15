@@ -20,6 +20,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region Properties
     Button btnStartChat;
     Button btnResetTrackingToken;
+    Button btnKnowledgeBase;
     ImageView ivSupport;
     //endregion
 
@@ -33,6 +34,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setListeners();
 
 
+        // Describing Customer
         KUSCustomerDescription customerDescription = new KUSCustomerDescription();
         customerDescription.setEmail("xasd@brainxtech.com");
 
@@ -45,7 +47,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         customerDescription.setCustom(customObject);
         Kustomer.describeCustomer(customerDescription);
 
-
+        // Describing Conversation
         JSONObject conversationObject = new JSONObject();
         try {
             conversationObject.put("companyStr","brainxTech");
@@ -53,12 +55,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             e.printStackTrace();
         }
         Kustomer.describeConversation(conversationObject);
+
+        Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHRlcm5hbElkIjoiMTEyMiIsImlhdCI6MTUyMTAzMTcyMX0.tOuT7041V4lV9LNtd6mEhQir-oQzCCkPEZoT2Qaq4ic");
     }
     //endregion
 
     //region Initializer
     private void initViews(){
         btnStartChat = findViewById(R.id.btnPresent);
+        btnKnowledgeBase = findViewById(R.id.btnKnowledgeBase);
         ivSupport = findViewById(R.id.ivSupport);
         btnResetTrackingToken = findViewById(R.id.btnResetToken);
     }
@@ -67,6 +72,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnStartChat.setOnClickListener(this);
         btnResetTrackingToken.setOnClickListener(this);
         ivSupport.setOnClickListener(this);
+        btnKnowledgeBase.setOnClickListener(this);
     }
     //endregion
 
@@ -81,6 +87,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.btnResetToken:
                 Kustomer.resetToken();
+                break;
+
+            case R.id.btnKnowledgeBase:
+                Kustomer.presentKnowledgeBase(this);
                 break;
         }
     }

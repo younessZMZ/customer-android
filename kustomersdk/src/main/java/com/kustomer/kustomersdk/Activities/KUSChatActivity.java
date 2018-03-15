@@ -541,7 +541,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         if (chatMessagesDataSource.shouldPreventSendingMessage())
             return;
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                chatMessagesDataSource.sendMessageWithText(kusInputBarView.getText(), kusInputBarView.getAllImages());
+            }
+        }).start();
+
         chatMessagesDataSource.sendMessageWithText(kusInputBarView.getText(), kusInputBarView.getAllImages());
+
         kusInputBarView.setText("");
         kusInputBarView.removeAllAttachments();
     }

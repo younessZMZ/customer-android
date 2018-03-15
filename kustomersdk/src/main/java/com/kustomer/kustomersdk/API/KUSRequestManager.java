@@ -68,7 +68,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                 put("X-Kustomer","kustomer");
                 put("Accept-Language",KUSAcceptLanguageHeaderValue());
                 put("User_Agent",KUSUserAgentHeaderValue());
-                put("x-kustomer-client","iOS");
+                put("x-kustomer-client","android");
                 put("x-kustomer-version", Kustomer.sdkVersion());
             }
         };
@@ -322,7 +322,7 @@ private void safeComplete(final KUSRequestCompletionListener completionListener,
 
     private static String KUSUserAgentHeaderValue(){
 
-        return String.format(Locale.US,"%s/%s (%s; android %s;)",
+        return String.format(Locale.getDefault(),"%s/%s (%s; android %s;)",
                 BuildConfig.APPLICATION_ID,
                 BuildConfig.VERSION_NAME,
                 Build.MODEL,

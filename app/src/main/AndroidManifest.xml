@@ -45,6 +45,10 @@
         <activity android:name="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/MySupportTheme" />
+
+        <activity android:name="com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/MySupportTheme"/>
     </application>
 
 </manifest>

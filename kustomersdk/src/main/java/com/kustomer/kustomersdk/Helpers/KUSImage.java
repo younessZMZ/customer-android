@@ -37,7 +37,7 @@ public class KUSImage {
     //endregion
 
     //region Public Methods
-    public static Bitmap circularImage(Size size, int color,int strokeColor, int strokeWidth){
+    private static Bitmap circularImage(Size size, int color, int strokeColor, int strokeWidth){
         Bitmap dstBitmap = Bitmap.createBitmap(
                 size.getWidth(), // Width
                 size.getHeight(), // Height
@@ -179,7 +179,7 @@ public class KUSImage {
         return defaultNameColors;
     }
 
-    public static byte[] getByteArrayFromBitmap(Bitmap bitmap){
+    static byte[] getByteArrayFromBitmap(Bitmap bitmap){
         if(bitmap != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);

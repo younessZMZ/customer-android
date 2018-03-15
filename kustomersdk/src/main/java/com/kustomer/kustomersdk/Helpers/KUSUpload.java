@@ -45,8 +45,8 @@ public class KUSUpload {
 
     //region Properties
     private boolean sendingComplete = false;
-    int uploadedCount = 0;
-    List<KUSChatAttachment> attachments;
+    private int uploadedCount = 0;
+    private List<KUSChatAttachment> attachments;
     //endregion
 
     //region LifeCycle
@@ -141,41 +141,6 @@ public class KUSUpload {
                                 HashMap<String, String> uploadFields =
                                         JsonHelper.hashMapFromKeyPath(response,"meta.upload.fields");
 
-//                                String boundary = "----FormBoundary";
-//                                final String contentType = String.format("multipart/form-data; boundary=%s",boundary);
-//                                final byte[] bodyData = uploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(
-//                                        imageBytes,
-//                                        filename,
-//                                        uploadFields,
-//                                        boundary
-//                                );
-//
-//                                userSession.getRequestManager().performRequestType(
-//                                        KUSRequestType.KUS_REQUEST_TYPE_POST,
-//                                        uploadURL,
-//                                        null,
-//                                        bodyData,
-//                                        false,
-//                                        new HashMap<String,String>(){{
-//                                                put("Content-Type",contentType);
-//                                            }},
-//                                        new KUSRequestCompletionListener(){
-//
-//                                            @Override
-//                                            public void onCompletion(Error error, JSONObject response) {
-//                                                if(error != null){
-//                                                    if(listener != null)
-//                                                        listener.onUploadComplete(error, null);
-//
-//                                                    return;
-//                                                }
-//
-//                                                if(listener != null)
-//                                                    listener.onUploadComplete(null,chatAttachment);
-//                                            }
-//                                        }
-//                                );
-
                                 uploadImageOnS3(uploadURL,
                                         filename,
                                         imageBytes,
@@ -206,63 +171,9 @@ public class KUSUpload {
         }
     }
 
-    private byte[] uploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(byte[] imageBytes,
-                                                                        String fileName,
-                                                                        HashMap<String, String> uploadFields,
-                                                                        String boundary){
-
-        byte[] bodyData = null;
-
-        String [] fieldArrays = new String[uploadFields.keySet().size()];
-        fieldArrays = uploadFields.keySet().toArray(fieldArrays);
-
-        List<String> fieldKeys = new ArrayList<>(Arrays.asList(fieldArrays));
-        if(fieldKeys.contains("key")){
-            fieldKeys.remove("key");
-            fieldKeys.add(0,"key");
-        }
-
-        try {
-            bodyData = String.format("\r\n--%s\r\n",boundary).getBytes("UTF-8");
-
-            for(String field : fieldKeys){
-                String value = uploadFields.get(field);
-                bodyData = concatByteArrays(
-                        bodyData,
-                        String.format("Content-Disposition: form-data; name=\"%s\"\r\n\r\n%s",field,value)
-                                .getBytes("UTF-8"));
-
-                bodyData = concatByteArrays(
-                        bodyData,
-                        String.format("\r\n--%s\r\n",boundary)
-                                .getBytes("UTF-8"));
-            }
-
-            bodyData = concatByteArrays(
-                    bodyData,
-                    String.format("Content-Disposition: form-data; name=\"file\"; filename=\"%s\"\r\n",
-                            fileName).getBytes("UTF-8"));
-
-            bodyData = concatByteArrays(
-                    bodyData,
-                    "Content-Type: image/jpeg\r\n\r\n".getBytes("UTF-8"));
-
-            bodyData = concatByteArrays(bodyData, imageBytes);
-
-            bodyData = concatByteArrays(
-                    bodyData,
-                    String.format("\r\n--%s--", boundary).getBytes("UTF-8"));
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return bodyData;
-    }
-
-    public void uploadImageOnS3(URL url, String filename, byte[] imageBytes,
-                                HashMap<String, String> uploadFields,
-                                final KUSRequestCompletionListener completionListener){
+    private void uploadImageOnS3(URL url, String filename, byte[] imageBytes,
+                                 HashMap<String, String> uploadFields,
+                                 final KUSRequestCompletionListener completionListener){
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -291,8 +202,7 @@ public class KUSUpload {
             builder.addFormDataPart(field,value);
         }
 
-        builder.addFormDataPart("file", filename);
-        builder.addPart(RequestBody.create(MediaType.parse("image/jpeg"), imageBytes));
+        builder.addFormDataPart("file", filename, RequestBody.create(MediaType.parse("image/jpeg"), imageBytes));
 
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder().url(url).post(requestBody).build();
@@ -307,31 +217,21 @@ public class KUSUpload {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(response.body() != null) {
-                    String body = response.body().string();
+                    boolean twoHundred = response.code() >= 200 && response.code() <300;
 
-                    try {
-                        JSONObject jsonObject = new JSONObject(body);
-                        completionListener.onCompletion(null, jsonObject);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    if(!twoHundred){
+                        if(completionListener != null)
+                            completionListener.onCompletion(new Error("Something went wrong"),null);
+                        return;
+                    }
+
+                    if(completionListener != null){
+                        completionListener.onCompletion(null,null);
                     }
                 }
+
             }
         });
-    }
-
-    private static byte[] concatByteArrays(byte[]... inputs) {
-        int i = 0;
-        for (byte[] b : inputs) {
-            i += b.length;
-        }
-        byte[] r = new byte[i];
-        i = 0;
-        for (byte[] b : inputs) {
-            System.arraycopy(b, 0, r, i, b.length);
-            i += b.length;
-        }
-        return r;
     }
     //endregion
 

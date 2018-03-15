@@ -138,10 +138,11 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
         ivAttachmentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!imageLoadedSuccessfully)
-                    updateImageForMessage(chatMessage,mListener);
-
-                mListener.onChatMessageImageClicked(chatMessage);
+                if(!imageLoadedSuccessfully) {
+                    updateImageForMessage(chatMessage, mListener);
+                }else {
+                    mListener.onChatMessageImageClicked(chatMessage);
+                }
             }
         });
     }

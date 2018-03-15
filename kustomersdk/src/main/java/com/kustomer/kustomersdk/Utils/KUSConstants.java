@@ -6,6 +6,10 @@ package com.kustomer.kustomersdk.Utils;
 
 public class KUSConstants {
 
+    public interface Pattern{
+        String URL_PATTERN = "(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+    }
+
     public interface URL{
         String HOST_NAME = "kustomerapp.com";
         String PUSHER_AUTH = "/c/v1/pusher/auth";
@@ -38,6 +42,5 @@ public class KUSConstants {
     public interface BundleName{
         String CHAT_SESSION_BUNDLE_KEY = "Chat_Session_bundle";
         String CHAT_SCREEN_BACK_BUTTON_KEY = "Chat_back_button_bundle";
-        String USER_SESSION_BUNDLE__KEY = "User_Session_bundle";
     }
 }

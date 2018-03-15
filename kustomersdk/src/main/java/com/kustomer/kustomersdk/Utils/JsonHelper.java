@@ -196,8 +196,7 @@ public class JsonHelper {
 
         while(matcher.find()){
 
-            String urlPattern = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-            Matcher urlMatcher = Pattern.compile(urlPattern).matcher(matcher.group());
+            Matcher urlMatcher = Pattern.compile(KUSConstants.Pattern.URL_PATTERN).matcher(matcher.group());
 
             if(urlMatcher.find()){
                 String matchedText = KUSUtils.KUSUnescapeBackslashesFromString(urlMatcher.group());
@@ -291,9 +290,5 @@ public class JsonHelper {
         return chatMessages;
     }
 
-    public static List<KUSModel> kusSessionModelsFromJSON(JSONObject jsonObject) {
-
-        return null;
-    }
 
 }

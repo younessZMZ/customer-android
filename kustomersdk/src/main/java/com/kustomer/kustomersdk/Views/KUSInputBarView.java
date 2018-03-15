@@ -149,10 +149,11 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     public List<Bitmap> getAllImages(){
 
-        if(adapter.getImageURIs().size() != 0) {
+        List<String> imageURIs = new ArrayList<>(adapter.getImageURIs());
+        if(imageURIs.size() != 0) {
             List<Bitmap> images = new ArrayList<>();
 
-            for (String uri : adapter.getImageURIs()) {
+            for (String uri : imageURIs) {
                 if (!uri.startsWith("content")) {
                     Bitmap bitmap = BitmapFactory.decodeFile(new File(uri).getAbsolutePath());
 
