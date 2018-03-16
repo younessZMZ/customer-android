@@ -65,6 +65,9 @@ public class KUSUpload {
 
         attachments = new ArrayList<>(images.size());
 
+        while(attachments.size() < images.size())
+            attachments.add(null);
+
         for(int i = 0; i<images.size(); i++){
             Bitmap bitmap = images.get(i);
 
@@ -93,7 +96,7 @@ public class KUSUpload {
         }
 
         uploadedCount++;
-        attachments.add(index,attachment);
+        attachments.set(index,attachment);
         if(uploadedCount == images.size()){
             if(listener !=null && !sendingComplete){
                 sendingComplete = true;

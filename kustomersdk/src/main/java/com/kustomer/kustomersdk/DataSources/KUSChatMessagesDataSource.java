@@ -192,14 +192,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     public void createSessionIfNecessaryWithTitle(String title, final onCreateSessionListener listener) {
         if (sessionId != null) {
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            Runnable myRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    listener.onComplete(true, null);
-                }
-            };
-            mainHandler.post(myRunnable);
+            listener.onComplete(true, null);
         } else {
             if (onCreateSessionListeners != null) {
                 if (listener != null)

@@ -157,6 +157,12 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
                 if (!uri.startsWith("content")) {
                     Bitmap bitmap = BitmapFactory.decodeFile(new File(uri).getAbsolutePath());
 
+                    try {
+                        bitmap = KUSImage.rotateBitmapIfNeeded(bitmap,getContext().getContentResolver().openInputStream(Uri.parse(uri)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     if (bitmap != null)
                         images.add(KUSImage.getScaledImage(bitmap, MAX_BITMAP_PIXELS));
 
@@ -164,6 +170,13 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
                 } else {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(uri));
+
+                        try {
+                            bitmap = KUSImage.rotateBitmapIfNeeded(bitmap,getContext().getContentResolver().openInputStream(Uri.parse(uri)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         if (bitmap != null)
                             images.add(KUSImage.getScaledImage(bitmap, MAX_BITMAP_PIXELS));
 
