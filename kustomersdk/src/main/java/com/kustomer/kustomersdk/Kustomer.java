@@ -12,6 +12,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -39,6 +40,7 @@ public class Kustomer {
     private String orgName;
 
     private static String hostDomainOverride = null;
+    KUSKustomerListener mListener;
     //endregion
 
     //region LifeCycle
@@ -48,7 +50,9 @@ public class Kustomer {
 
         return sharedInstance;
     }
+    //endregion
 
+    //region Class Methods
     public static void init(Context context, String apiKey) {
         mContext = context.getApplicationContext();
         getSharedInstance().setApiKey(apiKey);
@@ -59,9 +63,10 @@ public class Kustomer {
                 .build();
         Fresco.initialize(context, config);
     }
-    //endregion
 
-    //region Class Methods
+    public static void setListener(KUSKustomerListener listener){
+        getSharedInstance().mSetListener(listener);
+    }
     public static void describeConversation(JSONObject customAttributes){
         getSharedInstance().mDescribeConversation(customAttributes);
     }
@@ -97,6 +102,10 @@ public class Kustomer {
     //endregion
 
     //region Private Methods
+    private void mSetListener(KUSKustomerListener listener){
+        mListener = listener;
+        userSession.getDelegateProxy().setListener(listener);
+    }
     private void mDescribeConversation(JSONObject customAttributes){
         if (customAttributes==null)
             throw new AssertionError("Attempted to describe a conversation with no attributes set");
@@ -167,6 +176,7 @@ public class Kustomer {
                 throw new AssertionError("Kustomer API key missing expected field: orgName");
 
             userSession = new KUSUserSession(orgName,orgId);
+            userSession.getDelegateProxy().setListener(mListener);
         } catch (JSONException ignore) {}
 
     }

@@ -269,7 +269,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 userSession.getChatSessionsDataSource().fetchLatest();
             }
 
-            if( chatSession != null){
+            if( userSession.getDelegateProxy().shouldDisplayInAppNotification() && chatSession != null){
                 boolean shouldAutoDismiss = latestMessage.getCampaignId() == null
                         || latestMessage.getCampaignId().length() == 0;
 

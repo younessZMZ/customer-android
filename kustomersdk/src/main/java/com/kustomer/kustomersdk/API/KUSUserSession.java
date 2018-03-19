@@ -208,6 +208,17 @@ public class KUSUserSession implements Serializable {
 
     //region Accessors
 
+    public KUSDelegateProxy getDelegateProxy() {
+        if(delegateProxy == null)
+            delegateProxy = new KUSDelegateProxy();
+
+        return delegateProxy;
+    }
+
+    public void setDelegateProxy(KUSDelegateProxy delegateProxy) {
+        this.delegateProxy = delegateProxy;
+    }
+
     public String getOrgId() {
         return orgId;
     }
