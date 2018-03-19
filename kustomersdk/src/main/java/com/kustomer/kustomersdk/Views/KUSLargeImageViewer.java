@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
@@ -77,8 +78,10 @@ public class KUSLargeImageViewer implements View.OnClickListener {
 
         currentImageLink = imageURIs.get(startingIndex);
 
-        GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(mContext.getResources())
-                .setFailureImage(R.drawable.ic_error_outline_red_33dp);
+        GenericDraweeHierarchyBuilder hierarchyBuilder =
+                GenericDraweeHierarchyBuilder.newInstance(mContext.getResources())
+                .setFailureImage(R.drawable.ic_error_outline_red_33dp)
+                .setFailureImageScaleType(ScalingUtils.ScaleType.CENTER);
 
         imageViewer = new ImageViewer.Builder<>(mContext, imageURIs)
                 .setStartPosition(startingIndex)

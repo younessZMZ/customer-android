@@ -36,11 +36,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         // Describing Customer
         KUSCustomerDescription customerDescription = new KUSCustomerDescription();
-        customerDescription.setEmail("xasd@brainxtech.com");
+        customerDescription.setEmail("brainx@brainxtech.com");
 
         JSONObject customObject = new JSONObject();
         try {
-            customObject.put("ageNum",19);
+            customObject.put("ageNum",22);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         // Describing Conversation
         JSONObject conversationObject = new JSONObject();
         try {
-            conversationObject.put("companyStr","brainxTech");
+            conversationObject.put("companyStr","brainxTech2");
         } catch (JSONException e) {
             e.printStackTrace();
         }
