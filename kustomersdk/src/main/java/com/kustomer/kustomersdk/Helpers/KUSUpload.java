@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
+import com.kustomer.kustomersdk.API.KUSRequestManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Interfaces.KUSImageUploadListener;
@@ -144,7 +145,7 @@ public class KUSUpload {
                                 HashMap<String, String> uploadFields =
                                         JsonHelper.hashMapFromKeyPath(response,"meta.upload.fields");
 
-                                uploadImageOnS3(uploadURL,
+                                userSession.getRequestManager().uploadImageOnS3(uploadURL,
                                         filename,
                                         imageBytes,
                                         uploadFields,
@@ -174,68 +175,7 @@ public class KUSUpload {
         }
     }
 
-    private void uploadImageOnS3(URL url, String filename, byte[] imageBytes,
-                                 HashMap<String, String> uploadFields,
-                                 final KUSRequestCompletionListener completionListener){
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(180, TimeUnit.SECONDS)
-                .readTimeout(180, TimeUnit.SECONDS)
-                .addInterceptor(logging)
-                .build();
-
-        String [] fieldArrays = new String[uploadFields.keySet().size()];
-        fieldArrays = uploadFields.keySet().toArray(fieldArrays);
-
-        List<String> fieldKeys = new ArrayList<>(Arrays.asList(fieldArrays));
-        if(fieldKeys.contains("key")){
-            fieldKeys.remove("key");
-            fieldKeys.add(0,"key");
-        }
-
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);
-
-        for(String field : fieldKeys){
-            String value = uploadFields.get(field);
-
-            builder.addFormDataPart(field,value);
-        }
-
-        builder.addFormDataPart("file", filename, RequestBody.create(MediaType.parse("image/jpeg"), imageBytes));
-
-        RequestBody requestBody = builder.build();
-        Request request = new Request.Builder().url(url).post(requestBody).build();
-
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                completionListener.onCompletion(new Error(e.getMessage()), null);
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.body() != null) {
-                    boolean twoHundred = response.code() >= 200 && response.code() <300;
-
-                    if(!twoHundred){
-                        if(completionListener != null)
-                            completionListener.onCompletion(new Error("Something went wrong"),null);
-                        return;
-                    }
-
-                    if(completionListener != null){
-                        completionListener.onCompletion(null,null);
-                    }
-                }
-
-            }
-        });
-    }
     //endregion
 
     //region Interface
