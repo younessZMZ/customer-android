@@ -1,5 +1,8 @@
 package com.kustomer.kustomer.Activities;
 
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,6 +10,8 @@ import android.widget.ImageView;
 
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
+import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
+import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 
@@ -57,6 +62,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Kustomer.describeConversation(conversationObject);
 
         Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHRlcm5hbElkIjoiMTEyMiIsImlhdCI6MTUyMTAzMTcyMX0.tOuT7041V4lV9LNtd6mEhQir-oQzCCkPEZoT2Qaq4ic");
+
+        Kustomer.setListener(new KUSKustomerListener() {
+            @Override
+            public boolean kustomerShouldDisplayInAppNotification() {
+                return true;
+            }
+
+            @Override
+            public PendingIntent getPendingIntent(Context context) {
+                Intent intent = new Intent(context, KUSSessionsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                return PendingIntent.getActivity(context, 0, intent, 0);
+            }
+        });
     }
     //endregion
 

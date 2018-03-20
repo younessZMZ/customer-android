@@ -147,7 +147,7 @@ public class KUSChatMessage extends KUSModel {
             return false;
         if(!chatMessage.createdAt.equals(this.createdAt))
             return false;
-        if(!chatMessage.importedAt.equals(this.importedAt))
+        if(chatMessage.importedAt != null && !chatMessage.importedAt.equals(this.importedAt))
             return false;
         if(!chatMessage.body.equals(this.body))
             return false;

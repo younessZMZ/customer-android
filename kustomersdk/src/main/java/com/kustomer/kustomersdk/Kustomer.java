@@ -83,13 +83,15 @@ public class Kustomer {
         getSharedInstance().mResetTracking();
     }
 
-    public static void showSupport(Activity activity){
+    public static void showSupport(Context activity){
 
         if(activity != null) {
             Intent intent = new Intent(activity, KUSSessionsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
-            activity.overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
+
+            if(mContext instanceof Activity)
+                ((Activity)activity).overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
         }
     }
 

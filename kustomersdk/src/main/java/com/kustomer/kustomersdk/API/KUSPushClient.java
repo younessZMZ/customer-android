@@ -18,6 +18,7 @@ import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Views.KUSNotificationWindow;
 import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
 import com.pusher.client.channel.PresenceChannel;
@@ -176,14 +177,22 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(
                                 Kustomer.getContext(),JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
-                        KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
+                        final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
                         final KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
 
-                        boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getId()) == null;
+                        final boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getId()) == null;
                         messagesDataSource.upsertNewMessages(chatMessages);
 
-                        if (doesNotAlreadyContainMessage)
-                            notifyForUpdatedChatSession(chatMessage.getSessionId());
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (doesNotAlreadyContainMessage)
+                                    notifyForUpdatedChatSession(chatMessage.getSessionId());
+                            }
+                        };
+                        handler.post(runnable);
+
                     }
                 });
             }catch (IllegalArgumentException ignore){}
@@ -254,8 +263,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private void notifyForUpdatedChatSession(String sessionId){
 
-        if(isSupportScreenShown())
+        if(isSupportScreenShown()) {
             KUSAudio.playMessageReceivedSound();
+        }
         else{
             KUSChatMessagesDataSource chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(sessionId);
             KUSChatMessage latestMessage = chatMessagesDataSource.getLatestMessage();
@@ -273,8 +283,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 boolean shouldAutoDismiss = latestMessage.getCampaignId() == null
                         || latestMessage.getCampaignId().length() == 0;
 
-                KUSAudio.playMessageReceivedSound();
-                //TODO: show notification
+                //Sound is played by the notification itself
+                KUSNotificationWindow.getSharedInstance().showNotification(chatSession,Kustomer.getContext(),shouldAutoDismiss);
             }
         }
     }

@@ -1,7 +1,10 @@
 package com.kustomer.kustomersdk.DataSources;
 
-import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 
+import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
 
@@ -22,11 +25,14 @@ public class KUSDelegateProxy {
         return true;
     }
 
-    public void inAppNotificationOnTapped(Activity activity){
+    public PendingIntent getPendingIntent(Context context){
         if(listener != null)
-            listener.kustomerInAppNotificationOnTapped();
-        else
-            Kustomer.showSupport(activity);
+            return listener.getPendingIntent(context);
+        else {
+            Intent intent = new Intent(context, KUSSessionsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            return PendingIntent.getActivity(context, 0, intent, 0);
+        }
     }
     //endregion
 
