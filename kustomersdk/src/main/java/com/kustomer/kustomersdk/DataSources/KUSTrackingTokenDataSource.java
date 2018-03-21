@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk.DataSources;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
@@ -72,11 +73,16 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
             return headers;
         }
         else {
-            String cachedTrackingToken = getUserSession().getSharedPreferences().getTrackingToken();
 
-            if(cachedTrackingToken != null) {
-                headers.put(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, cachedTrackingToken);
-                return headers;
+            KUSSharedPreferences sharedPreferences = getUserSession().getSharedPreferences();
+
+            if(sharedPreferences != null) {
+                String cachedTrackingToken = sharedPreferences.getTrackingToken();
+
+                if (cachedTrackingToken != null) {
+                    headers.put(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, cachedTrackingToken);
+                    return headers;
+                }
             }
         }
 

@@ -53,15 +53,17 @@ public class Kustomer {
     //endregion
 
     //region Class Methods
-    public static void init(Context context, String apiKey) {
+    public static void init(Context context, String apiKey) throws AssertionError {
         mContext = context.getApplicationContext();
         getSharedInstance().setApiKey(apiKey);
 
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
-                .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
-                .setDownsampleEnabled(true)
-                .build();
-        Fresco.initialize(context, config);
+        try {
+            ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
+                    .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
+                    .setDownsampleEnabled(true)
+                    .build();
+            Fresco.initialize(context, config);
+        }catch (Exception ignore){}
     }
 
     public static void setListener(KUSKustomerListener listener){

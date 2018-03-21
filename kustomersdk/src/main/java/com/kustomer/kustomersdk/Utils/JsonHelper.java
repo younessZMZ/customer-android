@@ -148,9 +148,7 @@ public class JsonHelper {
 
         try {
             return json.getJSONObject(keyPath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ignore) {}
 
         return null;
     }

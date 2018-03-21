@@ -188,8 +188,11 @@ public class KUSUserSession implements Serializable {
 
 
     public KUSSharedPreferences getSharedPreferences() {
-        if (sharedPreferences == null)
-            sharedPreferences = new KUSSharedPreferences(Kustomer.getContext(),this);
+        if (sharedPreferences == null) {
+            try {
+                sharedPreferences = new KUSSharedPreferences(Kustomer.getContext(), this);
+            }catch (NullPointerException ignore){}
+        }
         return sharedPreferences;
     }
 

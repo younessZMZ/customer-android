@@ -48,7 +48,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     //region Private Methods
     private String stringSanitizedReply(String autoReply){
         if(autoReply != null)
-            return autoReply.trim();
+            return autoReply.trim().length() > 0 ? autoReply.trim() : null;
         else
             return null;
     }
