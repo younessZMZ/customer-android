@@ -15,12 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
+import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
@@ -124,9 +127,13 @@ public class KUSLargeImageViewer implements View.OnClickListener {
             mContext.startActivity(Intent.createChooser(intent,
                     mContext.getResources().getString(R.string.share_via)));
         }else{
+            GlideUrl glideUrl = new GlideUrl(currentImageLink, new LazyHeaders.Builder()
+                    .addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, Kustomer.getSharedInstance().getUserSession().getTrackingTokenDataSource().getCurrentTrackingToken())
+                    .build());
+
             Glide.with(mContext)
                     .asBitmap()
-                    .load(currentImageLink)
+                    .load(glideUrl)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

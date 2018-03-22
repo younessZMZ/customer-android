@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -22,9 +24,11 @@ import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSText;
+import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Views.KUSSquareFrameLayout;
 
 import java.util.Calendar;
@@ -96,7 +100,6 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
     //region Private Methods
     private void updateImageForMessage(){
 
-
         progressBarImage.setVisibility(View.VISIBLE);
 
         Bitmap cachedImage = new KUSCache().getBitmapFromMemCache(chatMessage.getImageUrl().toString());
@@ -105,9 +108,13 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             progressBarImage.setVisibility(View.GONE);
             imageLoadedSuccessfully = true;
         }else {
+            GlideUrl glideUrl = new GlideUrl(chatMessage.getImageUrl().toString(), new LazyHeaders.Builder()
+                    .addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, Kustomer.getSharedInstance().getUserSession().getTrackingTokenDataSource().getCurrentTrackingToken())
+                    .build());
+
             Glide.with(itemView)
                     .setDefaultRequestOptions(RequestOptions.errorOf(R.drawable.ic_error_outline_red_33dp))
-                    .load(chatMessage.getImageUrl().toString())
+                    .load(glideUrl)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Base64;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -20,8 +21,17 @@ import com.kustomer.kustomersdk.Utils.KUSConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.sql.Wrapper;
 import java.util.HashMap;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -58,10 +68,12 @@ public class Kustomer {
         getSharedInstance().setApiKey(apiKey);
 
         try {
-            ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
+            ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
+                    .newBuilder(context, getSharedInstance().getOkHttpClientForFresco())
                     .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
                     .setDownsampleEnabled(true)
                     .build();
+
             Fresco.initialize(context, config);
         }catch (Exception ignore){}
     }
@@ -106,6 +118,25 @@ public class Kustomer {
     //endregion
 
     //region Private Methods
+    private OkHttpClient getOkHttpClientForFresco(){
+        return new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Interceptor.Chain chain) throws IOException {
+                        Request originalRequest = chain.request(); //Current Request
+                        Request requestWithToken = null; //The request with the access token which we will use if we have one instead of the original
+                        requestWithToken = originalRequest.newBuilder()
+                                .addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY,getSharedInstance().getUserSession().getTrackingTokenDataSource().getCurrentTrackingToken())
+                                .build();
+                        Response response = chain.proceed((requestWithToken != null ? requestWithToken : originalRequest)); //proceed with the request and get the response
+                        if (response != null && response.code() != HttpURLConnection.HTTP_OK) {
+                            response.body().close();
+                        }
+                        return response;
+                    }
+                })
+                .build();
+    }
     private void mSetListener(KUSKustomerListener listener){
         mListener = listener;
         userSession.getDelegateProxy().setListener(listener);

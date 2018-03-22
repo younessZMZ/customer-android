@@ -39,29 +39,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setListeners();
 
 
-        // Describing Customer
-        KUSCustomerDescription customerDescription = new KUSCustomerDescription();
-        customerDescription.setEmail("brainx@brainxtech.com");
+//        // Describing Customer
+//        KUSCustomerDescription customerDescription = new KUSCustomerDescription();
+//        customerDescription.setEmail("brainx@brainxtech.com");
+//
+//        JSONObject customObject = new JSONObject();
+//        try {
+//            //You can put multiple values here
+//            customObject.put("ageNum",22);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        customerDescription.setCustom(customObject);
+//        Kustomer.describeCustomer(customerDescription);
+//
+//        // Describing Conversation
+//        JSONObject conversationObject = new JSONObject();
+//        try {
+//            conversationObject.put("companyStr","brainxTech2");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        Kustomer.describeConversation(conversationObject);
 
-        JSONObject customObject = new JSONObject();
-        try {
-            customObject.put("ageNum",22);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        customerDescription.setCustom(customObject);
-        Kustomer.describeCustomer(customerDescription);
-
-        // Describing Conversation
-        JSONObject conversationObject = new JSONObject();
-        try {
-            conversationObject.put("companyStr","brainxTech2");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Kustomer.describeConversation(conversationObject);
-
-        Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHRlcm5hbElkIjoiMTEyMiIsImlhdCI6MTUyMTAzMTcyMX0.tOuT7041V4lV9LNtd6mEhQir-oQzCCkPEZoT2Qaq4ic");
+//        Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHRlcm5hbElkIjoiMTEyMiIsImlhdCI6MTUyMTAzMTcyMX0.tOuT7041V4lV9LNtd6mEhQir-oQzCCkPEZoT2Qaq4ic");
 
         Kustomer.setListener(new KUSKustomerListener() {
             @Override
