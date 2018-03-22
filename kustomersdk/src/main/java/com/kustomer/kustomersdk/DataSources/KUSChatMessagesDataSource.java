@@ -30,6 +30,7 @@ import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSForm;
 import com.kustomer.kustomersdk.Models.KUSFormQuestion;
+import com.kustomer.kustomersdk.Models.KUSMessageRetry;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -72,9 +73,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private boolean submittingForm = false;
     private boolean creatingSession = false;
 
-    private String firstOtherUserId;
-    private ArrayList<String> otherUserIds;
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
+    private HashMap<String,KUSMessageRetry> messageRetryHashMap;
     //endregion
 
     //region Initializer
@@ -83,6 +83,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         questionIndex = -1;
         delayedChatMessageIds = new HashSet<>();
+        messageRetryHashMap = new HashMap<>();
 
 
         userSession.getChatSettingsDataSource().addListener(this);
@@ -239,7 +240,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
     }
 
-    public void actuallySendMessage(String text, List<Bitmap> attachments) {
+    private void actuallySendMessage(String text, List<Bitmap> attachments) {
 
         JSONArray attachmentObjects = new JSONArray();
 
@@ -305,8 +306,23 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         List<KUSModel> temporaryMessages = objectsFromJSON(messageJSON);
 
-        if (temporaryMessages != null)
+        if (temporaryMessages != null) {
+            for(KUSModel model : temporaryMessages){
+                KUSChatMessage temporaryMessage = (KUSChatMessage) model;
+                messageRetryHashMap.put(temporaryMessage.getId(),new KUSMessageRetry(temporaryMessages,attachments,text,cachedImageKeys));
+            }
+
             fullySendMessage(temporaryMessages, attachments, text, cachedImageKeys);
+        }
+    }
+
+    public void  resendMessage(KUSChatMessage chatMessage){
+        if(chatMessage != null){
+            KUSMessageRetry retry = messageRetryHashMap.get(chatMessage.getId());
+            if(retry != null)
+                fullySendMessage(retry.getTemporaryMessages(),retry.getAttachments()
+                        ,retry.getText(),retry.getCachedImages());
+        }
     }
 
     public int unreadCountAfterDate(Date date) {
@@ -782,7 +798,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 new KUSCache().removeBitmapFromMemCache(imageKey);
             }
 
-        //TODO: remove retry blocks
+        for(KUSModel model : temporaryMessages){
+            KUSChatMessage temporaryMessage = (KUSChatMessage) model;
+            messageRetryHashMap.remove(temporaryMessage.getId());
+        }
     }
 
     private JSONArray getAttachmentIds(List<KUSChatAttachment> attachments) {

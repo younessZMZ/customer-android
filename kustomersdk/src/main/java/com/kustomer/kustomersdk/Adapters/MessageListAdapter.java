@@ -117,6 +117,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     //region Interface
     public interface ChatMessageItemListener{
         void onChatMessageImageClicked(KUSChatMessage chatMessage);
+        void onChatMessageErrorClicked(KUSChatMessage chatMessage);
     }
     //endregion
 }

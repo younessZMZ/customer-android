@@ -599,5 +599,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         new KUSLargeImageViewer(this).showImages(imageURIs,startingIndex);
     }
+
+    @Override
+    public void onChatMessageErrorClicked(KUSChatMessage chatMessage) {
+        chatMessagesDataSource.resendMessage(chatMessage);
+    }
     //endregion
 }

@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
+import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
@@ -58,6 +59,8 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
     @BindView(R2.id.progressBarImage)
     ProgressBar progressBarImage;
     private Timer sendingFadingTimer;
+    @BindView(R2.id.retry)
+    ImageView retry;
 
     private boolean imageLoadedSuccessfully = false;
     private KUSChatMessage chatMessage;
@@ -83,6 +86,18 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             attachmentLayout.setVisibility(View.VISIBLE);
 
             updateImageForMessage();
+        }
+
+        if(chatMessage.getState() == KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_FAILED){
+            retry.setVisibility(View.VISIBLE);
+            retry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onChatMessageErrorClicked(chatMessage);
+                }
+            });
+        }else{
+            retry.setVisibility(View.INVISIBLE);
         }
 
         if(showDate){
