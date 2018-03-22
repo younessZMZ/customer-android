@@ -177,10 +177,10 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                                  final KUSRequestCompletionListener completionListener){
 
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
+//                .addInterceptor(logging)
                 .build();
 
         HttpUrl httpUrl = HttpUrl.parse(url.toString());
@@ -288,13 +288,13 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                  HashMap<String, String> uploadFields,
                                  final KUSRequestCompletionListener completionListener){
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(180, TimeUnit.SECONDS)
                 .readTimeout(180, TimeUnit.SECONDS)
-                .addInterceptor(logging)
+//                .addInterceptor(logging)
                 .build();
 
         String [] fieldArrays = new String[uploadFields.keySet().size()];

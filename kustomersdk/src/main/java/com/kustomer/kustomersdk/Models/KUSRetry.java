@@ -5,4 +5,5 @@ package com.kustomer.kustomersdk.Models;
  */
 
 public class KUSRetry {
+    //Base Class
 }
