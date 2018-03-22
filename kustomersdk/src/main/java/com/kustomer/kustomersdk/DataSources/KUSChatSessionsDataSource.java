@@ -7,6 +7,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSChatSessionCompletionListener;
 import com.kustomer.kustomersdk.Interfaces.KUSFormCompletionListener;
@@ -288,7 +289,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
                         if(error != null){
-                            //TODO: Log Error
+                            KUSLog.KUSLogError(String.format("Error updating chat attributes: %s", error));
                         }
                     }
                 }

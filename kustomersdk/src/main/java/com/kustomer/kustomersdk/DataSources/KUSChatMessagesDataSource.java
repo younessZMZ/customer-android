@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionType;
@@ -14,7 +13,7 @@ import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSUpload;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSChatSessionCompletionListener;
@@ -30,11 +29,12 @@ import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSForm;
 import com.kustomer.kustomersdk.Models.KUSFormQuestion;
+import com.kustomer.kustomersdk.Models.KUSFormRetry;
 import com.kustomer.kustomersdk.Models.KUSMessageRetry;
 import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.Models.KUSRetry;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
-import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,7 +74,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private boolean creatingSession = false;
 
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
-    private HashMap<String,KUSMessageRetry> messageRetryHashMap;
+    private HashMap<String,KUSRetry> messageRetryHashMap;
     //endregion
 
     //region Initializer
@@ -84,7 +84,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         questionIndex = -1;
         delayedChatMessageIds = new HashSet<>();
         messageRetryHashMap = new HashMap<>();
-
 
         userSession.getChatSettingsDataSource().addListener(this);
         addListener(this);
@@ -210,7 +209,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         onCreateSessionListeners = null;
 
                         if (error != null || session == null) {
-                            //TODO: logError
+                            KUSLog.KUSLogError(String.format("Error creating session: %s",
+                                    error != null ? error.toString() : ""));
                             for (onCreateSessionListener listener1 : callbacks)
                                 listener1.onComplete(false, error);
 
@@ -318,10 +318,17 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     public void  resendMessage(KUSChatMessage chatMessage){
         if(chatMessage != null){
-            KUSMessageRetry retry = messageRetryHashMap.get(chatMessage.getId());
-            if(retry != null)
-                fullySendMessage(retry.getTemporaryMessages(),retry.getAttachments()
-                        ,retry.getText(),retry.getCachedImages());
+            KUSRetry retry = messageRetryHashMap.get(chatMessage.getId());
+            if(retry != null && retry instanceof KUSMessageRetry) {
+                KUSMessageRetry messageRetry = (KUSMessageRetry) retry;
+                fullySendMessage(messageRetry.getTemporaryMessages(), messageRetry.getAttachments()
+                        , messageRetry.getText(), messageRetry.getCachedImages());
+
+            }
+            else if(retry != null && retry instanceof KUSFormRetry){
+                KUSFormRetry formRetry = (KUSFormRetry) retry;
+                retrySubmittingForm(formRetry);
+            }
         }
     }
 
@@ -665,9 +672,21 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             }
         }
 
-        //TODO: retrySubmitting form
+        if(lastUserChatMessage != null)
+            messageRetryHashMap.put(lastUserChatMessage.getId(),
+                    new KUSFormRetry(messagesJSON,form.getId(),lastUserChatMessage));
 
         actuallySubmitForm(messagesJSON, form.getId(), lastUserChatMessage);
+    }
+
+    private void retrySubmittingForm(final KUSFormRetry formRetry){
+        if(formRetry.getLastUserChatMessage() != null){
+            removeAll(new ArrayList<KUSModel>(){{add(formRetry.getLastUserChatMessage());}});
+            formRetry.getLastUserChatMessage().setState(KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENDING);
+            upsertNewMessages(new ArrayList<KUSModel>(){{add(formRetry.getLastUserChatMessage());}});
+        }
+
+        actuallySubmitForm(formRetry.getMessagesJSON(), formRetry.getFormId(), formRetry.getLastUserChatMessage());
     }
 
     private void actuallySubmitForm(final JSONArray messagesJSON, String formId,
@@ -698,7 +717,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         //Replace all of the local messages with the new ones
                         removeAll(getList());
                         upsertNewMessages(chatMessages);
-                        //TODO: retry
+                        messageRetryHashMap.remove(lastUserChatMessage.getId());
 
                         // Insert the current messages data source into the userSession's lookup table
                         getUserSession().getChatMessagesDataSources().put(sessionId, KUSChatMessagesDataSource.this);

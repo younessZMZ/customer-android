@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Junaid on 3/22/2018.
  */
 
-public class KUSMessageRetry {
+public class KUSMessageRetry extends KUSRetry {
 
     //region Properties
     private List<KUSModel> temporaryMessages;

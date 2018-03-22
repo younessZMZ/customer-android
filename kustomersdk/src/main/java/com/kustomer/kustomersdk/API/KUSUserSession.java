@@ -8,6 +8,7 @@ import com.kustomer.kustomersdk.DataSources.KUSFormDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTrackingTokenDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
@@ -113,7 +114,8 @@ public class KUSUserSession implements Serializable {
             @Override
             public void onComplete(boolean success, Error error) {
                 if(error != null || !success){
-                    //TODO: logError
+                    KUSLog.KUSLogError(String.format("Error submitting email: %s",
+                            error != null ? error.toString() : ""));
                     return;
                 }
 

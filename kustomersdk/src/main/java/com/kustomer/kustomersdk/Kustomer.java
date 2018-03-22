@@ -14,6 +14,7 @@ import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
+import com.kustomer.kustomersdk.Interfaces.KUSLogOptions;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -50,6 +51,7 @@ public class Kustomer {
     private String orgName;
 
     private static String hostDomainOverride = null;
+    private static int logOptions = KUSLogOptions.KUSLogOptionInfo | KUSLogOptions.KUSLogOptionErrors;
     KUSKustomerListener mListener;
     //endregion
 
@@ -229,6 +231,14 @@ public class Kustomer {
 
     public static String hostDomain(){
         return hostDomainOverride != null ? hostDomainOverride : KUSConstants.URL.HOST_NAME;
+    }
+
+    public static int getLogOptions(){
+        return logOptions;
+    }
+
+    public static void setLogOptions(int kusLogOptions){
+        logOptions = kusLogOptions;
     }
 
     public static void setHostDomain(String hostDomain){

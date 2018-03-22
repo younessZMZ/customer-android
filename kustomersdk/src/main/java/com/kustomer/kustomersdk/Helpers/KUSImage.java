@@ -29,7 +29,6 @@ import java.util.List;
  */
 
 public class KUSImage {
-    //TODO: Incomplete
     //region Properties
     private static List<Integer> defaultNameColors = null;
     //endreigon

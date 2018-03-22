@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk;
 
 import com.kustomer.kustomersdk.API.KUSRequestManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class KustomerTests {
 
     @Before
     public void setUp(){
-        //TODO: setLogOptions
+        Kustomer.setLogOptions(0);
     }
 
     @Test
