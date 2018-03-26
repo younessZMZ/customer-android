@@ -30,7 +30,7 @@ Include the library in your `app.gradle`:
 
 ## Setup
 
-In your project's Application Class:
+1. In your project's Application Class:
 ```java
 import com.kustomer.kustomersdk.Kustomer;
 
@@ -43,7 +43,7 @@ public void onCreate() {
 }
 ```
 
-When you want to present the Kustomer chat interface to your users:
+2. When you want to present the Kustomer chat interface to your users:
 
 ```java
 Intent intent = new Intent(activity, KUSSessionsActivity.class);
@@ -54,15 +54,15 @@ activity.startActivity(intent);
 Kustomer.showSupport(activity);
 ```
 
-### Add permissions to manifest:
+##### Add permissions to manifest:
 
-Internet Permissions (Required):
+3. Internet Permissions (Required):
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-Multimedia Permissions (Optional):
+4. Multimedia Permissions (Optional):
 ```xml
 <uses-permission android:name="android.permission.CAMERA"/>
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -70,9 +70,9 @@ Multimedia Permissions (Optional):
 
 Note: If neither of the Multimedia Permissions is declared, the image attachments button will be hidden.
 
-### Declaring Activities
+##### Declaring Activities
 
-Add `KUSSessionsActivity` & `KUSChatActivity` into your `AndroidManifest.xml`
+5. Add `KUSSessionsActivity` & `KUSChatActivity` into your `AndroidManifest.xml`
 ```xml
 <activity android:name="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -91,7 +91,7 @@ Kustomer.init(this, "API_KEY");
 ```
 
 ```java
-// Convenience method that will present the chat interface on the topmost view controller.
+// Convenience method that will present the chat interface.
 Kustomer.showSupport(ACTIVITY);
 
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
@@ -115,8 +115,8 @@ Kustomer.identify("SECURE_ID_HASH");
 
  JSON Web Token:
  The JWT used for secure identification must use HMAC SHA256 and include the following header and claims:
- Header: @{ @"alg" : @"HS256", @"typ" : @"JWT" }
- Claims: @{ @"externalId" : @"your_user_id", @"iat" : @"current_time_utc" }
+ Header: { "alg" : "HS256", "typ" : "JWT" }
+ Claims: { "externalId" : "your_user_id", "iat" : "current_time_utc" }
  NOTE: tokens with an @"iat" older than 15 minutes will be rejected
 
  The JWT must be signed with your organization's secret. This secret is accessible to your server,
@@ -203,7 +203,7 @@ Import the font files in `res/font` & create a file i.e **montserrat.xml**
 </font-family>
 ```
 
-**For more detail:** Please have a look [Fonts In XML](https://developer.android.com/guide/topics/ui/look-and-feel/fonts-in-xml.html)
+**For more detail:** Please have a look at [Fonts In XML](https://developer.android.com/guide/topics/ui/look-and-feel/fonts-in-xml.html)
 
 You can define any of the following in your `res/values/style` to customize font.
 ```xml
