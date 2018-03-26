@@ -282,6 +282,13 @@ You can define any of the following items in their respective `res` files to cha
 <bool name="kusNewSessionButtonHasShadow">true</bool>
 ```
 
+<p align="center" >
+  Before and after:
+  <br><br>
+  <img src="static/before_sessions.png">&nbsp&nbsp&nbsp<img src="static/after_sessions.png">
+</p>
+
+
 ##### Chat screen:
 
 ```xml
@@ -318,3 +325,8 @@ You can define any of the following items in their respective `res` files to cha
 
 <integer name="kusMaximumAvatarsToDisplay">3</integer>
 ```
+<p align="center" >
+  Before and after:
+  <br><br>
+  <img src="static/before_chat.png">&nbsp&nbsp&nbsp<img src="static/after_chat.png">
+</p>
