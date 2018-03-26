@@ -1,5 +1,5 @@
 <p align="center" >
-  <img src="Assets/kustomer_logo.png" title="Kustomer logo" float=left>
+  <img src="static/kustomer_logo.png" title="Kustomer logo" float=left>
 </p>
 
 ----------------
