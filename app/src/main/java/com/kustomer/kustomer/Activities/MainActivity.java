@@ -13,12 +13,6 @@ import com.kustomer.kustomer.R;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
-import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -41,7 +35,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 //        // Describing Customer
 //        KUSCustomerDescription customerDescription = new KUSCustomerDescription();
-//        customerDescription.setEmail("brainx@brainxtech.com");
+//        customerDescription.setEmail("address@example.com");
 //
 //        JSONObject customObject = new JSONObject();
 //        try {
@@ -106,7 +100,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.btnResetToken:
-                Kustomer.resetToken();
+                Kustomer.resetTracking();
                 break;
 
             case R.id.btnKnowledgeBase:

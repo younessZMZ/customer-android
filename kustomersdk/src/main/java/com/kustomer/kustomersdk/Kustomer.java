@@ -95,19 +95,16 @@ public class Kustomer {
         getSharedInstance().mIdentify(externalToken);
     }
 
-    public static void resetToken(){
+    public static void resetTracking(){
         getSharedInstance().mResetTracking();
     }
 
-    public static void showSupport(Context activity){
+    public static void showSupport(Activity activity){
 
         if(activity != null) {
             Intent intent = new Intent(activity, KUSSessionsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
-
-            if(mContext instanceof Activity)
-                ((Activity)activity).overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
+            activity.overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
         }
     }
 

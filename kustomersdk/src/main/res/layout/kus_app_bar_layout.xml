@@ -6,7 +6,7 @@
     android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/KusAppTheme.AppBarOverlay"
+    android:theme="@style/KUSAppTheme.AppBarOverlay"
     android:animateLayoutChanges="true">
 
     <com.kustomer.kustomersdk.Views.KUSToolbar
@@ -18,7 +18,7 @@
         android:contentInsetStart="0dp"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
-        app:popupTheme="@style/KusAppTheme.PopupOverlay">
+        app:popupTheme="@style/KUSAppTheme.PopupOverlay">
 
 
         <RelativeLayout
@@ -137,7 +137,7 @@
             android:background="@color/kusToolbarSeparatorColor" />
 
         <android.support.v7.widget.AppCompatTextView
-            style="@style/kusEmailInputPromptTextAppearance"
+            style="@style/KUSEmailInputPromptTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/kus_email_input_prompt_text"
@@ -159,7 +159,7 @@
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/etEmail"
-                style="@style/kusEmailInputTextAppearance"
+                style="@style/KUSEmailInputTextAppearance"
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"

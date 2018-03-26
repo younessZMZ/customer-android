@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Size;
+import android.util.TypedValue;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
