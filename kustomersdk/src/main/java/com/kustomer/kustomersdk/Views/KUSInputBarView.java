@@ -30,6 +30,7 @@ import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         updateSendButton();
 
         etTypeMessage.setImeOptions(EditorInfo.IME_ACTION_SEND);
-        etTypeMessage.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        etTypeMessage.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         KUSUtils.showKeyboard(etTypeMessage,800);
     }

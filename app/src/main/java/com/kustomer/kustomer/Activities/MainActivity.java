@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        }
 //        Kustomer.describeConversation(conversationObject);
 
-//        Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHRlcm5hbElkIjoiMTEyMiIsImlhdCI6MTUyMTAzMTcyMX0.tOuT7041V4lV9LNtd6mEhQir-oQzCCkPEZoT2Qaq4ic");
+//        Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIxMDUzOTUsImF1ZCI6Imt1c3RvbWVyIiwiaXNzIjoia3VzdG9tZXIiLCJleHRlcm5hbElkIjoiOTk5OSJ9.oDCzInyetRPwFiT2eEhQSKv6n4VknD7dFoWpl-tw778");
 
         Kustomer.setListener(new KUSKustomerListener() {
             @Override

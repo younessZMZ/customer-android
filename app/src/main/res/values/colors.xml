@@ -37,12 +37,13 @@
     <!--<color name="kusCompanyBubbleColor">#000000</color>-->
     <!--<color name="kusCompanyTextColor">#FFFFFF</color>-->
     <!--<color name="kusUserBubbleColor">#DD2C00</color>-->
-    <!--<color name="kusUserTextColor">#000000</color>-->
+    <!--<color name="kusUserTextColor">#FFFFFF</color>-->
     <!--<color name="kusSendButtonColor">#DD2C00</color>-->
     <!--<color name="kusInputBarTintColor">#DD2C00</color>-->
     <!--<color name="kusInputBarHintColor">#EEEEEE</color>-->
     <!--<color name="kusInputBarTextColor">#FFFFFF</color>-->
     <!--<color name="kusInputBarBackground">#000000</color>-->
+    <!--<color name="kusInputBarAttachmentIconColor">#FFFFFF</color>-->
     <!--<color name="kusInputBarSeparatorColor">#BDBDBD</color>-->
     <!--<color name="kusOptionPickerSeparatorColor">#BDBDBD</color>-->
     <!--<color name="kusOptionPickerButtonBorderColor">#2962FF</color>-->

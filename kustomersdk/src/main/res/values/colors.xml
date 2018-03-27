@@ -36,6 +36,7 @@
     <color name="kusInputBarHintColor">#E0E0E0</color>
     <color name="kusInputBarTextColor">#000000</color>
     <color name="kusInputBarBackground">#FFFFFF</color>
+    <color name="kusInputBarAttachmentIconColor">#000000</color>
     <color name="kusInputBarSeparatorColor">#BDBDBD</color>
     <color name="kusOptionPickerSeparatorColor">#BDBDBD</color>
     <color name="kusOptionPickerButtonBorderColor">#2962FF</color>

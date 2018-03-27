@@ -279,6 +279,8 @@ You can define any of the following items in their respective `res` files to cha
 <color name="kusNewSessionButtonColor">#DD2C00</color>
 <color name="kusNewSessionTextColor">#FFFFFF</color>
 
+<string name="kus_new_session_button_text">New Conversation</string>
+
 <bool name="kusNewSessionButtonHasShadow">true</bool>
 ```
 
@@ -313,6 +315,7 @@ You can define any of the following items in their respective `res` files to cha
 <color name="kusInputBarTextColor">#FFFFFF</color>
 <color name="kusInputBarBackground">#000000</color>
 <color name="kusInputBarSeparatorColor">#BDBDBD</color>
+<color name="kusInputBarAttachmentIconColor">#FFFFFF</color>
 <color name="kusOptionPickerSeparatorColor">#BDBDBD</color>
 <color name="kusOptionPickerButtonBorderColor">#2962FF</color>
 <color name="kusOptionPickerButtonTextColor">#2962FF</color>
@@ -321,7 +324,6 @@ You can define any of the following items in their respective `res` files to cha
 <string name="kus_input_bar_hint_text">Type a message...</string>
 <string name="kus_email_input_prompt_text">Don\'t miss a response! Get notified by email:</string>
 <string name="kus_email_input_hint_text">example@domain.com</string>
-<string name="kus_new_session_button_text">New Conversation</string>
 
 <integer name="kusMaximumAvatarsToDisplay">3</integer>
 ```
