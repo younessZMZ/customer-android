@@ -35,7 +35,7 @@ public class JsonHelper {
     public static URL urlFromKeyPath(JSONObject jsonObject, String keyPath) {
         String value = stringFromKeyPath(jsonObject, keyPath);
 
-        if (value != null)
+        if (value != null && !value.isEmpty())
             try {
                 return new URL(value);
             } catch (MalformedURLException e) {

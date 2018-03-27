@@ -31,6 +31,8 @@ public class KUSPaginatedDataSource {
 
     //region Properties
     private List<KUSModel> fetchedModels;
+    private List<KUSModel> tempFetchModels;
+
     private HashMap<String, KUSModel> fetchedModelsById;
 
     private KUSPaginatedResponse mostRecentPaginatedResponse;
@@ -53,6 +55,7 @@ public class KUSPaginatedDataSource {
         this.userSession = userSession;
         listeners = new ArrayList<>();
         fetchedModels = new ArrayList<>();
+        tempFetchModels = new ArrayList<>();
         fetchedModelsById = new HashMap<>();
     }
     //endregion
@@ -63,7 +66,7 @@ public class KUSPaginatedDataSource {
     }
 
     public List<KUSModel> getList() {
-        return fetchedModels;
+        return tempFetchModels;
     }
 
     public KUSModel findById(String oid) {
@@ -286,6 +289,7 @@ public class KUSPaginatedDataSource {
             }
         }
 
+        tempFetchModels = new ArrayList<>(fetchedModels);
         if (didChange) {
             notifyAnnouncersOnContentChange();
         }
@@ -320,6 +324,8 @@ public class KUSPaginatedDataSource {
         }
 
         sort();
+        tempFetchModels = new ArrayList<>(fetchedModels);
+
         if (didChange) {
             notifyAnnouncersOnContentChange();
         }
