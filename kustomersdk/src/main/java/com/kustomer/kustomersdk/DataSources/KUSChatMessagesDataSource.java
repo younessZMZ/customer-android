@@ -97,6 +97,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             userSession.getFormDataSource().addListener(this);
             if (!userSession.getFormDataSource().isFetched())
                 userSession.getFormDataSource().fetch();
+            else
+                form = (KUSForm) userSession.getFormDataSource().getObject();
 
         }
     }
