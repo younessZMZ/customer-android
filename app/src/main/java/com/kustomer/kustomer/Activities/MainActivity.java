@@ -50,13 +50,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        // Describing Conversation
 //        JSONObject conversationObject = new JSONObject();
 //        try {
-//            conversationObject.put("companyStr","brainxTech2");
+//            conversationObject.put("companyStr","acmeCorp");
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
 //        Kustomer.describeConversation(conversationObject);
 
-//        Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIxMDUzOTUsImF1ZCI6Imt1c3RvbWVyIiwiaXNzIjoia3VzdG9tZXIiLCJleHRlcm5hbElkIjoiOTk5OSJ9.oDCzInyetRPwFiT2eEhQSKv6n4VknD7dFoWpl-tw778");
+//        Kustomer.identify("[INSERT_JWT_TOKEN_HERE");
 
         Kustomer.setListener(new KUSKustomerListener() {
             @Override
