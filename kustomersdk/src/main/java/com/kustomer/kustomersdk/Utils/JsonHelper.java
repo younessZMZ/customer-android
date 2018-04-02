@@ -128,6 +128,18 @@ public class JsonHelper {
         }
     }
 
+    public static Double doubleFromKeyPath(JSONObject jsonObject, String keyPath) {
+        try {
+            String[] keys = keyPath.split("[.]");
+            for (int i = 0; i < keys.length - 1; i++) {
+                jsonObject = jsonObject.getJSONObject(keys[i]);
+            }
+            return keys.length > 0 ? jsonObject.getDouble(keys[keys.length - 1]) : jsonObject.getDouble(keyPath);
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
+
     public static Date dateFromKeyPath(JSONObject jsonObject, String keyPath) {
 
         try {
