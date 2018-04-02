@@ -15,7 +15,7 @@ import java.util.List;
 public class KUSClientActivity extends KUSModel {
 
     //region Properties
-    private List<Long> intervals;
+    private List<Double> intervals;
     private String currentPage;
     private String previousPage;
     private Double currentPageSeconds;
@@ -44,13 +44,13 @@ public class KUSClientActivity extends KUSModel {
     //endregion
 
     //region Private Methods
-    private List<Long> arrayListFromJsonArray(JSONArray array, String id) {
-        List<Long> list = new ArrayList<>();
+    private List<Double> arrayListFromJsonArray(JSONArray array, String id) {
+        List<Double> list = new ArrayList<>();
 
         for(int i = 0 ; i<array.length() ; i++){
             try {
                 JSONObject jsonObject = array.getJSONObject(i);
-                list.add(jsonObject.getLong(id));
+                list.add(jsonObject.getDouble(id));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -62,11 +62,11 @@ public class KUSClientActivity extends KUSModel {
 
     //region Getters & Setters
 
-    public List<Long> getIntervals() {
+    public List<Double> getIntervals() {
         return intervals;
     }
 
-    public void setIntervals(List<Long> intervals) {
+    public void setIntervals(List<Double> intervals) {
         this.intervals = intervals;
     }
 

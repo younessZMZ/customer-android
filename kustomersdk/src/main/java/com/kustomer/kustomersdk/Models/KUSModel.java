@@ -31,7 +31,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         String type = stringFromKeyPath(json,"type");
         String classType = modelType();
 
-        if (enforcesModelType() && type != null && !type.equals(classType))
+        if (enforcesModelType() && (type == null || !type.equals(classType)))
             throw new KUSInvalidJsonException("Model Type not matched.");
 
         //Make sure there is an object id
