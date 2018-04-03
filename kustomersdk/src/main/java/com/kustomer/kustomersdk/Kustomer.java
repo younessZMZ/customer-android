@@ -99,6 +99,10 @@ public class Kustomer {
         getSharedInstance().mResetTracking();
     }
 
+    public static void setCurrentPageName(String currentPageName){
+        getSharedInstance().mSetCurrentPageName(currentPageName);
+    }
+
     public static void showSupport(Activity activity){
 
         if(activity != null) {
@@ -183,6 +187,10 @@ public class Kustomer {
 
     private void mResetTracking(){
         userSession = new KUSUserSession(orgName,orgId,true);
+    }
+
+    public void mSetCurrentPageName(String currentPageName){
+        userSession.getActivityManager().setCurrentPageName(currentPageName);
     }
 
     private void setApiKey(String apiKey){

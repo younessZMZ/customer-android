@@ -12,6 +12,7 @@ import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSClientActivity;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -45,6 +46,7 @@ public class KUSUserSession implements Serializable {
     private KUSRequestManager requestManager;
     private KUSPushClient pushClient;
     private KUSDelegateProxy delegateProxy;
+    private KUSClientActivityManager activityManager;
 
     private KUSSharedPreferences sharedPreferences;
 
@@ -208,6 +210,13 @@ public class KUSUserSession implements Serializable {
         if (chatMessagesDataSources == null)
             chatMessagesDataSources = new HashMap<>();
         return chatMessagesDataSources;
+    }
+
+    public KUSClientActivityManager getActivityManager(){
+        if(activityManager == null)
+            activityManager = new KUSClientActivityManager(this);
+
+        return activityManager;
     }
     //endregion
 
