@@ -85,7 +85,7 @@ public class KUSObjectDataSource {
 
     }
 
-    void cancel(){
+    public void cancel(){
         fetching = false;
         requestMarker = null;
     }

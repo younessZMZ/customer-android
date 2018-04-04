@@ -27,6 +27,7 @@ public class KUSConstants {
         String CURRENT_CUSTOMER_ENDPOINT = "/c/v1/customers/current";
         String ATTACHMENT_ENDPOINT = "https://%s.api.%s/c/v1/chat/messages/%s/attachments/%s?redirect=true";
         String CHAT_ATTACHMENT_ENDPOINT = "/c/v1/chat/attachments";
+        String CLIENT_ACTIVITY_ENDPOINT = "/c/v1/client-activity";
     }
 
     public interface Keys {
