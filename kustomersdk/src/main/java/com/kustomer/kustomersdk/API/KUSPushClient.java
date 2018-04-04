@@ -49,6 +49,7 @@ import java.util.TimerTask;
 public class KUSPushClient implements Serializable, KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
 
     //region Properties
+    private static long KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD = 60000;
     private static long LAZY_POLLING_TIMER_INTERVAL = 30000;
     private static long Active_POLLING_TIMER_INTERVAL = 7500;
     private long currentPollingTimerInterval = 0;
@@ -133,7 +134,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     connectToChannelsIfNecessary();
                 }
             };
-            handler.postDelayed(runnable,LAZY_POLLING_TIMER_INTERVAL);
+            handler.postDelayed(runnable,KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD);
 
         }else{
             if(pusherClient != null)
@@ -290,7 +291,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             return true;
 
         Date lastMessageAt = userSession.getChatSessionsDataSource().getLastMessageAt();
-        return lastMessageAt!=null && Calendar.getInstance().getTimeInMillis() - lastMessageAt.getTime()  > LAZY_POLLING_TIMER_INTERVAL;
+        return lastMessageAt!=null && Calendar.getInstance().getTimeInMillis() - lastMessageAt.getTime()  > KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD;
     }
     //endregion
 
