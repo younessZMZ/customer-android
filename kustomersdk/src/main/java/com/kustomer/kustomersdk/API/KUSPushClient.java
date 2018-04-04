@@ -60,6 +60,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     private KUSUserSession userSession;
     private boolean isSupportScreenShown = false;
     private Timer pollingTimer;
+    private String pendingNotificationSessioId;
     //endregion
 
     //region LifeCycle
@@ -338,11 +339,34 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
         updatePreviousChatSessions();
+
+        if(dataSource instanceof  KUSChatMessagesDataSource){
+            KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
+            if(chatMessagesDataSource.getSessionId().equals(pendingNotificationSessioId)){
+                notifyForUpdatedChatSession(pendingNotificationSessioId);
+                pendingNotificationSessioId = null;
+            }
+        }
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                connectToChannelsIfNecessary();
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
     public void onError(KUSPaginatedDataSource dataSource, Error error) {
-
+        if(dataSource instanceof  KUSChatMessagesDataSource){
+            KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
+            if(chatMessagesDataSource.getSessionId().equals(pendingNotificationSessioId)){
+                notifyForUpdatedChatSession(pendingNotificationSessioId);
+                pendingNotificationSessioId = null;
+            }
+        }
     }
 
     @Override
@@ -352,54 +376,56 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if(dataSource == userSession.getChatSessionsDataSource())
-                    connectToChannelsIfNecessary();
+                if (dataSource == userSession.getChatSessionsDataSource()) {
 
-                // Only consider new messages here if we're actively polling
-                if(pollingTimer == null) {
-                    //But update the state of previousChatSessions
-                    updatePreviousChatSessions();
-                    return;
-                }
-
-                String updatedSessionId = null;
-                List<KUSModel> newChatSessions = userSession.getChatSessionsDataSource().getList();
-                for(KUSModel model : newChatSessions){
-                    KUSChatSession chatSession = (KUSChatSession) model;
-
-                    KUSChatSession previousChatSession = null;
-
-                    if(previousChatSessions != null)
-                        previousChatSession = previousChatSessions.get(chatSession.getId());
-
-                    KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
-                    if(previousChatSession!=null){
-
-                        try {
-                            KUSChatMessage latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
-                            boolean isUpdatedSession = chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt());
-                            Date sessionLastSeenAt = userSession.getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
-                            boolean lastSeenBeforeMessage = chatSession.getLastMessageAt().after(sessionLastSeenAt);
-                            boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
-                                    || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
-
-                            if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
-                                updatedSessionId = chatSession.getId();
-                                messagesDataSource.fetchLatest();
-                            }
-                        }catch (Exception ignore){}
-
-                    }else if (previousChatSessions != null){
-                        updatedSessionId = chatSession.getId();
-                        messagesDataSource.fetchLatest();
+                    // Only consider new messages here if we're actively polling
+                    if (pollingTimer == null) {
+                        //But update the state of previousChatSessions
+                        updatePreviousChatSessions();
+                        return;
                     }
-                }
 
-                updatePreviousChatSessions();
+                    String updatedSessionId = null;
+                    List<KUSModel> newChatSessions = userSession.getChatSessionsDataSource().getList();
+                    for (KUSModel model : newChatSessions) {
+                        KUSChatSession chatSession = (KUSChatSession) model;
 
-                if(updatedSessionId != null){
-                    notifyForUpdatedChatSession(updatedSessionId);
-                    updatedSessionId = null;
+                        KUSChatSession previousChatSession = null;
+
+                        if (previousChatSessions != null)
+                            previousChatSession = previousChatSessions.get(chatSession.getId());
+
+                        KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
+                        if (previousChatSession != null) {
+
+                            try {
+                                KUSChatMessage latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
+                                boolean isUpdatedSession = chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt());
+                                Date sessionLastSeenAt = userSession.getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
+                                boolean lastSeenBeforeMessage = chatSession.getLastMessageAt().after(sessionLastSeenAt);
+                                boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
+                                        || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
+
+                                if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
+                                    updatedSessionId = chatSession.getId();
+                                    messagesDataSource.addListener(KUSPushClient.this);
+                                    messagesDataSource.fetchLatest();
+                                }
+                            } catch (Exception ignore) {
+                            }
+
+                        } else if (previousChatSessions != null) {
+                            updatedSessionId = chatSession.getId();
+                            messagesDataSource.addListener(KUSPushClient.this);
+                            messagesDataSource.fetchLatest();
+                        }
+                    }
+
+                    updatePreviousChatSessions();
+
+                    if (updatedSessionId != null) {
+                        pendingNotificationSessioId = updatedSessionId;
+                    }
                 }
             }
         };

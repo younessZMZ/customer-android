@@ -879,6 +879,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         return createdLocally || super.isFetchedAll();
     }
 
+    public String getSessionId(){
+        return sessionId;
+    }
     //endregion
 
     //region Listener
