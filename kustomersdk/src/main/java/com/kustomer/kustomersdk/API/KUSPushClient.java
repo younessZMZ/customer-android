@@ -49,7 +49,7 @@ import java.util.TimerTask;
 public class KUSPushClient implements Serializable, KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
 
     //region Properties
-    private static long LAZY_POLLING_TIMER_INTERVAL = 45000;
+    private static long LAZY_POLLING_TIMER_INTERVAL = 30000;
     private static long Active_POLLING_TIMER_INTERVAL = 7500;
     private long currentPollingTimerInterval = 0;
 
@@ -253,11 +253,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void onPollTick(){
-        KUSTrackingToken trackingToken = (KUSTrackingToken) userSession.getTrackingTokenDataSource().getObject();
-        if(trackingToken == null || trackingToken.getCustomerId() == null || trackingToken.getCustomerId().length() == 0 || !userSession.getChatSessionsDataSource().isFetched()){
-            return;
-        }
-
         userSession.getChatSessionsDataSource().fetchLatest();
     }
 
@@ -319,10 +314,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             @Override
             public void run() {
                 connectToChannelsIfNecessary();
-
-                KUSTrackingToken trackingToken = (KUSTrackingToken) userSession.getTrackingTokenDataSource().getObject();
-                if(trackingToken != null && trackingToken.getCustomerId() != null && trackingToken.getCustomerId().length() > 0 && !userSession.getChatSessionsDataSource().isFetched())
-                    userSession.getChatSessionsDataSource().fetchLatest();
             }
         };
         handler.post(runnable);
