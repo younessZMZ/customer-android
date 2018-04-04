@@ -484,6 +484,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                             && isFetchedAll()
                             && (sessionId != null && sessionId.length() > 0)
                             && firstMessage.getState() == KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT
+                            && KUSChatMessageSentByUser(firstMessage)
             );
         else
             return false;
