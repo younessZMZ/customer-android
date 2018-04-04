@@ -219,7 +219,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     startTimer(Active_POLLING_TIMER_INTERVAL);
                 }
             }
-        }else if(userSession != null && userSession.getChatSessionsDataSource().getSize()>0){
+        }else {
             // Make sure we're polling lazily
             if(pollingTimer == null || currentPollingTimerInterval != LAZY_POLLING_TIMER_INTERVAL){
                 if(pollingTimer != null)
