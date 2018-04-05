@@ -21,6 +21,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
     private String orgId;
     private String customerId;
     private String sessionId;
+    private JSONObject originalJSON;
     //endregion
 
     //region Initializer
@@ -40,6 +41,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
             throw new KUSInvalidJsonException("Object Id not found.");
 
         id = objectId;
+        originalJSON = json;
 
         this.orgId = stringFromKeyPath(json, "relationships.org.data.id");
         this.customerId = stringFromKeyPath(json, "relationships.customer.data.id");
@@ -119,6 +121,14 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public JSONObject getOriginalJSON() {
+        return originalJSON;
+    }
+
+    public void setOriginalJSON(JSONObject originalJSON) {
+        this.originalJSON = originalJSON;
     }
 
     //endregion
