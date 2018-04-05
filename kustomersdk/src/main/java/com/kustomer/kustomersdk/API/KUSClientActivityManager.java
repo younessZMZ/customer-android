@@ -56,6 +56,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
         List <Timer> timers = new ArrayList<>();
 
+        //Interval value is in seconds rather than milliseconds
         for(final Double interval : activityDataSource.getIntervals()){
             final Handler handler = new Handler();
             Timer timer = new Timer();
@@ -69,7 +70,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
                     });
                 }
             };
-            timer.schedule(doAsynchronousTask, 0, interval.longValue()*1000);
+            timer.schedule(doAsynchronousTask, interval.longValue()*1000);
 
             timers.add(timer);
         }
@@ -134,7 +135,17 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
         if(dataSource == activityDataSource){
             if(activityDataSource.getCurrentPageSeconds() > 0){
-                userSession.getPushClient().onClientActivityTick();
+                // Tell the push client to perform a sessions list pull to check for automated messages
+                // We delay a bit here to avoid a race in message creation delay
+
+                Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        userSession.getPushClient().onClientActivityTick();
+                    }
+                };
+                handler.postDelayed(runnable,1000);
             }
         }
         updateTimers();
