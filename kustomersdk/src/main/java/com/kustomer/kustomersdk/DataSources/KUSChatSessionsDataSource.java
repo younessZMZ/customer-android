@@ -313,7 +313,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             }
         }
 
-        return mostRecentSession;
+        return mostRecentSession != null ? mostRecentSession : (KUSChatSession) getFirst();
     }
 
     public Date getLastMessageAt(){

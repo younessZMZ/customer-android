@@ -141,7 +141,8 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             else
                 overridePendingTransition(0, 0);
         }else if (chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 1){
-            KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.getFirst();
+            // Go directly to the most recent chat session
+            KUSChatSession chatSession = chatSessionsDataSource.getMostRecentSession();
 
             Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY,chatSession);
