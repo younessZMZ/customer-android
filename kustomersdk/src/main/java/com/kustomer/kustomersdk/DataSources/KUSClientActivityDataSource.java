@@ -81,7 +81,37 @@ public class KUSClientActivityDataSource extends KUSObjectDataSource {
 
     //region Getter & Setter
 
+    public void setIntervals(List<Double> intervals) {
+        this.intervals = intervals;
+    }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getPreviousPageName() {
+        return previousPageName;
+    }
+
+    public void setPreviousPageName(String previousPageName) {
+        this.previousPageName = previousPageName;
+    }
+
+    public String getCurrentPageName() {
+        return currentPageName;
+    }
+
+    public void setCurrentPageName(String currentPageName) {
+        this.currentPageName = currentPageName;
+    }
+
+    public Double getCurrentPageSeconds() {
+        return currentPageSeconds;
+    }
+
+    public void setCurrentPageSeconds(Double currentPageSeconds) {
+        this.currentPageSeconds = currentPageSeconds;
+    }
 
     //endregion
 }

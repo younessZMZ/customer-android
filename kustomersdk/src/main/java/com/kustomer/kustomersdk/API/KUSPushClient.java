@@ -83,6 +83,14 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
     //endregion
 
+    //region Public Methods
+    public void onClientActivityTick(){
+        // We only need to poll for client activity changes if we are not connected to the socket
+        if(!shouldBeConnectedToPusher())
+            onPollTick();
+    }
+    //endregion
+
     //region Private Methods
     private URL getPusherAuthURL(){
         return userSession.getRequestManager().urlForEndpoint(KUSConstants.URL.PUSHER_AUTH);

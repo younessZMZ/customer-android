@@ -56,7 +56,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
         List <Timer> timers = new ArrayList<>();
 
-        for(Double interval : activityDataSource.getIntervals()){
+        for(final Double interval : activityDataSource.getIntervals()){
             final Handler handler = new Handler();
             Timer timer = new Timer();
             TimerTask doAsynchronousTask = new TimerTask() {
@@ -64,7 +64,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
                 public void run() {
                     handler.post(new Runnable() {
                         public void run() {
-                            onActivityTimer();
+                            onActivityTimer(interval);
                         }
                     });
                 }
@@ -94,12 +94,12 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
     @NonNull
     private Double timeOnCurrentPage(){
         long currentTime = Calendar.getInstance().getTimeInMillis()/1000;
-        return currentTime - currentPageStartTime;
+        return (double) Math.round(currentTime - currentPageStartTime);
     }
 
 
-    private void onActivityTimer(){
-        requestClientActivity();
+    private void onActivityTimer(Double interval){
+        requestClientActivityWithCurrentPageSeconds(interval);
     }
     //endregion
 
@@ -132,6 +132,11 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
     //region Callbacks
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if(dataSource == activityDataSource){
+            if(activityDataSource.getCurrentPageSeconds() > 0){
+                userSession.getPushClient().onClientActivityTick();
+            }
+        }
         updateTimers();
     }
 
