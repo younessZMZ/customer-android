@@ -232,14 +232,14 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public void describeActiveConversation(JSONObject customAttributes){
-        KUSChatSession mostRecentChatSession = getMostRecentChatSession();
+        KUSChatSession mostRecentSession = getMostRecentSession();
 
-        String mostRecentChatSessionId = null;
-        if(mostRecentChatSession != null)
-            mostRecentChatSessionId = mostRecentChatSession.getId();
+        String mostRecentSessionId = null;
+        if(mostRecentSession != null)
+            mostRecentSessionId = mostRecentSession.getId();
 
-        if(mostRecentChatSessionId != null)
-            flushCustomAttributes(customAttributes,mostRecentChatSessionId);
+        if(mostRecentSessionId != null)
+            flushCustomAttributes(customAttributes,mostRecentSessionId);
         else{
             // Merge previously queued custom attributes with the latest custom attributes
             JSONObject pendingCustomChatSessionAttributes = new JSONObject();
@@ -298,27 +298,27 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     //endregion
 
     //region Helper methods
-    private KUSChatSession getMostRecentChatSession(){
+    public KUSChatSession getMostRecentSession(){
         Date mostRecentMessageAt = null;
-        KUSChatSession mostRecentChatSession = null;
+        KUSChatSession mostRecentSession = null;
 
         for(KUSModel model: getList()){
             KUSChatSession chatSession = (KUSChatSession) model;
             if(mostRecentMessageAt == null){
                 mostRecentMessageAt = chatSession.getLastMessageAt();
-                mostRecentChatSession = chatSession;
+                mostRecentSession = chatSession;
             }else if(mostRecentMessageAt.before(chatSession.getLastMessageAt())){
                     mostRecentMessageAt = chatSession.getLastMessageAt();
-                    mostRecentChatSession = chatSession;
+                    mostRecentSession = chatSession;
             }
         }
 
-        return mostRecentChatSession;
+        return mostRecentSession;
     }
 
     public Date getLastMessageAt(){
-        if(getMostRecentChatSession() != null)
-            return getMostRecentChatSession().getLastMessageAt();
+        if(getMostRecentSession() != null)
+            return getMostRecentSession().getLastMessageAt();
         return null;
     }
 
@@ -372,10 +372,10 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         if(dataSource == this){
             if(pendingCustomChatSessionAttributes != null){
-                KUSChatSession mostRecentChatSession = getMostRecentChatSession();
-                String mostRecentChatSessionId = mostRecentChatSession.getId();
-                if(mostRecentChatSessionId != null){
-                    flushCustomAttributes(pendingCustomChatSessionAttributes,mostRecentChatSessionId);
+                KUSChatSession mostRecentSession = getMostRecentSession();
+                String mostRecentSessionId = mostRecentSession.getId();
+                if(mostRecentSessionId != null){
+                    flushCustomAttributes(pendingCustomChatSessionAttributes,mostRecentSessionId);
                     pendingCustomChatSessionAttributes = null;
                 }
             }
