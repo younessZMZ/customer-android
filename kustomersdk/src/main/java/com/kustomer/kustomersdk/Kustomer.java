@@ -196,7 +196,7 @@ public class Kustomer {
         userSession.getActivityManager().setCurrentPageName(currentPage);
     }
 
-    public void mSetCurrentPageName(String currentPageName){
+    private void mSetCurrentPageName(String currentPageName){
         userSession.getActivityManager().setCurrentPageName(currentPageName);
     }
 

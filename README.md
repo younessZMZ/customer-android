@@ -160,6 +160,18 @@ conversationObject.put("customAttributeStr", "value");
 Kustomer.describeConversation(conversationObject);
 ```
 
+```java
+/*
+ Mark the user as having navigated to a new page. By marking the user's progress around the app, you will be able to create proactive conversational campaigns that can be triggered as a result of the user's progress in your application flow.
+*/
+ @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+    // Track the current page on appearance
+    Kustomer.setCurrentPageName("Home");
+ }
+```
+
 ### Styling
 
 ##### Theme Customization:
