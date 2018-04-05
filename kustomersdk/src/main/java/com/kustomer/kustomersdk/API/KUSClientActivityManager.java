@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.API;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.kustomer.kustomersdk.DataSources.KUSClientActivityDataSource;
@@ -107,13 +108,16 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
     //region Public Methods
     public void setCurrentPageName(String currentPageName){
 
-        if(this.currentPageName.equals(currentPageName))
+        if(this.currentPageName != null && this.currentPageName.equals(currentPageName))
             return;
         previousPageName = this.currentPageName;
         this.currentPageName = currentPageName;
 
         cancelTimers();
-        activityDataSource.cancel();
+
+        if(activityDataSource != null)
+            activityDataSource.cancel();
+
         activityDataSource = null;
 
         //If we don't have a current page name, stop here.
@@ -132,23 +136,34 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
     //region Callbacks
     @Override
-    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
-        if(dataSource == activityDataSource){
-            if(activityDataSource.getCurrentPageSeconds() > 0){
-                // Tell the push client to perform a sessions list pull to check for automated messages
-                // We delay a bit here to avoid a race in message creation delay
+    public void objectDataSourceOnLoad(final KUSObjectDataSource dataSource) {
 
-                Handler handler = new Handler();
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        userSession.getPushClient().onClientActivityTick();
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                    if(dataSource == activityDataSource){
+                        if(activityDataSource.getCurrentPageSeconds() > 0){
+                            // Tell the push client to perform a sessions list pull to check for automated messages
+                            // We delay a bit here to avoid a race in message creation delay
+
+                            Handler handler = new Handler();
+                            Runnable runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    userSession.getPushClient().onClientActivityTick();
+                                }
+                            };
+                            handler.postDelayed(runnable,1000);
+                        }
                     }
-                };
-                handler.postDelayed(runnable,1000);
-            }
-        }
-        updateTimers();
+
+
+                    updateTimers();
+                }
+            };
+        handler.post(runnable);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
     private String orgId;
     private String customerId;
     private String sessionId;
-    private JSONObject originalJSON;
+    private String originalJSON;
     //endregion
 
     //region Initializer
@@ -41,7 +42,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
             throw new KUSInvalidJsonException("Object Id not found.");
 
         id = objectId;
-        originalJSON = json;
+        originalJSON = json.toString();
 
         this.orgId = stringFromKeyPath(json, "relationships.org.data.id");
         this.customerId = stringFromKeyPath(json, "relationships.customer.data.id");
@@ -124,11 +125,15 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
     }
 
     public JSONObject getOriginalJSON() {
-        return originalJSON;
+        try {
+            return new JSONObject(originalJSON);
+        } catch (JSONException e) {
+            return null;
+        }
     }
 
     public void setOriginalJSON(JSONObject originalJSON) {
-        this.originalJSON = originalJSON;
+        this.originalJSON = originalJSON.toString();
     }
 
     //endregion
