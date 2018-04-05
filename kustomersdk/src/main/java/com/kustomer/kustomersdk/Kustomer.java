@@ -186,7 +186,14 @@ public class Kustomer {
     }
 
     private void mResetTracking(){
+        String currentPage = userSession.getActivityManager().getCurrentPageName();
+
+        // Create a new userSession and release the previous one
         userSession = new KUSUserSession(orgName,orgId,true);
+
+        // Update the new userSession with the previous state
+        userSession.getDelegateProxy().setListener(mListener);
+        userSession.getActivityManager().setCurrentPageName(currentPage);
     }
 
     public void mSetCurrentPageName(String currentPageName){

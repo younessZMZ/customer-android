@@ -122,6 +122,11 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
         currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis()/1000;
         requestClientActivityWithCurrentPageSeconds(0.0);
     }
+
+    public String getCurrentPageName() {
+        return currentPageName;
+    }
+
     //endregion
 
     //region Callbacks
