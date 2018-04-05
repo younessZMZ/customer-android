@@ -5,15 +5,19 @@ import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSChatSettingsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSDelegateProxy;
 import com.kustomer.kustomersdk.DataSources.KUSFormDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTrackingTokenDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
+import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSClientActivity;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
+import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -27,7 +31,7 @@ import java.util.HashMap;
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSUserSession implements Serializable {
+public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListener {
 
     //region Properties
     private String orgId;
@@ -70,6 +74,9 @@ public class KUSUserSession implements Serializable {
 
         getChatSettingsDataSource().fetch();
         getPushClient();
+
+        chatSessionsDataSource.addListener(this);
+        chatSessionsDataSource.fetchLatest();
     }
 
     public KUSUserSession(String orgName, String orgId){
@@ -268,6 +275,34 @@ public class KUSUserSession implements Serializable {
             return !getSharedPreferences().getDidCaptureEmail();
         }
         return false;
+    }
+    //endregion
+
+    //region Callback
+    @Override
+    public void onLoad(KUSPaginatedDataSource dataSource) {
+        if(dataSource == chatSessionsDataSource){
+            chatSessionsDataSource.removeListener(this);
+
+            for(KUSModel model : chatSessionsDataSource.getList()){
+                KUSChatSession chatSession = (KUSChatSession) model;
+                //Fetch any messages that might contribute to unread count
+                KUSChatMessagesDataSource messagesDataSource = chatMessageDataSourceForSessionId(chatSession.getId());
+                boolean hasUnseen = chatSession.getLastSeenAt() == null || chatSession.getLastMessageAt().after(chatSession.getLastMessageAt());
+                if(hasUnseen && !messagesDataSource.isFetched())
+                    messagesDataSource.fetchLatest();
+            }
+        }
+    }
+
+    @Override
+    public void onError(KUSPaginatedDataSource dataSource, Error error) {
+
+    }
+
+    @Override
+    public void onContentChange(KUSPaginatedDataSource dataSource) {
+
     }
 
     //endregion
