@@ -154,17 +154,6 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
     @Override
     public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
 
-        if(dataSource == activityDataSource){
-            final WeakReference<KUSClientActivityManager> weakReference = new WeakReference<>(this);
-            Handler handler = new Handler();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    weakReference.get().requestClientActivity();
-                }
-            };
-            handler.postDelayed(runnable,2000);
-        }
     }
     //endregion
 }
