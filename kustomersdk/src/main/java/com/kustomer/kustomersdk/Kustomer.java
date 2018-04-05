@@ -103,6 +103,10 @@ public class Kustomer {
         getSharedInstance().mSetCurrentPageName(currentPageName);
     }
 
+    public static void getUnreadMessageCount(){
+        getSharedInstance().mGetUnreadMessageCount();
+    }
+
     public static void showSupport(Activity activity){
 
         if(activity != null) {
@@ -198,6 +202,10 @@ public class Kustomer {
 
     private void mSetCurrentPageName(String currentPageName){
         userSession.getActivityManager().setCurrentPageName(currentPageName);
+    }
+
+    private int mGetUnreadMessageCount(){
+        return userSession.getChatSessionsDataSource().totalUnreadCountExcludingSessionId(null);
     }
 
     private void setApiKey(String apiKey){
