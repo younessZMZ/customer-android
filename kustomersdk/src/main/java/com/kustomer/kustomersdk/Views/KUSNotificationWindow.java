@@ -44,6 +44,7 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.support.v4.app.NotificationCompat.CATEGORY_CALL;
 
 /**
  * Created by Junaid on 3/19/2018.
@@ -117,7 +118,7 @@ public class KUSNotificationWindow {
         if(chatSettings != null) {
             URL iconURL = user != null && user.getAvatarURL() != null ? user.getAvatarURL() : chatSettings.getTeamIconURL();
 
-            if (iconURL != null)
+            if (iconURL != null) {
                 try {
                     Glide.with(mContext)
                             .asBitmap()
@@ -127,13 +128,13 @@ public class KUSNotificationWindow {
                             .listener(new RequestListener<Bitmap>() {
                                 @Override
                                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                    displayNotification(placeHolderImage,shouldAutoDismiss);
+                                    displayNotification(placeHolderImage, shouldAutoDismiss);
                                     return false;
                                 }
 
                                 @Override
                                 public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                    displayNotification(resource,shouldAutoDismiss);
+                                    displayNotification(resource, shouldAutoDismiss);
                                     return false;
                                 }
                             })
@@ -146,6 +147,9 @@ public class KUSNotificationWindow {
 
                 } catch (IllegalArgumentException ignore) {
                 }
+            }else{
+                displayNotification(placeHolderImage,shouldAutoDismiss);
+            }
         }
 
     }
@@ -227,13 +231,14 @@ public class KUSNotificationWindow {
                 .setContentTitle(String.format(mContext.getString(R.string.chat_with)+" %s",responderName))
                 .setContentText(subtitleText)
                 .setLargeIcon(bitmap)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVibrate(new long[0])
                 .setSound(soundUri)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .setFullScreenIntent(pendingIntent,true)
+                .setAutoCancel(true)
+                .setCategory(CATEGORY_CALL)
+                .setOngoing(true);
 
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build());

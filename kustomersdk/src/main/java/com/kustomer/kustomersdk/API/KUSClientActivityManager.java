@@ -110,6 +110,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
         if(this.currentPageName != null && this.currentPageName.equals(currentPageName))
             return;
+
         previousPageName = this.currentPageName;
         this.currentPageName = currentPageName;
 
@@ -158,7 +159,6 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
                             handler.postDelayed(runnable,1000);
                         }
                     }
-
 
                     updateTimers();
                 }
