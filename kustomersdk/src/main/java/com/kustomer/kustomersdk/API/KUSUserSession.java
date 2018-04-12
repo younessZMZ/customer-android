@@ -87,6 +87,38 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
 
 
     //region public methods
+    public void removeAllListeners() {
+        pushClient.removeAllListeners();
+
+        if(chatSessionsDataSource != null)
+            chatSessionsDataSource.removeAllListeners();
+
+        if(chatSettingsDataSource != null)
+            chatSettingsDataSource.removeAllListeners();
+
+        if(trackingTokenDataSource != null)
+            trackingTokenDataSource.removeAllListeners();
+
+        if(formDataSource != null)
+            formDataSource.removeAllListeners();
+
+        if(userDataSources != null && userDataSources.keySet().size() > 0)
+            for(String key : userDataSources.keySet()){
+                KUSUserDataSource dataSource = userDataSources.get(key);
+
+                if(dataSource != null)
+                    dataSource.removeAllListeners();
+            }
+
+        if(chatMessagesDataSources != null && chatMessagesDataSources.keySet().size() > 0)
+            for(String key : chatMessagesDataSources.keySet()) {
+                KUSChatMessagesDataSource dataSource = chatMessagesDataSources.get(key);
+
+                if(dataSource != null)
+                    dataSource.removeAllListeners();
+            }
+    }
+
     public KUSChatMessagesDataSource chatMessageDataSourceForSessionId(String sessionId){
         if(sessionId.length() == 0)
             return null;

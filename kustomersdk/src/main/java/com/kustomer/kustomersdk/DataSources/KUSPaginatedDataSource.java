@@ -38,7 +38,7 @@ public class KUSPaginatedDataSource {
     private KUSPaginatedResponse mostRecentPaginatedResponse;
     private KUSPaginatedResponse lastPaginatedResponse;
 
-    private KUSUserSession userSession;
+    private WeakReference<KUSUserSession> userSession;
     protected List<KUSPaginatedDataSourceListener> listeners;
 
     private boolean fetching;
@@ -52,7 +52,7 @@ public class KUSPaginatedDataSource {
 
     //region LifeCycle
     public KUSPaginatedDataSource(KUSUserSession userSession) {
-        this.userSession = userSession;
+        this.userSession = new WeakReference<>(userSession);
         listeners = new ArrayList<>();
         fetchedModels = new ArrayList<>();
         tempFetchModels = new ArrayList<>();
@@ -113,11 +113,15 @@ public class KUSPaginatedDataSource {
         listeners.remove(listener);
     }
 
+    public void removeAllListeners(){
+        listeners.clear();
+    }
+
 
     public void fetchLatest() {
         URL url = getFirstUrl();
         if (mostRecentPaginatedResponse != null && mostRecentPaginatedResponse.getFirstPath() != null) {
-            url = userSession.getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.getFirstPath());
+            url = userSession.get().getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.getFirstPath());
         }
 
         if (url == null) {
@@ -138,7 +142,7 @@ public class KUSPaginatedDataSource {
 
         final KUSPaginatedDataSource dataSource = this;
 
-        userSession.getRequestManager().performRequestType(
+        userSession.get().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_GET,
                 url,
                 null,
@@ -165,9 +169,9 @@ public class KUSPaginatedDataSource {
     public void fetchNext() {
         URL url = null;
         if(lastPaginatedResponse != null){
-            url = userSession.getRequestManager().urlForEndpoint(lastPaginatedResponse.getNextPath());
+            url = userSession.get().getRequestManager().urlForEndpoint(lastPaginatedResponse.getNextPath());
         }else if(mostRecentPaginatedResponse!= null){
-            url  = userSession.getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.getNextPath());
+            url  = userSession.get().getRequestManager().urlForEndpoint(mostRecentPaginatedResponse.getNextPath());
         }
 
         if(url == null)
@@ -184,7 +188,7 @@ public class KUSPaginatedDataSource {
 
         final KUSPaginatedDataSource model = this;
 
-        userSession.getRequestManager().performRequestType(
+        userSession.get().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_GET,
                 url,
                 null,
@@ -354,11 +358,11 @@ public class KUSPaginatedDataSource {
     //region Accessors
 
     public KUSUserSession getUserSession() {
-        return userSession;
+        return userSession.get();
     }
 
     public void setUserSession(KUSUserSession userSession) {
-        this.userSession = userSession;
+        this.userSession = new WeakReference<>(userSession);
     }
 
     //endregion

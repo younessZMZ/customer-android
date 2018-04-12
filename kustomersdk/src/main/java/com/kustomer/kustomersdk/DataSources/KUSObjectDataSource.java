@@ -24,7 +24,7 @@ public class KUSObjectDataSource {
     private Error error;
     private KUSModel object;
 
-    private KUSUserSession userSession;
+    private WeakReference<KUSUserSession> userSession;
     private Object requestMarker;
 
     private List<KUSObjectDataSourceListener> listeners;
@@ -36,7 +36,7 @@ public class KUSObjectDataSource {
     }
 
     KUSObjectDataSource(KUSUserSession userSession){
-        this.userSession = userSession;
+        this.userSession = new WeakReference<>(userSession);
         listeners = new ArrayList<>();
     }
     //endregion
@@ -98,6 +98,10 @@ public class KUSObjectDataSource {
     public void removeListener(KUSObjectDataSourceListener listener){
         listeners.remove(listener);
     }
+
+    public void removeAllListeners(){
+        listeners.clear();
+    }
     //endregion
 
     //region Private Methods
@@ -141,7 +145,7 @@ public class KUSObjectDataSource {
     }
 
     public KUSUserSession getUserSession() {
-        return userSession;
+        return userSession.get();
     }
 
     public Object getRequestMarker() {

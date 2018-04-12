@@ -131,7 +131,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             }
         }
 
-        Date lastSeenAtDate = Calendar.getInstance().getTime();;
+        Date lastSeenAtDate = Calendar.getInstance().getTime();
         localLastSeenAtBySessionId.put(sessionId,lastSeenAtDate);
         final String lastSeenAtString = KUSDate.stringFromDate(lastSeenAtDate);
 

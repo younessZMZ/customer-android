@@ -64,13 +64,14 @@ public class KUSClientActivityDataSource extends KUSObjectDataSource {
         params.put("currentPage",currentPageName);
         params.put("currentPageSeconds",currentPageSeconds);
 
-        getUserSession().getRequestManager().performRequestType(
-                KUSRequestType.KUS_REQUEST_TYPE_POST,
-                KUSConstants.URL.CLIENT_ACTIVITY_ENDPOINT,
-                params,
-                true,
-                completionListener
-        );
+        if(getUserSession() != null)
+            getUserSession().getRequestManager().performRequestType(
+                    KUSRequestType.KUS_REQUEST_TYPE_POST,
+                    KUSConstants.URL.CLIENT_ACTIVITY_ENDPOINT,
+                    params,
+                    true,
+                    completionListener
+            );
     }
 
     @Override

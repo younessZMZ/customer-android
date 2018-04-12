@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
     //region Properties
     private String baseUrlString;
-    private KUSUserSession userSession;
+    private WeakReference<KUSUserSession> userSession;
 
     HashMap<String, String> genericHTTPHeaderValues = null;
     private ArrayList<KUSTrackingTokenListener> pendingTrackingTokenListeners  = null;
@@ -62,7 +63,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
     //region LifeCycle
     public KUSRequestManager (KUSUserSession userSession){
-        this.userSession = userSession;
+        this.userSession = new WeakReference<>(userSession);
 
         baseUrlString = String.format("https://%s.api.%s",userSession.getOrgName(), Kustomer.hostDomain());
         genericHTTPHeaderValues = new HashMap<String, String>(){
@@ -353,12 +354,12 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
 
     private void dispenseTrackingToken(final KUSTrackingTokenListener listener){
-        String trackingToken = userSession.getTrackingTokenDataSource().getCurrentTrackingToken();
+        String trackingToken = userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken();
         if(trackingToken != null){
             listener.onCompletion(null,trackingToken);
         }else{
             getPendingTrackingTokenListeners().add(listener);
-            userSession.getTrackingTokenDataSource().fetch();
+            userSession.get().getTrackingTokenDataSource().fetch();
         }
     }
 
@@ -405,8 +406,8 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     //region Callbacks
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
-        if(dataSource == userSession.getTrackingTokenDataSource()){
-            String trackingToken = userSession.getTrackingTokenDataSource().getCurrentTrackingToken();
+        if(dataSource == userSession.get().getTrackingTokenDataSource()){
+            String trackingToken = userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken();
             firePendingTokenCompletionsWithToken(trackingToken,null);
         }
     }

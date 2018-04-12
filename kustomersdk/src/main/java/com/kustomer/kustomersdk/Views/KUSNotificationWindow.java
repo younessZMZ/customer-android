@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -13,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Size;
-import android.util.TypedValue;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -35,16 +35,17 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 
 import java.net.URL;
 import java.util.Locale;
-
-import butterknife.ButterKnife;
+import java.util.Random;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.support.v4.app.NotificationCompat.CATEGORY_CALL;
+import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.NOTIFICATION_ID_BUNDLE_KEY;
 
 /**
  * Created by Junaid on 3/19/2018.
@@ -55,7 +56,6 @@ public class KUSNotificationWindow {
     //region Properties
     private static final int FONT_SIZE = 12;
     private static final int IMAGE_SIZE_IN_DP = 40;
-    private static final int NOTIFICATION_ID = 123;
     private static final int DISMISS_DURATION_MILLISECOND = 4000;
     private static final String NOTIFICATION_CHANNEL_ID = "Default";
 
@@ -65,6 +65,8 @@ public class KUSNotificationWindow {
     private KUSUserSession mUserSession;
     private KUSChatMessagesDataSource chatMessagesDataSource;
     private KUSChatSession chatSession;
+
+    private static int notificationId;
     //endregion
 
     //region Initializer
@@ -79,6 +81,8 @@ public class KUSNotificationWindow {
 
     //region Public Methods
     public void showNotification(KUSChatSession mChatSession, Context context, final boolean shouldAutoDismiss){
+        clearPreviousNotification();
+
         mContext = context;
         chatSession = mChatSession;
 
@@ -156,6 +160,10 @@ public class KUSNotificationWindow {
     //endregion
 
     //region Private Methods
+    private void clearPreviousNotification(){
+        NotificationManagerCompat.from(Kustomer.getContext()).cancel(notificationId);
+    }
+
     private void createNotificationChannelForOreoAndAbove(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the NotificationChannel
@@ -210,6 +218,7 @@ public class KUSNotificationWindow {
     }
 
     private void displayNotification(Bitmap bitmap, boolean shouldAutoDismiss){
+        notificationId = new Random().nextInt();
         createNotificationChannelForOreoAndAbove();
 
         //Title text (from last responder, chat settings or organization name)
@@ -222,12 +231,14 @@ public class KUSNotificationWindow {
         PendingIntent pendingIntent = Kustomer.getSharedInstance().getUserSession()
                 .getDelegateProxy().getPendingIntent(mContext);
 
+
+        PendingIntent dummyIntent = PendingIntent.getActivity(mContext, 0,new Intent(), 0);
         //Create Sound Uri
         Uri soundUri = Uri.parse(String.format(Locale.getDefault(),
                 "android.resource://%s/%d",mContext.getPackageName(),R.raw.message_received));
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext,NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(android.R.color.transparent)
                 .setContentTitle(String.format(mContext.getString(R.string.chat_with)+" %s",responderName))
                 .setContentText(subtitleText)
                 .setLargeIcon(bitmap)
@@ -235,20 +246,34 @@ public class KUSNotificationWindow {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVibrate(new long[0])
                 .setSound(soundUri)
-                .setFullScreenIntent(pendingIntent,true)
+                .setFullScreenIntent(dummyIntent,true)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setCategory(CATEGORY_CALL)
+//                .setOnlyAlertOnce(false)
                 .setOngoing(true);
 
+        //Add dismiss button in case of persistent notification
+        if(!shouldAutoDismiss){
+            Intent dismiss = new Intent();
+            dismiss.putExtra(NOTIFICATION_ID_BUNDLE_KEY, notificationId);
+            dismiss.setAction(KUSConstants.Actions.CANCEL_NOTIFICATION_RECEIVER_ACTION);
+
+            PendingIntent pIntentNegative = PendingIntent.getBroadcast(mContext, notificationId,
+                    dismiss, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            mBuilder.addAction(R.drawable.ic_close_black_24dp,mContext.getString(R.string.dismiss),pIntentNegative);
+        }
+
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        notificationManager.notify(notificationId,mBuilder.build() );
 
         if(shouldAutoDismiss) {
             Handler handler = new Handler();
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    notificationManager.cancel(NOTIFICATION_ID);
+                    notificationManager.cancel(notificationId);
                 }
             };
             handler.postDelayed(runnable, DISMISS_DURATION_MILLISECOND);

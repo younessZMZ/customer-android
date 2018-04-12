@@ -103,8 +103,8 @@ public class Kustomer {
         getSharedInstance().mSetCurrentPageName(currentPageName);
     }
 
-    public static void getUnreadMessageCount(){
-        getSharedInstance().mGetUnreadMessageCount();
+    public static int getUnreadMessageCount(){
+        return getSharedInstance().mGetUnreadMessageCount();
     }
 
     public static void showSupport(Activity activity){
@@ -193,6 +193,10 @@ public class Kustomer {
         String currentPage = userSession.getActivityManager().getCurrentPageName();
 
         // Create a new userSession and release the previous one
+        if (userSession != null) {
+            userSession.removeAllListeners();
+        }
+
         userSession = new KUSUserSession(orgName,orgId,true);
 
         // Update the new userSession with the previous state

@@ -20,7 +20,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
     //region Properties
     private String currentPageName;
-    private KUSUserSession userSession;
+    private WeakReference<KUSUserSession> userSession;
     private String previousPageName;
     private Double currentPageStartTime;
     private List<Timer> timers = new ArrayList<>();
@@ -29,7 +29,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
     //region LifeCycle
     public KUSClientActivityManager(KUSUserSession userSession){
-        this.userSession = userSession;
+        this.userSession = new WeakReference<>(userSession);
     }
     //endregion
 
@@ -84,7 +84,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
     private void requestClientActivityWithCurrentPageSeconds(Double currentPageSeconds){
 
-        activityDataSource = new KUSClientActivityDataSource(userSession,
+        activityDataSource = new KUSClientActivityDataSource(userSession.get(),
                 previousPageName,
                 currentPageName,
                 currentPageSeconds);
@@ -153,7 +153,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
                             Runnable runnable = new Runnable() {
                                 @Override
                                 public void run() {
-                                    userSession.getPushClient().onClientActivityTick();
+                                    userSession.get().getPushClient().onClientActivityTick();
                                 }
                             };
                             handler.postDelayed(runnable,1000);
