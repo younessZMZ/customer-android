@@ -281,7 +281,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void onPollTick(){
-        userSession.get().getChatSessionsDataSource().fetchLatest();
+        if(userSession.get() != null)
+            userSession.get().getChatSessionsDataSource().fetchLatest();
     }
 
     private void notifyForUpdatedChatSession(String sessionId){
