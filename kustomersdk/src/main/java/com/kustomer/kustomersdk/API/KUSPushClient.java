@@ -1,12 +1,7 @@
 package com.kustomer.kustomersdk.API;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationManagerCompat;
 
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
@@ -47,8 +42,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.NOTIFICATION_ID_BUNDLE_KEY;
-
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -70,7 +63,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     private boolean isSupportScreenShown = false;
     private Timer pollingTimer;
     private String pendingNotificationSessionId;
-    private BroadcastReceiver notificationReceiver;
     private Handler handler;
     //endregion
 
@@ -82,7 +74,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         userSession.getChatSettingsDataSource().addListener(this);
         userSession.getTrackingTokenDataSource().addListener(this);
 
-        setupNotificationReceiver();
         connectToChannelsIfNecessary();
     }
     //endregion
@@ -108,23 +99,10 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             handler = null;
         }
 
-        Kustomer.getContext().unregisterReceiver(notificationReceiver);
     }
     //endregion
 
     //region Private Methods
-    private void setupNotificationReceiver(){
-        IntentFilter filter = new IntentFilter(KUSConstants.Actions.CANCEL_NOTIFICATION_RECEIVER_ACTION);
-        notificationReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                int notificationId = intent.getIntExtra(NOTIFICATION_ID_BUNDLE_KEY,0);
-                NotificationManagerCompat.from(Kustomer.getContext()).cancel(notificationId);
-            }
-        };
-
-        Kustomer.getContext().registerReceiver(notificationReceiver,filter);
-    }
     private URL getPusherAuthURL(){
         return userSession.get().getRequestManager().urlForEndpoint(KUSConstants.URL.PUSHER_AUTH);
     }

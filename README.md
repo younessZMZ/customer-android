@@ -170,6 +170,21 @@ Kustomer.describeConversation(conversationObject);
     // Track the current page on appearance
     Kustomer.setCurrentPageName("Home");
  }
+
+ /*
+ You should also declare the following receiver in manifest file to allow proactive notifications to be dismissed.
+ */
+
+
+ <receiver
+     android:name="com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver"
+     android:enabled="true"
+     android:exported="true">
+     <intent-filter>
+         <action android:name="com.kustomer.cancelNotification"/>
+     </intent-filter>
+ </receiver>
+
 ```
 
 ### Styling
