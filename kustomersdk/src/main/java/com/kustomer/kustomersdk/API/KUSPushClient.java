@@ -292,9 +292,11 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
         else{
             KUSChatMessagesDataSource chatMessagesDataSource = userSession.get().chatMessageDataSourceForSessionId(sessionId);
+
+
             KUSChatMessage latestMessage = chatMessagesDataSource.getLatestMessage();
             KUSChatSession chatSession = (KUSChatSession) userSession.get().getChatSessionsDataSource().findById(sessionId);
-            if(chatSession == null){
+            if (chatSession == null && latestMessage != null) {
                 try {
                     chatSession = KUSChatSession.tempSessionFromChatMessage(latestMessage);
                 } catch (KUSInvalidJsonException e) {
@@ -373,9 +375,16 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         if(dataSource instanceof  KUSChatMessagesDataSource){
             KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
-            if(chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)){
-                notifyForUpdatedChatSession(pendingNotificationSessionId);
-                pendingNotificationSessionId = null;
+            if(pendingNotificationSessionId != null && chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)){
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyForUpdatedChatSession(pendingNotificationSessionId);
+                        pendingNotificationSessionId = null;
+                    }
+                };
+                handler.post(runnable);
             }
         }
 
@@ -393,9 +402,16 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     public void onError(KUSPaginatedDataSource dataSource, Error error) {
         if(dataSource instanceof  KUSChatMessagesDataSource){
             KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
-            if(chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)){
-                notifyForUpdatedChatSession(pendingNotificationSessionId);
-                pendingNotificationSessionId = null;
+            if(pendingNotificationSessionId != null && chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)){
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyForUpdatedChatSession(pendingNotificationSessionId);
+                        pendingNotificationSessionId = null;
+                    }
+                };
+                handler.post(runnable);
             }
         }
     }

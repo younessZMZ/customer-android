@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 import android.util.Size;
 
 import com.bumptech.glide.Glide;
@@ -150,6 +151,7 @@ public class KUSNotificationWindow {
                             });
 
                 } catch (IllegalArgumentException ignore) {
+                    Log.d("Kustoemr",ignore.getMessage());
                 }
             }else{
                 displayNotification(placeHolderImage,shouldAutoDismiss);

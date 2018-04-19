@@ -71,7 +71,7 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
                     });
                 }
             };
-            timer.schedule(doAsynchronousTask, interval.longValue()*1000);
+            timer.schedule(doAsynchronousTask, interval.longValue() > 0 ? interval.longValue()*1000 : 0);
 
             timers.add(timer);
         }

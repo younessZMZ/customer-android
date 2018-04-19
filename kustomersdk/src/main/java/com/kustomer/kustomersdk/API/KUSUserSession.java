@@ -120,7 +120,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
     }
 
     public KUSChatMessagesDataSource chatMessageDataSourceForSessionId(String sessionId){
-        if(sessionId.length() == 0)
+        if(sessionId == null || sessionId.isEmpty())
             return null;
 
         KUSChatMessagesDataSource chatMessagesDataSource = getChatMessagesDataSources().get(sessionId);
