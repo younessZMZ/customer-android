@@ -36,4 +36,4 @@ obj/
 .externalNativeBuild
 
 # app file to avoid kustomer key from pushed
-src/main/java/com/kustomer/kustomer/App
+src/**/App.java
