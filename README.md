@@ -96,6 +96,9 @@ Kustomer.showSupport(ACTIVITY);
 
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 Kustomer.presentKnowledgeBase(ACTIVITY);
+
+// Convenience method that will present a custom web page interface
+Kustomer.presentCustomWebPage(ACTIVITY,"https://www.example.com");
 ```
 
 ```java

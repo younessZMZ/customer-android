@@ -38,6 +38,7 @@ public class KUSConstants {
        String K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY = "x-kustomer-tracking-token";
        String K_KUSTOMER_ORG_ID_KEY = "org";
        String K_KUSTOMER_ORG_NAME_KEY = "orgName";
+        String K_KUSTOMER_URL_KEY= "url";
     }
 
     public interface PusherEventNames{

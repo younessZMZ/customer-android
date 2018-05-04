@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Base64;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -119,6 +120,15 @@ public class Kustomer {
     public static void presentKnowledgeBase(Activity activity){
         Intent intent = new Intent(activity, KUSKnowledgeBaseActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+    }
+
+    public static void presentCustomWebPage(Activity activity, String url){
+        Intent intent = new Intent(activity, KUSKnowledgeBaseActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KUSConstants.Keys.K_KUSTOMER_URL_KEY,url);
+
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
     }

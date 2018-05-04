@@ -72,6 +72,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return PendingIntent.getActivity(context, 0, intent, 0);
             }
         });
+
+//        Kustomer.presentCustomWebPage(this,"https://www.example.com");
     }
 
     //endregion
