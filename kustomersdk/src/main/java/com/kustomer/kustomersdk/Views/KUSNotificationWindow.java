@@ -36,6 +36,7 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
+import com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
@@ -260,6 +261,7 @@ public class KUSNotificationWindow {
             Intent dismiss = new Intent();
             dismiss.putExtra(NOTIFICATION_ID_BUNDLE_KEY, notificationId);
             dismiss.setAction(KUSConstants.Actions.CANCEL_NOTIFICATION_RECEIVER_ACTION);
+            dismiss.setClass(mContext, NotificationDismissReceiver.class);
 
             PendingIntent pIntentNegative = PendingIntent.getBroadcast(mContext, notificationId,
                     dismiss, PendingIntent.FLAG_CANCEL_CURRENT);
