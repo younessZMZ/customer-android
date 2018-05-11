@@ -15,6 +15,8 @@ import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
 
+import java.util.Locale;
+
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //region Properties
@@ -59,21 +61,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 //        Kustomer.identify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIxMDUzOTUsImF1ZCI6Imt1c3RvbWVyIiwiaXNzIjoia3VzdG9tZXIiLCJleHRlcm5hbElkIjoiOTk5OSJ9.oDCzInyetRPwFiT2eEhQSKv6n4VknD7dFoWpl-tw778");
 
-        Kustomer.setListener(new KUSKustomerListener() {
-            @Override
-            public boolean kustomerShouldDisplayInAppNotification() {
-                return true;
-            }
-
-            @Override
-            public PendingIntent getPendingIntent(Context context) {
-                Intent intent = new Intent(context, KUSSessionsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                return PendingIntent.getActivity(context, 0, intent, 0);
-            }
-        });
+//        Kustomer.setListener(new KUSKustomerListener() {
+//            @Override
+//            public boolean kustomerShouldDisplayInAppNotification() {
+//                return true;
+//            }
+//
+//            @Override
+//            public PendingIntent getPendingIntent(Context context) {
+//                Intent intent = new Intent(context, KUSSessionsActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                return PendingIntent.getActivity(context, 0, intent, 0);
+//            }
+//        });
 
 //        Kustomer.presentCustomWebPage(this,"https://www.example.com");
+
+        Kustomer.setLocale(new Locale("ur"));
     }
 
     //endregion

@@ -14,6 +14,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSLogOptions;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
@@ -28,6 +29,7 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.sql.Wrapper;
 import java.util.HashMap;
+import java.util.Locale;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -121,7 +123,10 @@ public class Kustomer {
         Intent intent = new Intent(activity, KUSKnowledgeBaseActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+        if(KUSLocalization.getSharedInstance().isLTR())
+            activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+        else
+            activity.overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);
     }
 
     public static void presentCustomWebPage(Activity activity, String url){
@@ -131,6 +136,14 @@ public class Kustomer {
 
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+    }
+
+    public static void setLocale(Locale locale){
+        getSharedInstance().mSetLocale(locale);
+    }
+
+    public static String getLocalizedString(String key){
+        return getSharedInstance().mGetString(key);
     }
     //endregion
 
@@ -255,6 +268,14 @@ public class Kustomer {
     private JSONObject jsonFromBase64EncodedJsonString(String base64EncodedJson )throws JSONException{
         byte[] array = Base64.decode(base64EncodedJson,Base64.NO_PADDING);
         return new JSONObject(new String(array));
+    }
+
+    private void mSetLocale(Locale locale){
+        KUSLocalization.getSharedInstance().setLocale(locale);
+    }
+
+    private String mGetString(String key){
+        return KUSLocalization.getSharedInstance().localizedString(mContext, key);
     }
     //endregion
 

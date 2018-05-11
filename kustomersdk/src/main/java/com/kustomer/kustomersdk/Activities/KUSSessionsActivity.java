@@ -14,6 +14,7 @@ import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
+import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -163,7 +164,10 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     void newConversationClicked(){
         Intent intent = new Intent(this, KUSChatActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+        if(KUSLocalization.getSharedInstance().isLTR())
+            overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+        else
+            overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);
     }
 
     @Override
@@ -215,7 +219,11 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         Intent intent = new Intent(this, KUSChatActivity.class);
         intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY,chatSession);
         startActivity(intent);
-        overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+
+        if(KUSLocalization.getSharedInstance().isLTR())
+            overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+        else
+            overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);
     }
 
     @Override

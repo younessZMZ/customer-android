@@ -182,11 +182,7 @@ Kustomer.describeConversation(conversationObject);
  <receiver
      android:name="com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver"
      android:enabled="true"
-     android:exported="true">
-     <intent-filter>
-         <action android:name="com.kustomer.cancelNotification"/>
-     </intent-filter>
- </receiver>
+     android:exported="true"/>
 
 ```
 

@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.util.Size;
+import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -28,7 +29,9 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
+import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSImage;
+import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -42,6 +45,7 @@ import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 
 import java.net.URL;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
@@ -87,6 +91,9 @@ public class KUSNotificationWindow {
 
         mContext = context;
         chatSession = mChatSession;
+
+        //Updating language configuration
+        KUSLocalization.getSharedInstance().updateConfig(mContext);
 
         mUserSession = Kustomer.getSharedInstance().getUserSession();
         chatMessagesDataSource = mUserSession.chatMessageDataSourceForSessionId(chatSession.getId());
@@ -152,7 +159,7 @@ public class KUSNotificationWindow {
                             });
 
                 } catch (IllegalArgumentException ignore) {
-                    Log.d("Kustoemr",ignore.getMessage());
+                    Log.d("Kustomer",ignore.getMessage());
                 }
             }else{
                 displayNotification(placeHolderImage,shouldAutoDismiss);
@@ -200,16 +207,20 @@ public class KUSNotificationWindow {
         return responderName;
     }
 
-    private String getSubtitleText(){
-        //Subtitle text (from last message, or preview text)
-        KUSChatMessage latestTextMessage = null;
+    private KUSChatMessage getlatestMessage(){
         for(KUSModel model : chatMessagesDataSource.getList()){
             KUSChatMessage message = (KUSChatMessage) model;
             if(message.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT){
-                latestTextMessage = message;
-                break;
+                return message;
             }
         }
+
+        return null;
+    }
+
+    private String getSubtitleText(){
+        //Subtitle text (from last message, or preview text)
+        KUSChatMessage latestTextMessage = getlatestMessage();
 
         String subtitleText = null;
         if (latestTextMessage != null) {
@@ -218,6 +229,24 @@ public class KUSNotificationWindow {
         }
 
         return subtitleText;
+    }
+
+    private Date getDate(){
+        //Date text (from last message date, or session created at)
+        KUSChatMessage latestTextMessage = getlatestMessage();
+
+        Date sessionDate = null;
+        if (latestTextMessage != null) {
+            sessionDate = latestTextMessage.getCreatedAt() != null ?
+                    latestTextMessage.getCreatedAt() : chatSession.getCreatedAt();
+        }
+
+        return sessionDate;
+    }
+
+    private int getUnreadCount(){
+        Date sessionLastSeenAt = mUserSession.getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
+        return chatMessagesDataSource.unreadCountAfterDate(sessionLastSeenAt);
     }
 
     private void displayNotification(Bitmap bitmap, boolean shouldAutoDismiss){
@@ -240,11 +269,14 @@ public class KUSNotificationWindow {
         Uri soundUri = Uri.parse(String.format(Locale.getDefault(),
                 "android.resource://%s/%d",mContext.getPackageName(),R.raw.message_received));
 
+        RemoteViews view = createNotificationView(
+                bitmap,
+                String.format(mContext.getString(R.string.chat_with)+" %s",responderName),
+                subtitleText, getDate(),getUnreadCount());
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext,NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(android.R.color.transparent)
-                .setContentTitle(String.format(mContext.getString(R.string.chat_with)+" %s",responderName))
-                .setContentText(subtitleText)
-                .setLargeIcon(bitmap)
+                .setContent(view)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVibrate(new long[0])
@@ -253,20 +285,24 @@ public class KUSNotificationWindow {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setCategory(CATEGORY_CALL)
-//                .setOnlyAlertOnce(false)
                 .setOngoing(true);
 
         //Add dismiss button in case of persistent notification
         if(!shouldAutoDismiss){
-            Intent dismiss = new Intent();
+
+            RemoteViews expandedView = createExpandedNotificationView(
+                    bitmap,
+                    String.format(mContext.getString(R.string.chat_with)+" %s",responderName),
+                    subtitleText, getDate(),getUnreadCount());
+
+            Intent dismiss = new Intent(mContext, NotificationDismissReceiver.class);
             dismiss.putExtra(NOTIFICATION_ID_BUNDLE_KEY, notificationId);
-            dismiss.setAction(KUSConstants.Actions.CANCEL_NOTIFICATION_RECEIVER_ACTION);
-            dismiss.setClass(mContext, NotificationDismissReceiver.class);
 
             PendingIntent pIntentNegative = PendingIntent.getBroadcast(mContext, notificationId,
                     dismiss, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            mBuilder.addAction(R.drawable.ic_close_black_24dp,mContext.getString(R.string.dismiss),pIntentNegative);
+            expandedView.setOnClickPendingIntent(R.id.closeButton,pIntentNegative);
+            mBuilder.setCustomBigContentView(expandedView);
         }
 
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
@@ -282,6 +318,49 @@ public class KUSNotificationWindow {
             };
             handler.postDelayed(runnable, DISMISS_DURATION_MILLISECOND);
         }
+
+    }
+
+    private RemoteViews createNotificationView(Bitmap image, String title, String subtitle, Date date, int unreadCount){
+        RemoteViews contentView;
+        if(KUSLocalization.getSharedInstance().isLTR())
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_ltr);
+        else
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_rtl);
+
+        if(unreadCount < 1)
+            unreadCount = 1;
+
+        contentView.setImageViewBitmap(R.id.avatarImage, image);
+        contentView.setTextViewText(R.id.tvNotificationTitle, title);
+        contentView.setTextViewText(R.id.tvNotificationSubtitle, subtitle);
+        contentView.setTextViewText(R.id.tvNotificationDate, KUSDate.humanReadableTextFromDate(date));
+        contentView.setTextViewText(R.id.tvUnreadCount,String.valueOf(unreadCount));
+
+        return contentView;
+
+    }
+
+
+    private RemoteViews createExpandedNotificationView(Bitmap image, String title, String subtitle,Date date,int unreadCount){
+        RemoteViews contentView;
+
+        if(KUSLocalization.getSharedInstance().isLTR())
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_expanded_ltr);
+        else
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_expanded_rtl);
+
+        if(unreadCount < 1)
+            unreadCount = 1;
+
+        contentView.setImageViewBitmap(R.id.avatarImage, image);
+        contentView.setTextViewText(R.id.tvNotificationTitle, title);
+        contentView.setTextViewText(R.id.tvNotificationSubtitle, subtitle);
+        contentView.setTextViewText(R.id.tvNotificationDate, KUSDate.humanReadableTextFromDate(date));
+        contentView.setTextViewText(R.id.tvUnreadCount,String.valueOf(unreadCount));
+        contentView.setTextViewText(R.id.closeButton,mContext.getResources().getString(R.string.dismiss));
+
+        return contentView;
 
     }
     //endregion

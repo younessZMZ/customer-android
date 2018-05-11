@@ -12,7 +12,6 @@ public class App extends Application {
 
     private static final String K_KUSTOMER_API_KEY =
             "[INSERT_API_KEY_HERE]";
-
     @Override
     public void onCreate() {
         super.onCreate();

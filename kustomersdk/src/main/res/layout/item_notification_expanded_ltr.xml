@@ -2,10 +2,12 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/session_item_background">
+    android:background="@drawable/session_item_background"
+    android:layoutDirection="ltr">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,12 +15,15 @@
         android:padding="15dp"
         android:gravity="center_vertical">
 
-        <FrameLayout
-            android:id="@+id/flAvatar"
+        <ImageView
+            android:id="@+id/avatarImage"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="10dp"
-            android:padding="1dp"/>
+            android:padding="1dp"
+            tools:ignore="ContentDescription">
+
+        </ImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +36,7 @@
                 android:layout_marginBottom="3dp"
                 android:gravity="center_vertical">
                 <TextView
-                    android:id="@+id/tvSessionTitle"
+                    android:id="@+id/tvNotificationTitle"
                     style="@style/KUSChatSessionTitleTextAppearance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -41,14 +46,13 @@
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:textAlignment="viewStart"/>
-
                 <TextView
-                    android:id="@+id/tvSessionDate"
+                    android:id="@+id/tvNotificationDate"
                     style="@style/KUSChatSessionDateTextAppearance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/kusSessionDateColor"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -57,7 +61,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/tvSessionSubtitle"
+                    android:id="@+id/tvNotificationSubtitle"
                     style="@style/KUSChatSessionSubtitleTextAppearance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -65,10 +69,8 @@
                     android:textColor="@color/kusSessionSubtitleColor"
                     android:textColorLink="@color/kusSessionSubtitleColor"
                     android:layout_weight="1"
-                    android:lines="1"
                     android:textSize="12sp"
                     android:textAlignment="viewStart"/>
-
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -85,8 +87,7 @@
                         android:gravity="center"
                         android:textSize="10sp"
                         android:backgroundTint="@color/kusSessionUnreadBackground"
-                        android:background="@drawable/shape_unread_count_background"
-                        android:visibility="invisible"/>
+                        android:background="@drawable/shape_unread_count_background" />
                 </FrameLayout>
 
             </LinearLayout>
@@ -95,9 +96,12 @@
 
     </LinearLayout>
 
-    <View
+    <Button
+        android:id="@+id/closeButton"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLightGrey"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/kusSessionTitleColor"
+        android:text="@string/dismiss"
+        android:background="@drawable/session_item_background"/>
 
 </LinearLayout>

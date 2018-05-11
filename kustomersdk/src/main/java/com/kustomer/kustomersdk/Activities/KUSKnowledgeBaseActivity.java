@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
+import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
@@ -58,7 +59,10 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
     public void finish() {
         super.finish();
 
-        overridePendingTransition(R.anim.stay, R.anim.kus_slide_right);
+        if (KUSLocalization.getSharedInstance().isLTR())
+            overridePendingTransition(R.anim.stay, R.anim.kus_slide_right);
+        else
+            overridePendingTransition(R.anim.stay, R.anim.kus_slide_right_rtl);
     }
     //endregion
 

@@ -10,10 +10,6 @@ public class KUSConstants {
         String URL_PATTERN = "(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
     }
 
-    public interface Actions{
-        String CANCEL_NOTIFICATION_RECEIVER_ACTION = "com.kustomer.cancelNotification";
-    }
-
     public interface URL{
         String HOST_NAME = "kustomerapp.com";
         String PUSHER_AUTH = "/c/v1/pusher/auth";
