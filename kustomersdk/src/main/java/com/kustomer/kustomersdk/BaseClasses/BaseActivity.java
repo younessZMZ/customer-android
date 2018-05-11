@@ -2,7 +2,6 @@ package com.kustomer.kustomersdk.BaseClasses;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
-import com.kustomer.kustomersdk.Receivers.NetworkStateReceiver;
 
 import java.util.ArrayList;
 import java.util.List;

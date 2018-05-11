@@ -39,7 +39,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     private boolean didHandleFirstLoad = false;
     private SessionListAdapter adapter;
-    private boolean animateChatScreen = false;
+    private boolean shouldAnimateChatScreen = false;
     //endregion
 
     //region LifeCycle
@@ -55,12 +55,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         chatSessionsDataSource.addListener(this);
         chatSessionsDataSource.fetchLatest();
 
-        if(!chatSessionsDataSource.isFetched() || chatSessionsDataSource.getSize() > 1) {
-            animateChatScreen = false;
-        }
-        else {
-            animateChatScreen = true;
-        }
+        shouldAnimateChatScreen = chatSessionsDataSource.isFetched();
 
         setupAdapter();
         setupToolbar();
@@ -136,18 +131,19 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY,false);
             startActivity(intent);
 
-            if(animateChatScreen)
+            if(shouldAnimateChatScreen)
                 overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
             else
                 overridePendingTransition(0, 0);
-        }else if (chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 1){
-            KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.getFirst();
+        }else if (chatSessionsDataSource != null){
+            // Go directly to the most recent chat session
+            KUSChatSession chatSession = chatSessionsDataSource.getMostRecentSession();
 
             Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY,chatSession);
             startActivity(intent);
 
-            if(animateChatScreen)
+            if(shouldAnimateChatScreen)
                 overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
             else
                 overridePendingTransition(0, 0);

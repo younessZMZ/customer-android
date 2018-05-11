@@ -32,6 +32,7 @@ import com.pusher.client.util.HttpAuthorizer;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,22 +50,25 @@ import java.util.TimerTask;
 public class KUSPushClient implements Serializable, KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
 
     //region Properties
-    private static long LAZY_POLLING_TIMER_INTERVAL = 45000;
-    private static long Active_POLLING_TIMER_INTERVAL = 7500;
+    private static long KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD = 60000;
+    private static long LAZY_POLLING_TIMER_INTERVAL = 30000;
+    private static long ACTIVE_POLLING_TIMER_INTERVAL = 7500;
     private long currentPollingTimerInterval = 0;
 
     private Pusher pusherClient;
     private PresenceChannel pusherChannel;
     private HashMap<String, KUSChatSession> previousChatSessions;
 
-    private KUSUserSession userSession;
+    private WeakReference<KUSUserSession> userSession;
     private boolean isSupportScreenShown = false;
     private Timer pollingTimer;
+    private String pendingNotificationSessionId;
+    private Handler handler;
     //endregion
 
     //region LifeCycle
     public KUSPushClient(KUSUserSession userSession){
-        this.userSession = userSession;
+        this.userSession = new WeakReference<>(userSession);
 
         userSession.getChatSessionsDataSource().addListener(this);
         userSession.getChatSettingsDataSource().addListener(this);
@@ -72,37 +76,57 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         connectToChannelsIfNecessary();
     }
+    //endregion
 
-    @Override
-    protected void finalize() throws Throwable {
-        pusherClient.unsubscribe(getPusherChannelName());
-        pusherClient.disconnect();
-        super.finalize();
+    //region Public Methods
+    public void onClientActivityTick(){
+        // We only need to poll for client activity changes if we are not connected to the socket
+        if(!shouldBeConnectedToPusher())
+            onPollTick();
+    }
+
+    public void removeAllListeners() {
+        if(pusherClient != null) {
+            pusherClient.unsubscribe(getPusherChannelName());
+            pusherClient.disconnect();
+        }
+
+        if(pollingTimer != null)
+            pollingTimer.cancel();
+
+        if(handler != null) {
+            handler.removeCallbacks(null);
+            handler = null;
+        }
+
     }
     //endregion
 
     //region Private Methods
     private URL getPusherAuthURL(){
-        return userSession.getRequestManager().urlForEndpoint(KUSConstants.URL.PUSHER_AUTH);
+        return userSession.get().getRequestManager().urlForEndpoint(KUSConstants.URL.PUSHER_AUTH);
     }
 
     private String getPusherChannelName(){
-        KUSTrackingToken trackingTokenObj = (KUSTrackingToken) userSession.getTrackingTokenDataSource().getObject();
+        KUSTrackingToken trackingTokenObj = (KUSTrackingToken) userSession.get().getTrackingTokenDataSource().getObject();
 
         if(trackingTokenObj != null)
-            return String.format("presence-external-%s-tracking-%s",userSession.getOrgId(),
+            return String.format("presence-external-%s-tracking-%s",userSession.get().getOrgId(),
                     trackingTokenObj.getTrackingId());
         return null;
     }
 
     private void connectToChannelsIfNecessary(){
-        KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        KUSChatSettings chatSettings = null;
+
+        if(userSession.get() != null)
+            chatSettings = (KUSChatSettings) userSession.get().getChatSettingsDataSource().getObject();
 
         if(pusherClient == null && chatSettings != null) {
             HashMap<String, String> headers = new HashMap<>();
             headers.put(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY,
-                    userSession.getTrackingTokenDataSource().getCurrentTrackingToken());
-            headers.putAll(userSession.getRequestManager().genericHTTPHeaderValues);
+                    userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken());
+            headers.putAll(userSession.get().getRequestManager().genericHTTPHeaderValues);
 
             HttpAuthorizer authorizer = new HttpAuthorizer(getPusherAuthURL().toString());
             authorizer.setHeaders(headers);
@@ -125,14 +149,15 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 }
             });
 
-            Handler handler = new Handler(Looper.getMainLooper());
+            handler = new Handler(Looper.getMainLooper());
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    connectToChannelsIfNecessary();
+                    if(userSession.get() != null)
+                        connectToChannelsIfNecessary();
                 }
             };
-            handler.postDelayed(runnable,LAZY_POLLING_TIMER_INTERVAL);
+            handler.postDelayed(runnable,KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD);
 
         }else{
             if(pusherClient != null)
@@ -178,7 +203,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                                 Kustomer.getContext(),JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
                         final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
-                        final KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+                        final KUSChatMessagesDataSource messagesDataSource = userSession.get().chatMessageDataSourceForSessionId(chatMessage.getSessionId());
 
                         final boolean doesNotAlreadyContainMessage = messagesDataSource.findById(chatMessage.getId()) == null;
                         messagesDataSource.upsertNewMessages(chatMessages);
@@ -212,14 +237,14 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             }else{
                 // We are not yet connected to pusher, setup an active polling pollingTimer
                 // (in the event that connecting to pusher fails)
-                if(pollingTimer == null || currentPollingTimerInterval != Active_POLLING_TIMER_INTERVAL){
+                if(pollingTimer == null || currentPollingTimerInterval != ACTIVE_POLLING_TIMER_INTERVAL){
                     if(pollingTimer != null)
                         pollingTimer.cancel();
 
-                    startTimer(Active_POLLING_TIMER_INTERVAL);
+                    startTimer(ACTIVE_POLLING_TIMER_INTERVAL);
                 }
             }
-        }else if(userSession != null && userSession.getChatSessionsDataSource().getSize()>0){
+        }else {
             // Make sure we're polling lazily
             if(pollingTimer == null || currentPollingTimerInterval != LAZY_POLLING_TIMER_INTERVAL){
                 if(pollingTimer != null)
@@ -235,6 +260,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private void startTimer(long time) {
         try {
+            if(pollingTimer != null)
+                pollingTimer.cancel();
+
             currentPollingTimerInterval = time;
             final Handler handler = new Handler();
             pollingTimer = new Timer();
@@ -253,12 +281,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void onPollTick(){
-        KUSTrackingToken trackingToken = (KUSTrackingToken) userSession.getTrackingTokenDataSource().getObject();
-        if(trackingToken == null || trackingToken.getCustomerId() == null || trackingToken.getCustomerId().length() == 0 || !userSession.getChatSessionsDataSource().isFetched()){
-            return;
-        }
-
-        userSession.getChatSessionsDataSource().fetchLatest();
+        if(userSession.get() != null)
+            userSession.get().getChatSessionsDataSource().fetchLatest();
     }
 
     private void notifyForUpdatedChatSession(String sessionId){
@@ -267,19 +291,21 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             KUSAudio.playMessageReceivedSound();
         }
         else{
-            KUSChatMessagesDataSource chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(sessionId);
+            KUSChatMessagesDataSource chatMessagesDataSource = userSession.get().chatMessageDataSourceForSessionId(sessionId);
+
+
             KUSChatMessage latestMessage = chatMessagesDataSource.getLatestMessage();
-            KUSChatSession chatSession = (KUSChatSession) userSession.getChatSessionsDataSource().findById(sessionId);
-            if(chatSession == null){
+            KUSChatSession chatSession = (KUSChatSession) userSession.get().getChatSessionsDataSource().findById(sessionId);
+            if (chatSession == null && latestMessage != null) {
                 try {
                     chatSession = KUSChatSession.tempSessionFromChatMessage(latestMessage);
                 } catch (KUSInvalidJsonException e) {
                     e.printStackTrace();
                 }
-                userSession.getChatSessionsDataSource().fetchLatest();
+                userSession.get().getChatSessionsDataSource().fetchLatest();
             }
 
-            if( userSession.getDelegateProxy().shouldDisplayInAppNotification() && chatSession != null){
+            if( userSession.get().getDelegateProxy().shouldDisplayInAppNotification() && chatSession != null){
                 boolean shouldAutoDismiss = latestMessage.getCampaignId() == null
                         || latestMessage.getCampaignId().length() == 0;
 
@@ -293,8 +319,11 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         if(isSupportScreenShown())
             return true;
 
-        Date lastMessageAt = userSession.getChatSessionsDataSource().getLastMessageAt();
-        return lastMessageAt!=null && Calendar.getInstance().getTimeInMillis() - lastMessageAt.getTime()  > LAZY_POLLING_TIMER_INTERVAL;
+        if(userSession.get() == null)
+            return false;
+
+        Date lastMessageAt = userSession.get().getChatSessionsDataSource().getLastMessageAt();
+        return lastMessageAt!=null && Calendar.getInstance().getTimeInMillis() - lastMessageAt.getTime()  > KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD;
     }
     //endregion
 
@@ -313,16 +342,14 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     //region Callbacks
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if(!userSession.get().getChatSessionsDataSource().isFetched())
+            userSession.get().getChatSessionsDataSource().fetchLatest();
 
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 connectToChannelsIfNecessary();
-
-                KUSTrackingToken trackingToken = (KUSTrackingToken) userSession.getTrackingTokenDataSource().getObject();
-                if(trackingToken != null && trackingToken.getCustomerId() != null && trackingToken.getCustomerId().length() > 0 && !userSession.getChatSessionsDataSource().isFetched())
-                    userSession.getChatSessionsDataSource().fetchLatest();
             }
         };
         handler.post(runnable);
@@ -334,73 +361,119 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     }
 
+    private void updatePreviousChatSessions(){
+        previousChatSessions = new HashMap<>();
+        for(KUSModel model : userSession.get().getChatSessionsDataSource().getList()){
+            KUSChatSession chatSession = (KUSChatSession) model;
+            previousChatSessions.put(chatSession.getId(),chatSession);
+        }
+    }
+
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
+        updatePreviousChatSessions();
 
-    }
-
-    @Override
-    public void onError(KUSPaginatedDataSource dataSource, Error error) {
-
-    }
-
-    @Override
-    public void onContentChange(final KUSPaginatedDataSource dataSource) {
+        if(dataSource instanceof  KUSChatMessagesDataSource){
+            KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
+            if(pendingNotificationSessionId != null && chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)){
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyForUpdatedChatSession(pendingNotificationSessionId);
+                        pendingNotificationSessionId = null;
+                    }
+                };
+                handler.post(runnable);
+            }
+        }
 
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if(dataSource == userSession.getChatSessionsDataSource())
-                    connectToChannelsIfNecessary();
-
-                // Only consider new messages here if we're actively polling
-                if(pollingTimer == null)
-                    return;
-
-                String updatedSessionId = null;
-                List<KUSModel> newChatSessions = userSession.getChatSessionsDataSource().getList();
-                for(KUSModel model : newChatSessions){
-                    KUSChatSession chatSession = (KUSChatSession) model;
-
-                    KUSChatSession previousChatSession = null;
-
-                    if(previousChatSessions != null)
-                        previousChatSession = previousChatSessions.get(chatSession.getId());
-
-                    if(previousChatSession!=null){
-
-                        try {
-                            KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
-                            KUSChatMessage latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
-                            boolean isUpdatedSession = chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt());
-                            Date sessionLastSeenAt = userSession.getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
-                            boolean lastSeenBeforeMessage = chatSession.getLastMessageAt().after(sessionLastSeenAt);
-                            boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
-                                    || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
-
-                            if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
-                                updatedSessionId = chatSession.getId();
-                                messagesDataSource.fetchLatest();
-                            }
-                        }catch (Exception ignore){}
-
-                    }
-                }
-
-                previousChatSessions = new HashMap<>();
-                for(KUSModel model : newChatSessions){
-                    KUSChatSession chatSession = (KUSChatSession) model;
-                    previousChatSessions.put(chatSession.getId(),chatSession);
-                }
-
-                if(updatedSessionId != null){
-                    notifyForUpdatedChatSession(updatedSessionId);
-                    updatedSessionId = null;
-                }
+                connectToChannelsIfNecessary();
             }
         };
         handler.post(runnable);
+    }
+
+    @Override
+    public void onError(KUSPaginatedDataSource dataSource, Error error) {
+        if(dataSource instanceof  KUSChatMessagesDataSource){
+            KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
+            if(pendingNotificationSessionId != null && chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)){
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyForUpdatedChatSession(pendingNotificationSessionId);
+                        pendingNotificationSessionId = null;
+                    }
+                };
+                handler.post(runnable);
+            }
+        }
+    }
+
+    @Override
+    public void onContentChange(final KUSPaginatedDataSource dataSource) {
+
+        if (dataSource == userSession.get().getChatSessionsDataSource()) {
+
+            // Only consider new messages here if we're actively polling
+            if (pollingTimer == null) {
+                //But update the state of previousChatSessions
+                updatePreviousChatSessions();
+                return;
+            }
+
+            String updatedSessionId = null;
+            List<KUSModel> newChatSessions = userSession.get().getChatSessionsDataSource().getList();
+            for (KUSModel model : newChatSessions) {
+                KUSChatSession chatSession = (KUSChatSession) model;
+
+                KUSChatSession previousChatSession = null;
+
+                if (previousChatSessions != null)
+                    previousChatSession = previousChatSessions.get(chatSession.getId());
+
+                KUSChatMessagesDataSource messagesDataSource = userSession.get().chatMessageDataSourceForSessionId(chatSession.getId());
+                if (previousChatSession != null) {
+
+                    try {
+                        KUSChatMessage latestChatMessage = null;
+
+                        if(messagesDataSource.getList().size() > 0)
+                            latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
+
+                        boolean isUpdatedSession = chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt());
+                        Date sessionLastSeenAt = userSession.get().getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
+                        boolean lastSeenBeforeMessage = sessionLastSeenAt == null || chatSession.getLastMessageAt().after(sessionLastSeenAt);
+                        boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
+                                || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
+
+                        if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
+                            updatedSessionId = chatSession.getId();
+                            messagesDataSource.addListener(KUSPushClient.this);
+                            messagesDataSource.fetchLatest();
+                        }
+                    } catch (Exception ignore) {
+                    }
+
+                } else if (previousChatSessions != null) {
+                    updatedSessionId = chatSession.getId();
+                    messagesDataSource.addListener(KUSPushClient.this);
+                    messagesDataSource.fetchLatest();
+                }
+            }
+
+            updatePreviousChatSessions();
+
+            if (updatedSessionId != null) {
+                pendingNotificationSessionId = updatedSessionId;
+            }
+        }
 
     }
     //endregion

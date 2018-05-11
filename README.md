@@ -96,6 +96,9 @@ Kustomer.showSupport(ACTIVITY);
 
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 Kustomer.presentKnowledgeBase(ACTIVITY);
+
+// Convenience method that will present a custom web page interface
+Kustomer.presentCustomWebPage(ACTIVITY,"https://www.example.com");
 ```
 
 ```java
@@ -158,6 +161,33 @@ conversationObject.put("customAttributeStr", "value");
 // ...
 
 Kustomer.describeConversation(conversationObject);
+```
+
+```java
+/*
+ Mark the user as having navigated to a new page. By marking the user's progress around the app, you will be able to create proactive conversational campaigns that can be triggered as a result of the user's progress in your application flow.
+*/
+ @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+    // Track the current page on appearance
+    Kustomer.setCurrentPageName("Home");
+ }
+
+ /*
+ You should also declare the following receiver in manifest file to allow proactive notifications to be dismissed.
+ */
+
+
+ <receiver
+     android:name="com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver"
+     android:enabled="true"
+     android:exported="true">
+     <intent-filter>
+         <action android:name="com.kustomer.cancelNotification"/>
+     </intent-filter>
+ </receiver>
+
 ```
 
 ### Styling

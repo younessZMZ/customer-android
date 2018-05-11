@@ -49,6 +49,15 @@
         <activity android:name="com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/MySupportTheme"/>
+
+        <receiver
+            android:name="com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kustomer.cancelNotification"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

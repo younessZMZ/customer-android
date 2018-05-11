@@ -10,6 +10,10 @@ public class KUSConstants {
         String URL_PATTERN = "(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
     }
 
+    public interface Actions{
+        String CANCEL_NOTIFICATION_RECEIVER_ACTION = "com.kustomer.cancelNotification";
+    }
+
     public interface URL{
         String HOST_NAME = "kustomerapp.com";
         String PUSHER_AUTH = "/c/v1/pusher/auth";
@@ -27,12 +31,14 @@ public class KUSConstants {
         String CURRENT_CUSTOMER_ENDPOINT = "/c/v1/customers/current";
         String ATTACHMENT_ENDPOINT = "https://%s.api.%s/c/v1/chat/messages/%s/attachments/%s?redirect=true";
         String CHAT_ATTACHMENT_ENDPOINT = "/c/v1/chat/attachments";
+        String CLIENT_ACTIVITY_ENDPOINT = "/c/v1/client-activity";
     }
 
     public interface Keys {
        String K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY = "x-kustomer-tracking-token";
        String K_KUSTOMER_ORG_ID_KEY = "org";
        String K_KUSTOMER_ORG_NAME_KEY = "orgName";
+        String K_KUSTOMER_URL_KEY= "url";
     }
 
     public interface PusherEventNames{
@@ -42,5 +48,6 @@ public class KUSConstants {
     public interface BundleName{
         String CHAT_SESSION_BUNDLE_KEY = "Chat_Session_bundle";
         String CHAT_SCREEN_BACK_BUTTON_KEY = "Chat_back_button_bundle";
+        String NOTIFICATION_ID_BUNDLE_KEY = "Notification_ID";
     }
 }

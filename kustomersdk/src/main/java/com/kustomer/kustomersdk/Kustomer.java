@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Base64;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -99,6 +100,14 @@ public class Kustomer {
         getSharedInstance().mResetTracking();
     }
 
+    public static void setCurrentPageName(String currentPageName){
+        getSharedInstance().mSetCurrentPageName(currentPageName);
+    }
+
+    public static int getUnreadMessageCount(){
+        return getSharedInstance().mGetUnreadMessageCount();
+    }
+
     public static void showSupport(Activity activity){
 
         if(activity != null) {
@@ -111,6 +120,15 @@ public class Kustomer {
     public static void presentKnowledgeBase(Activity activity){
         Intent intent = new Intent(activity, KUSKnowledgeBaseActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+    }
+
+    public static void presentCustomWebPage(Activity activity, String url){
+        Intent intent = new Intent(activity, KUSKnowledgeBaseActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KUSConstants.Keys.K_KUSTOMER_URL_KEY,url);
+
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
     }
@@ -182,7 +200,26 @@ public class Kustomer {
     }
 
     private void mResetTracking(){
+        String currentPage = userSession.getActivityManager().getCurrentPageName();
+
+        // Create a new userSession and release the previous one
+        if (userSession != null) {
+            userSession.removeAllListeners();
+        }
+
         userSession = new KUSUserSession(orgName,orgId,true);
+
+        // Update the new userSession with the previous state
+        userSession.getDelegateProxy().setListener(mListener);
+        userSession.getActivityManager().setCurrentPageName(currentPage);
+    }
+
+    private void mSetCurrentPageName(String currentPageName){
+        userSession.getActivityManager().setCurrentPageName(currentPageName);
+    }
+
+    private int mGetUnreadMessageCount(){
+        return userSession.getChatSessionsDataSource().totalUnreadCountExcludingSessionId(null);
     }
 
     private void setApiKey(String apiKey){

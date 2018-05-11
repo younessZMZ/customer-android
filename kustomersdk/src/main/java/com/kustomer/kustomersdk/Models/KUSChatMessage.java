@@ -86,7 +86,9 @@ public class KUSChatMessage extends KUSModel {
 
     //region Public Methods
     public static boolean KUSChatMessageSentByUser(KUSChatMessage message) {
-        return message.direction == KUSChatMessageDirection.KUS_CHAT_MESSAGE_DIRECTION_IN;
+
+        return message != null && message.direction == KUSChatMessageDirection.KUS_CHAT_MESSAGE_DIRECTION_IN;
+
     }
 
     public static boolean KUSMessagesSameSender(KUSChatMessage message1, KUSChatMessage message2) {
@@ -96,7 +98,11 @@ public class KUSChatMessage extends KUSModel {
                 && (message1.sentById != null && message1.sentById.equalsIgnoreCase(message2.sentById));
     }
 
-    public static KUSChatMessageDirection KUSChatMessageDirectionFromString(String str) {
+    private static KUSChatMessageDirection KUSChatMessageDirectionFromString(String str) {
+
+        if(str == null)
+            return null;
+
         return str.equalsIgnoreCase("in")
                 ? KUSChatMessageDirection.KUS_CHAT_MESSAGE_DIRECTION_IN
                 : KUSChatMessageDirection.KUS_CHAT_MESSAGE_DIRECTION_OUT;

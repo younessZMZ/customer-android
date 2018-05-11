@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
@@ -31,7 +32,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         initViews();
         setListeners();
-
+        Kustomer.setCurrentPageName("Home");
 
 //        // Describing Customer
 //        KUSCustomerDescription customerDescription = new KUSCustomerDescription();
@@ -71,7 +72,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return PendingIntent.getActivity(context, 0, intent, 0);
             }
         });
+
+//        Kustomer.presentCustomWebPage(this,"https://www.example.com");
     }
+
     //endregion
 
     //region Initializer

@@ -1,7 +1,6 @@
 package com.kustomer.kustomersdk.Activities;
 
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -14,6 +13,7 @@ import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
+import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import java.util.Locale;
 
@@ -49,8 +49,8 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
         wvKnowledge.getSettings().setBlockNetworkImage(false);
         wvKnowledge.setWebViewClient(new WebViewController());
 
-        KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
-        wvKnowledge.loadUrl(String.format(Locale.getDefault(), "https://%s.kustomer.help/", userSession.getOrgName()));
+        //wvKnowledge.loadUrl(String.format(Locale.getDefault(), "https://%s.kustomer.help/", userSession.getOrgName()));
+        wvKnowledge.loadUrl(getUrl());
         updateButtons();
     }
 
@@ -80,6 +80,18 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
         else {
             forwardButton.setAlpha(0.3f);
             forwardButton.setClickable(false);
+        }
+    }
+    //endregion
+
+    //region private method
+    private String getUrl() {
+        String url = getIntent().getStringExtra(KUSConstants.Keys.K_KUSTOMER_URL_KEY);
+        if (url != null) {
+            return url;
+        }else {
+            KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
+            return String.format(Locale.getDefault(), "https://%s.kustomer.help/", userSession.getOrgName());
         }
     }
     //endregion

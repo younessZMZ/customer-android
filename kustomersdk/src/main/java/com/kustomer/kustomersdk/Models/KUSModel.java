@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -21,6 +22,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
     private String orgId;
     private String customerId;
     private String sessionId;
+    private String originalJSON;
     //endregion
 
     //region Initializer
@@ -31,7 +33,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
         String type = stringFromKeyPath(json,"type");
         String classType = modelType();
 
-        if (enforcesModelType() && type != null && !type.equals(classType))
+        if (enforcesModelType() && (type == null || !type.equals(classType)))
             throw new KUSInvalidJsonException("Model Type not matched.");
 
         //Make sure there is an object id
@@ -40,6 +42,7 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
             throw new KUSInvalidJsonException("Object Id not found.");
 
         id = objectId;
+        originalJSON = json.toString();
 
         this.orgId = stringFromKeyPath(json, "relationships.org.data.id");
         this.customerId = stringFromKeyPath(json, "relationships.customer.data.id");
@@ -119,6 +122,18 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public JSONObject getOriginalJSON() {
+        try {
+            return new JSONObject(originalJSON);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    public void setOriginalJSON(JSONObject originalJSON) {
+        this.originalJSON = originalJSON.toString();
     }
 
     //endregion

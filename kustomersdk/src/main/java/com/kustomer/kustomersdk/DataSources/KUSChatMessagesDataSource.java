@@ -390,8 +390,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (sessionId != null)
             return null;
 
-        KUSChatMessage latestMessage = getSize() > 0 ? (KUSChatMessage) get(0) : null;
-        if (latestMessage == null || KUSChatMessageSentByUser(latestMessage))
+        if (KUSChatMessageSentByUser(this.getLatestMessage()))
             return null;
 
         return formQuestion;
@@ -484,6 +483,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                             && isFetchedAll()
                             && (sessionId != null && sessionId.length() > 0)
                             && firstMessage.getState() == KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT
+                            && KUSChatMessageSentByUser(firstMessage)
             );
         else
             return false;
@@ -553,7 +553,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 && questionIndex == form.getQuestions().size() - 1)
             submitFormResponses();
 
-        KUSChatMessage lastMessage = (KUSChatMessage) get(0);
+        KUSChatMessage lastMessage = getLatestMessage();
         if (!KUSChatMessageSentByUser(lastMessage))
             return;
 
@@ -879,6 +879,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         return createdLocally || super.isFetchedAll();
     }
 
+    public String getSessionId(){
+        return sessionId;
+    }
     //endregion
 
     //region Listener
