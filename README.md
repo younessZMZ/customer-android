@@ -353,6 +353,63 @@ You can define any of the following items in their respective `res` files to cha
 
 <integer name="kusMaximumAvatarsToDisplay">3</integer>
 ```
+
+### Localization
+Kustomer SDK support both <b>Right-to-left (RTL)</b> and <b>Left-to-right (LTR)</b> formatted languages. English and Urdu language translation is already added in SDK.
+
+```xml
+// List of all strings that you can override
+ <string name="app_name">KustomerSDK</string>
+ <string name="processing">Processing…</string>
+ <string name="no_internet_connection">No Internet Connection</string>
+ <string name="chat_screen">Chat Screen</string>
+ <string name="we_re_here_let_us_know_if_we_can_help">We\'re here, Let us know if we can help.</string>
+ <string name="example">Example</string>
+ <string name="please_provide_a_message_body">Please provide a message body</string>
+ <string name="messaging_by_kustomer">Messaging by Kustomer</string>
+ <string name="something_went_wrong_please_try_again">Something went wrong. Please try again.</string>
+ <string name="chat_with">Chat with</string>
+ <string name="just_now">Just now</string>
+ <string name="try_again">Try Again</string>
+ <string name="no_internet_message">The Internet connection appears to be offline.</string>
+ <string name="kus_input_bar_hint_text">Type a message...</string>
+ <string name="kus_email_input_prompt_text">Don\'t miss a response! Get notified by email:</string>
+ <string name="kus_email_input_hint_text">example@domain.com</string>
+ <string name="kus_new_session_button_text">New Conversation</string>
+ <string name="camera">Camera</string>
+ <string name="gallery">Gallery</string>
+ <string name="cancel">Cancel</string>
+ <string name="camera_permission_denied">Camera permission is denied.</string>
+ <string name="storage_permission_denied">Storage permission is denied.</string>
+ <string name="authorities">authority</string>
+ <string name="attachment">Attachment</string>
+ <string name="share_via">Share Via</string>
+ <string name="please_provide_storage_permission">Please provide storage permission to this app</string>
+ <string name="dismiss">Dismiss</string>
+```
+
+#### Customize existing strings
+If you are interested in adding translation for SDK specified language but with different
+translation then you just need to add the strings file for the respective language in your app
+and write any of the strings defined above and change the translation.
+
+#### Add new localization
+If the SDK does not include localized strings for the language you are interested in, you can add new ones.
+You just need to add the strings file for the respective language in your app
+and write all of the strings defined above and add the translation for that language.
+
+#### Custom locale
+By default, Kustomer SDK use currently running mobile locale. If you want to use a different locale, you can override locale as well. <br>
+To do that:
+```java
+// Set Custom Locale
+Kustomer.setLocale(new Locale("language_code"));
+
+// Example
+Kustomer.setLocale(new Locale("ur"));
+```
+After setting SDK locale, SDK automatically updates the layout (LTR or RTL) and will update the text for that language as well.
+
 <p align="center" >
   Before and after:
   <br><br>

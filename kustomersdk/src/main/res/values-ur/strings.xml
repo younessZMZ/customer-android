@@ -10,19 +10,6 @@
     <string name="something_went_wrong_please_try_again">کچھ غلط ہو گیا. دوبارہ کوشش کریں.</string>
     <string name="chat_with">کے ساتھ چیٹ کریں</string>
 
-    <!--<string name="week">ہفتہ</string>-->
-    <!--<string name="weeks">ہفتے</string>-->
-
-    <!--<string name="day">دن</string>-->
-    <!--<string name="days">دن</string>-->
-
-    <!--<string name="hour">گھنٹہ</string>-->
-    <!--<string name="hours">گھنٹے</string>-->
-
-    <!--<string name="minute">منٹ</string>-->
-    <!--<string name="minutes">منٹ</string>-->
-
-    <!--<string name="ago">پہلے</string>-->
     <string name="just_now">ابھی ابھی</string>
     <string name="try_again">دوبارہ کوشش کریں</string>
     <string name="no_internet_message">انٹرنیٹ کنکشن آف لائن ہونے لگتا ہے.</string>
