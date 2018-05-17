@@ -353,6 +353,11 @@ You can define any of the following items in their respective `res` files to cha
 
 <integer name="kusMaximumAvatarsToDisplay">3</integer>
 ```
+<p align="center" >
+  Before and after:
+  <br><br>
+  <img src="static/before_chat.png">&nbsp&nbsp&nbsp<img src="static/after_chat.png">
+</p>
 
 ### Localization
 Kustomer SDK support both <b>Right-to-left (RTL)</b> and <b>Left-to-right (LTR)</b> formatted languages. English and Urdu language translation is already added in SDK.
@@ -409,9 +414,3 @@ Kustomer.setLocale(new Locale("language_code"));
 Kustomer.setLocale(new Locale("ur"));
 ```
 After setting SDK locale, SDK automatically updates the layout (LTR or RTL) and will update the text for that language as well.
-
-<p align="center" >
-  Before and after:
-  <br><br>
-  <img src="static/before_chat.png">&nbsp&nbsp&nbsp<img src="static/after_chat.png">
-</p>
