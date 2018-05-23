@@ -1,7 +1,9 @@
 package com.kustomer.kustomer.Activities;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +23,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     Button btnStartChat;
     Button btnResetTrackingToken;
     Button btnKnowledgeBase;
+    Button btnOnlineStatus;
     ImageView ivSupport;
     //endregion
 
@@ -84,6 +87,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnKnowledgeBase = findViewById(R.id.btnKnowledgeBase);
         ivSupport = findViewById(R.id.ivSupport);
         btnResetTrackingToken = findViewById(R.id.btnResetToken);
+        btnOnlineStatus =findViewById(R.id.btnOnlineStatus);
     }
 
     private void setListeners(){
@@ -91,6 +95,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnResetTrackingToken.setOnClickListener(this);
         ivSupport.setOnClickListener(this);
         btnKnowledgeBase.setOnClickListener(this);
+        btnOnlineStatus.setOnClickListener(this);
     }
     //endregion
 
@@ -110,7 +115,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.btnKnowledgeBase:
                 Kustomer.presentKnowledgeBase(this);
                 break;
+            case R.id.btnOnlineStatus:
+                getStatus();
+                break;
         }
     }
+
+    //endregion
+
+    //region private method
+
+    private void getStatus() {
+        boolean availBool =Kustomer.isChatAvailable();
+        String  testString = availBool ? "Yes, chat's turned on!" : "Sorry, chat is not available at the moment, please contact support@acme.com";
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Chat On/Off Status").setMessage(testString).setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+        }).show();
+    }
+
     //endregion
 }

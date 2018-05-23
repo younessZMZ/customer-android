@@ -49,6 +49,13 @@
                 android:text="@string/manually_present_support"
                 android:textAllCaps="false"
                 android:layout_margin="10dp"/>
+            <Button
+                android:id="@+id/btnOnlineStatus"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:text="@string/get_online_status"
+                android:textAllCaps="false"
+                android:layout_margin="10dp"/>
 
         </LinearLayout>
 

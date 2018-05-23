@@ -5,4 +5,5 @@
     <string name="reset_tracking_token">Reset Tracking Token</string>
     <string name="present_knowledgebase">Present KnowledgeBase</string>
     <string name="authorities">com.kustomer.kustomer.fileprovider</string>
+    <string name="get_online_status">Get Online Status</string>
 </resources>
