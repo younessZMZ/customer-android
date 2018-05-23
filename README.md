@@ -190,6 +190,14 @@ Kustomer.describeConversation(conversationObject);
 
 ```
 
+```java
+/*
+Check chat management status to enable support chat.
+*/
+Kustomer.isChatAvailable();
+
+```
+
 ### Styling
 
 ##### Theme Customization:

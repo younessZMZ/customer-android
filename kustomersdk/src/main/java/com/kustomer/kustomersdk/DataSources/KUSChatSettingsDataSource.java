@@ -36,5 +36,10 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
     KUSModel objectFromJson(JSONObject jsonObject) throws KUSInvalidJsonException {
         return new KUSChatSettings(jsonObject);
     }
+
+    public boolean isChatAvailable(){
+        KUSChatSettings settings =  (KUSChatSettings) this.getObject();
+        return settings.getEnabled();
+    }
     //endregion
 }

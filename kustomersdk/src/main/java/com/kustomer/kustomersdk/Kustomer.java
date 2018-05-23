@@ -108,6 +108,10 @@ public class Kustomer {
         return getSharedInstance().mGetUnreadMessageCount();
     }
 
+    public static boolean isChatAvailable(){
+        return getSharedInstance().mIsChatAvailable();
+    }
+
     public static void showSupport(Activity activity){
 
         if(activity != null) {
@@ -220,6 +224,13 @@ public class Kustomer {
 
     private int mGetUnreadMessageCount(){
         return userSession.getChatSessionsDataSource().totalUnreadCountExcludingSessionId(null);
+    }
+
+    private boolean mIsChatAvailable(){
+
+        // Get latest settings from server
+        userSession.getChatSettingsDataSource().fetch();
+        return userSession.getChatSettingsDataSource().isChatAvailable();
     }
 
     private void setApiKey(String apiKey){
