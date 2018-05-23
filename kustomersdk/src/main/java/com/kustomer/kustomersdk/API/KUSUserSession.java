@@ -174,7 +174,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
 
         // If email is passed in custom description
         if (customerDescription.getEmail() != null) {
-            sharedPreferences.setDidCaptureEmail(true);
+            getSharedPreferences().setDidCaptureEmail(true);
         }
 
         getRequestManager().performRequestType(
