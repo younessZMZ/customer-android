@@ -95,11 +95,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (startNewConversation) {
             createdLocally = true;
             userSession.getFormDataSource().addListener(this);
-            if (!userSession.getFormDataSource().isFetched())
-                userSession.getFormDataSource().fetch();
-            else
-                form = (KUSForm) userSession.getFormDataSource().getObject();
 
+            userSession.getFormDataSource().fetch();
         }
     }
 

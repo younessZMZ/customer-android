@@ -172,6 +172,10 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
         if(formData.size() == 0)
             throw new AssertionError("Attempted to describe a customer with no attributes se");
 
+        // If email is passed in custom description
+        if (customerDescription.getEmail() != null) {
+            sharedPreferences.setDidCaptureEmail(true);
+        }
 
         getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_PATCH,
