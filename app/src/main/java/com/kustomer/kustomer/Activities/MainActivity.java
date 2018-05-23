@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
+import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
 
@@ -126,14 +127,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region private method
 
     private void getStatus() {
-        boolean availBool =Kustomer.isChatAvailable();
-        String  testString = availBool ? "Yes, chat's turned on!" : "Sorry, chat is not available at the moment, please contact support@acme.com";
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chat On/Off Status").setMessage(testString).setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+        Kustomer.isChatAvailable(new KUSChatAvailableListener() {
+            @Override
+            public void onSuccess(boolean enabled) {
+                String  testString = enabled ? "Yes, chat's turned on!" :
+                        "Sorry, chat is not available at the moment, please contact support@acme.com";
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Chat On/Off Status").setMessage(testString)
+                        .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-        }).show();
+                }).show();
+            }
+
+            @Override
+            public void onFailure() {
+                String  testString = "Sorry, chat is not available at the moment, please contact support@acme.com";
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Chat On/Off Status").setMessage(testString)
+                        .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).show();
+            }
+        });
+
     }
 
     //endregion

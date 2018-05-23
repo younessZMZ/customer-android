@@ -1,5 +1,9 @@
 package com.kustomer.kustomersdk.DataSources;
 
+
+import android.os.Handler;
+import android.os.Looper;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
@@ -43,7 +47,7 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
 
         performRequest(new KUSRequestCompletionListener() {
             @Override
-            public void onCompletion(Error error, JSONObject response) {
+            public void onCompletion(final Error error, JSONObject response) {
 
                 KUSChatSettings settings = null;
                 try {
@@ -54,10 +58,20 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
                     e.printStackTrace();
                 }
 
-                if(error == null && settings !=null)
-                    listener.onSuccess(settings.getEnabled());
-                else
-                    listener.onFailure();
+                Handler handler = new Handler(Looper.getMainLooper());
+                final KUSChatSettings finalSettings = settings;
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if(error == null && finalSettings !=null)
+                            listener.onSuccess(finalSettings.getEnabled());
+                        else
+                            listener.onFailure();
+                    }
+                };
+
+                handler.post(runnable);
             }
         });
 
