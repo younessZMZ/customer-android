@@ -2,9 +2,11 @@ package com.kustomer.kustomersdk.DataSources;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
@@ -37,9 +39,28 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
         return new KUSChatSettings(jsonObject);
     }
 
-    public boolean isChatAvailable(){
-        KUSChatSettings settings =  (KUSChatSettings) this.getObject();
-        return settings.getEnabled();
+    public void isChatAvailable(final KUSChatAvailableListener listener){
+
+        performRequest(new KUSRequestCompletionListener() {
+            @Override
+            public void onCompletion(Error error, JSONObject response) {
+
+                KUSChatSettings settings = null;
+                try {
+                    settings = (KUSChatSettings) objectFromJson(
+                            JsonHelper.jsonObjectFromKeyPath(response,"data"));
+
+                } catch (KUSInvalidJsonException e) {
+                    e.printStackTrace();
+                }
+
+                if(error == null && settings !=null)
+                    listener.onSuccess(settings.getEnabled());
+                else
+                    listener.onFailure();
+            }
+        });
+
     }
     //endregion
 }
