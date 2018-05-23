@@ -48,14 +48,18 @@ public class KUSFormQuestion extends KUSModel {
         if(question == null || question.type == null)
             return false;
 
-        return question.type == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY;
+        return question.type == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY ||
+                question.type == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_RESPONSE;
     }
 
     private static KUSFormQuestionType KUSFormQuestionTypeFromString(String string){
-        if(string.equals("message")){
-            return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_MESSAGE;
-        }else if(string.equals("property")){
-            return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY;
+        switch (string) {
+            case "message":
+                return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_MESSAGE;
+            case "property":
+                return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY;
+            case "response":
+                return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_RESPONSE;
         }
 
         return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN;
