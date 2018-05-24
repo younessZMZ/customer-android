@@ -11,8 +11,8 @@ import io.fabric.sdk.android.Fabric;
 public class App extends Application {
 
     private static final String K_KUSTOMER_API_KEY =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZmFmMGUzNmQ4OGZlMDAxYjlmNDU5NiIsInVzZXIiOiI1YWZhZjBlMzdhYTdhMWE1Zjc3N2FjYWEiLCJvcmciOiI1YTVmNmNhM2I1NzNmZDAwMDFhZjczZGQiLCJvcmdOYW1lIjoienp6LWJ4LXRlY2hub2xvZ2llcyIsInVzZXJUeXBlIjoibWFjaGluZSIsInJvbGVzIjpbIm9yZy51c2VyIiwib3JnLmFkbWluIiwib3JnLnRyYWNraW5nIl0sImF1ZCI6InVybjpjb25zdW1lciIsImlzcyI6InVybjphcGkiLCJzdWIiOiI1YWZhZjBlMzdhYTdhMWE1Zjc3N2FjYWEifQ.N464DdmiB55U_CJ-cTlLRsZtunRm2BqEDhiFYuMImCY";
-//[INSERT_API_KEY_HERE]
+            "[INSERT_API_KEY_HERE]";
+
     @Override
     public void onCreate() {
         super.onCreate();
