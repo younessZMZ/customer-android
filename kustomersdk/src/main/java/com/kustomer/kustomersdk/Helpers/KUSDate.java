@@ -120,7 +120,7 @@ public class KUSDate {
     }
 
     private static DateFormat ISO8601DateFormatterFromString(){
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", new Locale("en_US_POSIX"));
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", new Locale("en_US_POSIX"));
     }
 
     private static DateFormat ISO8601DateFormatterFromDate(){

@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Kustomer.iml" filepath="$PROJECT_DIR$/Kustomer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bxlargeimageviewer/bxlargeimageviewer.iml" filepath="$PROJECT_DIR$/bxlargeimageviewer/bxlargeimageviewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/customer-android.iml" filepath="$PROJECT_DIR$/customer-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/kustomersdk/kustomersdk.iml" filepath="$PROJECT_DIR$/kustomersdk/kustomersdk.iml" />
     </modules>
   </component>

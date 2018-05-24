@@ -19,15 +19,12 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.kustomer.kustomersdk.Helpers.KUSCache;
+import com.example.bxlargeimageviewer.BxImageViewer;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,13 +42,12 @@ import java.util.regex.Pattern;
 
 public class KUSLargeImageViewer implements View.OnClickListener {
 
-    private static final int REQUEST_STORAGE_PERMISSION = 122;
     //region Properties
     private View header;
     private ImageView ivClose;
     private ImageView ivShare;
     private TextView tvheader;
-    private ImageViewer imageViewer;
+    private BxImageViewer imageViewer;
 
     private Context mContext;
     private String currentImageLink;
@@ -81,38 +77,20 @@ public class KUSLargeImageViewer implements View.OnClickListener {
 
         currentImageLink = imageURIs.get(startingIndex);
 
-        GenericDraweeHierarchyBuilder hierarchyBuilder =
-                GenericDraweeHierarchyBuilder.newInstance(mContext.getResources())
-                .setFailureImage(R.drawable.ic_error_outline_red_33dp)
-                .setFailureImageScaleType(ScalingUtils.ScaleType.CENTER);
-
-        imageViewer = new ImageViewer.Builder<>(mContext, imageURIs)
-                .setStartPosition(startingIndex)
-                .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
-                .setOverlayView(header)
-                .setImageChangeListener(new ImageViewer.OnImageChangeListener() {
+        imageViewer = BxImageViewer.getInstance(mContext);
+        imageViewer.initialization()
+                .setImageChangeListener(new BxImageViewer.OnImageChangeListener() {
                     @Override
-                    public void onImageChange(int position) {
-                        tvheader.setText(String.format(Locale.getDefault(),"%d/%d",position+1,imageURIs.size()));
+                    public void onImageChanged(int position) {
+                        tvheader.setText(String.format(Locale.getDefault(), "%d/%d", position + 1, imageURIs.size()));
                         currentImageLink = imageURIs.get(position);
                     }
                 })
-                .setImageMarginPx((int) KUSUtils.dipToPixels(mContext,10))
+                .addDataSet(imageURIs)
+                .setStartPosition(startingIndex)
+                .setOverlayView(header)
                 .show();
-    }
 
-    private List<String> updateListWithCachedImages(List<String> imageURIs){
-
-        for(int i = 0; i<imageURIs.size() ; i++) {
-            Bitmap cachedImage = new KUSCache().getBitmapFromMemCache(imageURIs.get(i));
-            if (cachedImage != null) {
-                String imagePath = saveBitmap(cachedImage);
-                if(imagePath != null)
-                    imageURIs.add(i,imagePath);
-            }
-        }
-
-        return imageURIs;
     }
 
     private void shareImage(){
@@ -175,7 +153,9 @@ public class KUSLargeImageViewer implements View.OnClickListener {
 
     private void shareImage(String imagePath){
         if(imagePath != null) {
-            Uri bitmapUri = Uri.parse(imagePath);
+            imagePath =imagePath.replaceFirst("file://","");
+            Uri bitmapUri = KUSUtils.getUriFromFile(mContext, new File(imagePath));
+
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("image/png");
             intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
@@ -198,9 +178,11 @@ public class KUSLargeImageViewer implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if(v == ivClose){
-            imageViewer.onDismiss();
-        }else if(v == ivShare){
+        if (v == ivClose) {
+            if (imageViewer != null) {
+                imageViewer.onDismiss();
+            }
+            }else if(v == ivShare){
             shareImage();
         }
     }
