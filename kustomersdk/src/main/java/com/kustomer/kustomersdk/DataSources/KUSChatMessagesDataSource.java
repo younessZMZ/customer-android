@@ -95,11 +95,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (startNewConversation) {
             createdLocally = true;
             userSession.getFormDataSource().addListener(this);
-            if (!userSession.getFormDataSource().isFetched())
-                userSession.getFormDataSource().fetch();
-            else
-                form = (KUSForm) userSession.getFormDataSource().getObject();
 
+            userSession.getFormDataSource().fetch();
         }
     }
 
@@ -550,7 +547,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         // Make sure we submit the form if we just inserted a non-response question
         if (!submittingForm && !KUSFormQuestion.KUSFormQuestionRequiresResponse(formQuestion)
-                && questionIndex == form.getQuestions().size() - 1)
+                && questionIndex == form.getQuestions().size() - 1 && delayedChatMessageIds.size() == 0)
             submitFormResponses();
 
         KUSChatMessage lastMessage = getLatestMessage();
@@ -565,8 +562,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         int startingOffset = formQuestion != null ? 1 : 0;
         for (int i = Math.max(questionIndex + startingOffset, 0); i < form.getQuestions().size(); i++) {
             KUSFormQuestion question = form.getQuestions().get(i);
-            if (question.getType() == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN)
-                continue;
 
             Date createdAt = new Date(lastMessage.getCreatedAt().getTime()
                     + KUS_CHAT_AUTO_REPLY_DELAY + additionalInsertDelay);

@@ -14,6 +14,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSLogOptions;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
@@ -106,6 +107,10 @@ public class Kustomer {
 
     public static int getUnreadMessageCount(){
         return getSharedInstance().mGetUnreadMessageCount();
+    }
+
+    public static void isChatAvailable(KUSChatAvailableListener listener){
+        getSharedInstance().mIsChatAvailable(listener);
     }
 
     public static void showSupport(Activity activity){
@@ -220,6 +225,13 @@ public class Kustomer {
 
     private int mGetUnreadMessageCount(){
         return userSession.getChatSessionsDataSource().totalUnreadCountExcludingSessionId(null);
+    }
+
+    private void mIsChatAvailable(KUSChatAvailableListener listener){
+
+        // Get latest settings from server
+        userSession.getChatSettingsDataSource().fetch();
+        userSession.getChatSettingsDataSource().isChatAvailable(listener);
     }
 
     private void setApiKey(String apiKey){

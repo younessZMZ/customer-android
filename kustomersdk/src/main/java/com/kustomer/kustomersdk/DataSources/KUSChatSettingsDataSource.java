@@ -1,10 +1,16 @@
 package com.kustomer.kustomersdk.DataSources;
 
+
+import android.os.Handler;
+import android.os.Looper;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
@@ -35,6 +41,40 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
     @Override
     KUSModel objectFromJson(JSONObject jsonObject) throws KUSInvalidJsonException {
         return new KUSChatSettings(jsonObject);
+    }
+
+    public void isChatAvailable(final KUSChatAvailableListener listener){
+
+        performRequest(new KUSRequestCompletionListener() {
+            @Override
+            public void onCompletion(final Error error, JSONObject response) {
+
+                KUSChatSettings settings = null;
+                try {
+                    settings = (KUSChatSettings) objectFromJson(
+                            JsonHelper.jsonObjectFromKeyPath(response,"data"));
+
+                } catch (KUSInvalidJsonException e) {
+                    e.printStackTrace();
+                }
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                final KUSChatSettings finalSettings = settings;
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if(error == null && finalSettings !=null)
+                            listener.onSuccess(finalSettings.getEnabled());
+                        else
+                            listener.onFailure();
+                    }
+                };
+
+                handler.post(runnable);
+            }
+        });
+
     }
     //endregion
 }

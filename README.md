@@ -190,6 +190,26 @@ Kustomer.describeConversation(conversationObject);
 
 ```
 
+```java
+/*
+Check chat management status asynchronously to enable support chat.
+*/
+Kustomer.isChatAvailable(new KUSChatAvailableListener(){
+    @Override
+    public void onSuccess(boolean enabled){
+        // This is called when API call is successful.
+        // enabled represent chat management settings.
+
+    }
+    
+    @Override
+    public void onFailure(){
+        // This is called when API call fails.
+    }
+});
+
+```
+
 ### Styling
 
 ##### Theme Customization:
