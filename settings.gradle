@@ -1,1 +1,1 @@
-include ':app', ':kustomersdk', ':bxlargeimageviewer'
+include ':app', ':kustomersdk'

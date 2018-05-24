@@ -24,12 +24,12 @@ import java.util.List;
 public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ImageAttachmentViewHolder.ImageAttachmentListener {
 
     //region Properties
-    private List <String> imageURIs;
+    private List<String> imageURIs;
     private onItemClickListener mListener;
     //endregion
 
     //region LifeCycle
-    public ImageAttachmentListAdapter(onItemClickListener listener){
+    public ImageAttachmentListAdapter(onItemClickListener listener) {
         imageURIs = new ArrayList<>();
         mListener = listener;
     }
@@ -37,12 +37,12 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ImageAttachmentViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_image_attachment_view_holder,parent,false));
+                .inflate(R.layout.item_image_attachment_view_holder, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((ImageAttachmentViewHolder)holder).onBind(imageURIs.get(position), this);
+        ((ImageAttachmentViewHolder) holder).onBind(imageURIs.get(position), this);
     }
 
     @Override
@@ -50,17 +50,17 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         return imageURIs.size();
     }
 
-    public void attachImage(String imageUri){
+    public void attachImage(String imageUri) {
         imageURIs.add(imageUri);
-        notifyItemRangeInserted(imageURIs.indexOf(imageUri),1);
+        notifyItemRangeInserted(imageURIs.indexOf(imageUri), 1);
     }
 
-    public void removeAll(){
+    public void removeAll() {
         imageURIs.clear();
         notifyDataSetChanged();
     }
 
-    public List<String> getImageURIs(){
+    public List<String> getImageURIs() {
         return imageURIs;
     }
     //endreigon
@@ -76,14 +76,15 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     @Override
-    public void onImageTapped(String imageUri) {
-        mListener.onAttachmentImageClicked(imageURIs.indexOf(imageUri),imageURIs);
+    public void onImageTapped(int position) {
+        mListener.onAttachmentImageClicked(position, imageURIs);
     }
     //endregion
 
     //region Listener
-    public interface onItemClickListener{
+    public interface onItemClickListener {
         void onAttachmentImageClicked(int position, List<String> imageURIs);
+
         void onAttachmentImageRemoved();
     }
     //endregion

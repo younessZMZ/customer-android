@@ -32,12 +32,12 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
     //region Methods
     public ImageAttachmentViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 
-    public void onBind(final String imageUri, final ImageAttachmentListener listener){
+    public void onBind(final String imageUri, final ImageAttachmentListener listener) {
 
-        if(!imageUri.startsWith("content"))
+        if (!imageUri.startsWith("content"))
             Glide.with(itemView).load(new File(imageUri)).into(ivAttachment);
         else
             Glide.with(itemView).load(Uri.parse(imageUri)).into(ivAttachment);
@@ -45,7 +45,9 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onImageTapped(imageUri);
+                int index = getAdapterPosition();
+                if (index >= 0)
+                    listener.onImageTapped(index);
             }
         });
 
@@ -59,9 +61,10 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
     //endregion
 
     //region Interface
-    public interface ImageAttachmentListener{
+    public interface ImageAttachmentListener {
         void onImageCancelClicked(String imageUri);
-        void onImageTapped(String imageUri);
+
+        void onImageTapped(int index);
     }
     //endregion
 
