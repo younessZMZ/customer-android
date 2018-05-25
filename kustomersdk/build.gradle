@@ -1,12 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
 
-ext {
-    PUBLISH_GROUP_ID = 'com.kustomer.kustomersdk'
-    PUBLISH_ARTIFACT_ID = 'customer-test'
-    PUBLISH_VERSION = '0.1.0'
-}
-
 android {
     compileSdkVersion 27
 
@@ -46,15 +40,29 @@ buildscript {
     }
     dependencies {
         classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0-SNAPSHOT'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
-allprojects {
-    repositories {
-        jcenter()
-        google()
-    }
+ext {
+    bintrayRepo = 'Kustomer' // your repo name
+    bintrayName = 'kustomersdk' // has to be same as your library module name
+    publishedGroupId = 'com.kustomer.kustomersdk' // your module package name
+    libraryName = 'Kustomer-Android-SDK'
+    artifact = 'kustomersdk' // has to be same as your library module name
+    libraryDescription = 'A set of methods used to manipulate time object'
+    siteUrl = 'https://github.com/kustomer/customer-android'
+    gitUrl = 'https://github.com/kustomer/customer-android.git'
+    libraryVersion = '0.1.0'
+    developerId = 'junaid'
+    developerName = 'Junaid'
+    developerEmail = 'junaid.ahmed@brainxtech.com'
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
 }
+
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -93,4 +101,5 @@ dependencies {
 
 }
 
-apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/installv.gradle'
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/bintrayv.gradle'
