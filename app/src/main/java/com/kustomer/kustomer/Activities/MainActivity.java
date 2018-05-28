@@ -1,18 +1,12 @@
 package com.kustomer.kustomer.Activities;
 
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
-import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
-import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
 
 import java.util.Locale;
@@ -77,7 +71,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 //        Kustomer.presentCustomWebPage(this,"https://www.example.com");
 
-        Kustomer.setLocale(new Locale("ur"));
     }
 
     //endregion

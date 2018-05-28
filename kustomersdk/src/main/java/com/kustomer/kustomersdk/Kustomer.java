@@ -3,7 +3,6 @@ package com.kustomer.kustomersdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Base64;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -27,7 +26,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.sql.Wrapper;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -35,7 +33,6 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -70,6 +67,9 @@ public class Kustomer {
     //region Class Methods
     public static void init(Context context, String apiKey) throws AssertionError {
         mContext = context.getApplicationContext();
+
+        KUSLocalization.getSharedInstance().setDefaultLocale(mContext);
+
         getSharedInstance().setApiKey(apiKey);
 
         try {
@@ -271,7 +271,7 @@ public class Kustomer {
     }
 
     private void mSetLocale(Locale locale){
-        KUSLocalization.getSharedInstance().setLocale(locale);
+        KUSLocalization.getSharedInstance().setUserLocale(locale);
     }
 
     private String mGetString(String key){

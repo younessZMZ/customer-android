@@ -2,9 +2,12 @@ package com.kustomer.kustomersdk.Helpers;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.support.v4.os.LocaleListCompat;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+
+import com.kustomer.kustomersdk.R;
 
 import java.util.Locale;
 
@@ -12,12 +15,22 @@ public class KUSLocalization {
     //region properties
 
     private static KUSLocalization localizationManager;
-    private Locale sLocale;
+    private Locale dLocale;
+    private Locale uLocale;
+
+    //endregion
+
+    //region Public Getter
+
+    public Locale getUserLocale() {
+        return uLocale;
+    }
 
     //endregion
 
     //region LifeCycle
-    private KUSLocalization(){}
+    private KUSLocalization() {
+    }
 
     public static KUSLocalization getSharedInstance() {
         if (localizationManager == null) {
@@ -27,17 +40,71 @@ public class KUSLocalization {
     }
     //endregion
 
+    //region Private Methods
+
+
+    private boolean isLocaleResourceAvailable(Context mContext, Locale locale) {
+
+        Configuration config = new Configuration(mContext.getResources().getConfiguration());
+
+        config.setLocale(locale);
+        String result = mContext.createConfigurationContext(config).getResources().getString(R.string.chat_with);
+
+        config.setLocale(Locale.ENGLISH);
+        String englishString = mContext.createConfigurationContext(config).getResources().getString(R.string.chat_with);
+
+        if (result.equals(englishString)) {
+            if (locale.getLanguage().equals(Locale.ENGLISH.getLanguage()))
+                return true;
+            else
+                return false;
+        }
+
+        return true;
+
+    }
+
+    private Locale getAvailableLocale(Context mContext) {
+        LocaleListCompat localeList = LocaleListCompat.getDefault();
+        for (int i = 0; i < localeList.size(); i++) {
+            if (isLocaleResourceAvailable(mContext, localeList.get(i))) {
+                return localeList.get(i);
+            }else {
+                Locale lanLocale = new Locale(localeList.get(i).getLanguage());
+                if (isLocaleResourceAvailable(mContext, lanLocale))
+                    return localeList.get(i);
+            }
+        }
+        return Locale.ENGLISH;
+    }
+
+    //endregion
+
     //region Public Methods
 
-    public void setLocale(Locale locale) {
-        Locale locales[]= Locale.getAvailableLocales();
-        for(Locale loc : locales) {
-            if(loc.equals(locale)) {
-                sLocale = locale;
-                return;
+    public void setUserLocale(Locale locale) {
+        uLocale=locale;
+    }
+
+    public void setDefaultLocale(Context mContext) {
+        if(uLocale == null)
+            uLocale = Locale.getDefault();
+
+        Locale locales[] = Locale.getAvailableLocales();
+
+        for (Locale loc : locales) {
+            if (loc.equals(uLocale)) {
+                dLocale = uLocale;
+                break;
             }
         }
 
+        if(dLocale !=null) {
+            if (isLocaleResourceAvailable(mContext, dLocale))
+                return;
+        }
+
+        dLocale = getAvailableLocale(mContext);
 
     }
 
@@ -52,25 +119,27 @@ public class KUSLocalization {
     }
 
     public void updateConfig(ContextThemeWrapper wrapper) {
-        if (sLocale != null) {
-            Locale.setDefault(sLocale);
+        if (dLocale != null) {
+            Locale.setDefault(dLocale);
             Configuration configuration = new Configuration();
-            configuration.setLocale(sLocale);
+            configuration.setLocale(dLocale);
             wrapper.applyOverrideConfiguration(configuration);
         }
     }
-    public void  updateConfig(Context context){
-        if (sLocale != null) {
-            Locale.setDefault(sLocale);
-            Configuration configuration = context.getResources().getConfiguration();
-            configuration.setLocale(sLocale);
-            context.getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+    public void updateConfig(Context mContext) {
+        if (dLocale != null) {
+            Locale.setDefault(dLocale);
+            Configuration configuration = mContext.getResources().getConfiguration();
+            configuration.setLocale(dLocale);
+            mContext.getResources().updateConfiguration(configuration, mContext.getResources().getDisplayMetrics());
         }
     }
 
-    public boolean isLTR(){
-        return TextUtils.getLayoutDirectionFromLocale(Locale.getDefault())== View.LAYOUT_DIRECTION_LTR;
+    public boolean isLTR() {
+        return TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == View.LAYOUT_DIRECTION_LTR;
     }
+
 
     //endregion
 }

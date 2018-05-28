@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.os.ConfigurationCompat;
+import android.support.v4.os.LocaleListCompat;
 import android.util.Log;
 
 import com.kustomer.kustomersdk.BuildConfig;
@@ -382,8 +383,20 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     }
 
 
-    private static String KUSAcceptLanguageHeaderValue(){
-        return ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0).toString();
+    private static String KUSAcceptLanguageHeaderValue() {
+        StringBuilder output = new StringBuilder();
+        LocaleListCompat localeList =LocaleListCompat.getDefault();
+        int size = localeList.size();
+        if (size > 5) {
+            size = 5;
+        }
+        for (int i = 0; i < size; i++) {
+            output.append(localeList.get(i).getLanguage()).append(";q=").append(1.0 - (0.1) * i);
+            if (i != size - 1) {
+                output.append(", ");
+            }
+        }
+        return output.toString();
     }
 
     private static String KUSUserAgentHeaderValue(){

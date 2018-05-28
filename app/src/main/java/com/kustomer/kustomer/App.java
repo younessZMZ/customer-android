@@ -1,10 +1,11 @@
 package com.kustomer.kustomer;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.kustomer.kustomersdk.Kustomer;
+
+import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -15,7 +16,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+//        Kustomer.setLocale(new Locale("ar"));
         Kustomer.init(this,K_KUSTOMER_API_KEY);
         Fabric.with(this, new Crashlytics());
     }

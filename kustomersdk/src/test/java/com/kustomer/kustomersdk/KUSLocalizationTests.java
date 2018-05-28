@@ -31,15 +31,15 @@ public class KUSLocalizationTests {
     public void testRTL(){
 
         boolean systemIsLRT= KUSLocalization.getSharedInstance().isLTR();
-        KUSLocalization.getSharedInstance().setLocale(null);
+        KUSLocalization.getSharedInstance().setDefaultLocale(null);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(systemIsLRT, KUSLocalization.getSharedInstance().isLTR());
 
-        KUSLocalization.getSharedInstance().setLocale( new Locale("en"));
+        KUSLocalization.getSharedInstance().setUserLocale( new Locale("en"));
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(true, KUSLocalization.getSharedInstance().isLTR());
 
-        KUSLocalization.getSharedInstance().setLocale( new Locale("ar"));
+        KUSLocalization.getSharedInstance().setUserLocale( new Locale("ar"));
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(false, KUSLocalization.getSharedInstance().isLTR());
 
@@ -49,17 +49,17 @@ public class KUSLocalizationTests {
     public void testLocale(){
 
         Locale expectedLocale = Locale.getDefault();
-        KUSLocalization.getSharedInstance().setLocale(null);
+        KUSLocalization.getSharedInstance().setDefaultLocale(null);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(expectedLocale, Locale.getDefault());
 
         expectedLocale =new Locale("en");
-        KUSLocalization.getSharedInstance().setLocale(expectedLocale);
+        KUSLocalization.getSharedInstance().setUserLocale(expectedLocale);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(expectedLocale, Locale.getDefault());
 
         expectedLocale =new Locale("ar");
-        KUSLocalization.getSharedInstance().setLocale(expectedLocale);
+        KUSLocalization.getSharedInstance().setUserLocale(expectedLocale);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(expectedLocale, Locale.getDefault());
 
@@ -69,7 +69,7 @@ public class KUSLocalizationTests {
     @Test
     public void testLocalizedString(){
 
-        KUSLocalization.getSharedInstance().setLocale(null);
+        KUSLocalization.getSharedInstance().setDefaultLocale(null);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext, "attachment"), "Attachment");
         assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"just_now"), "Just now");
@@ -77,7 +77,7 @@ public class KUSLocalizationTests {
         assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"cancel"), "Cancel");
         assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"camera"), "Camera");
 
-        KUSLocalization.getSharedInstance().setLocale(new Locale("en"));
+        KUSLocalization.getSharedInstance().setUserLocale(new Locale("en"));
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"attachment"), "Attachment");
         assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"just_now"), "Just now");
