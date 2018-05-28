@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -23,7 +22,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
@@ -53,7 +51,6 @@ import com.kustomer.kustomersdk.Views.KUSInputBarView;
 import com.kustomer.kustomersdk.Views.KUSLargeImageViewer;
 import com.kustomer.kustomersdk.Views.KUSOptionsPickerView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.IOException;

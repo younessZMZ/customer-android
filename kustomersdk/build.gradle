@@ -73,31 +73,30 @@ dependencies {
     testImplementation "org.robolectric:robolectric:3.8"
 
     //Support Libraries
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:design:27.1.1'
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
+    compile 'com.android.support:design:27.1.1'
 
 
-    implementation 'com.jakewharton:butterknife:8.8.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'com.pusher:pusher-java-client:1.6.1'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'com.pusher:pusher-java-client:1.6.1'
 
-    implementation("com.github.bumptech.glide:glide:4.5.0") {
+    provided("com.github.bumptech.glide:glide:4.5.0") {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
-    implementation 'ru.noties:markwon:1.0.3'
-    implementation 'com.nex3z:flow-layout:1.1.0'
-    implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
-    implementation 'com.facebook.fresco:fresco:1.8.1'
-    implementation 'com.facebook.fresco:animated-gif:1.8.1'
-    implementation "com.facebook.fresco:imagepipeline-okhttp3:1.8.1"
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
-    implementation 'com.android.support:exifinterface:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.brainx.android:bx-large-image-viewer:1.0'
+    compile 'ru.noties:markwon:1.0.3'
+    compile 'com.nex3z:flow-layout:1.2.2'
+    compile 'com.facebook.fresco:fresco:1.8.1'
+
+    compile "com.facebook.fresco:imagepipeline-okhttp3:1.8.1"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    compile 'com.android.support:exifinterface:27.1.1'
+    compile 'com.android.support:cardview-v7:27.1.1'
+    compile 'com.brainx.android:bx-large-image-viewer:1.0'
 
 }
 

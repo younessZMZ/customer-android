@@ -26,7 +26,6 @@ import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.IOException;
