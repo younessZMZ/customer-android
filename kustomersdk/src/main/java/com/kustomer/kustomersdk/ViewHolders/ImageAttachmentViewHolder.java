@@ -37,9 +37,9 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
 
     public void onBind(final String imageUri, final ImageAttachmentListener listener) {
 
-        if (!imageUri.startsWith("content"))
+      /*  if (imageUri.startsWith("content"))
             Glide.with(itemView).load(new File(imageUri)).into(ivAttachment);
-        else
+        else*/
             Glide.with(itemView).load(Uri.parse(imageUri)).into(ivAttachment);
 
         itemView.setOnClickListener(new View.OnClickListener() {
