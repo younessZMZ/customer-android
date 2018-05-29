@@ -404,7 +404,7 @@ You just need to add the strings file for the respective language in your app
 and write all of the strings defined above and add the translation for that language.
 
 #### Custom locale
-By default, Kustomer SDK use currently running mobile locale. If you want to use a different locale, you can override locale as well. <br>
+By default, SDK use mobile preferred locale. If you want to use different locale, you can override locale as well.
 To do that:
 ```java
 // Set Custom Locale
@@ -413,4 +413,6 @@ Kustomer.setLocale(new Locale("language_code"));
 // Example
 Kustomer.setLocale(new Locale("ur"));
 ```
+You must set locale before calling `Kustomer.init()` method. SDK will load only the language whose translation exists either in SDK or in project. If specified language's translation doesn't exist, SDK will try to load translation of mobile preferred languages before using default language.
+
 After setting SDK locale, SDK automatically updates the layout (LTR or RTL) and will update the text for that language as well.
