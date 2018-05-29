@@ -35,7 +35,8 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
                 KUSConstants.URL.SETTINGS_ENDPOINT,
                 new HashMap<String, Object>() {
                     {
-                        put("lang", KUSLocalization.getSharedInstance().getUserLocale().getLanguage());
+                        put(KUSConstants.HeaderKeys.K_KUSTOMER_LANGUAGE_KEY,
+                                KUSLocalization.getSharedInstance().getUserLocale().getLanguage());
                     }
                 }, true,
                 completionListener);
