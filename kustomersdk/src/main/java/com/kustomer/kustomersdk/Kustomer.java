@@ -68,7 +68,7 @@ public class Kustomer {
     public static void init(Context context, String apiKey) throws AssertionError {
         mContext = context.getApplicationContext();
 
-        KUSLocalization.getSharedInstance().setDefaultLocale(mContext);
+        KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
 
         getSharedInstance().setApiKey(apiKey);
 

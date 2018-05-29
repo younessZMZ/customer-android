@@ -20,14 +20,6 @@ public class KUSLocalization {
 
     //endregion
 
-    //region Public Getter
-
-    public Locale getUserLocale() {
-        return uLocale;
-    }
-
-    //endregion
-
     //region LifeCycle
     private KUSLocalization() {
     }
@@ -41,7 +33,6 @@ public class KUSLocalization {
     //endregion
 
     //region Private Methods
-
 
     private boolean isLocaleResourceAvailable(Context mContext, Locale locale) {
 
@@ -82,11 +73,15 @@ public class KUSLocalization {
 
     //region Public Methods
 
+    public Locale getUserLocale() {
+        return uLocale;
+    }
+
     public void setUserLocale(Locale locale) {
         uLocale=locale;
     }
 
-    public void setDefaultLocale(Context mContext) {
+    public void updateKustomerLocaleWithFallback(Context mContext) {
         if(uLocale == null)
             uLocale = Locale.getDefault();
 
