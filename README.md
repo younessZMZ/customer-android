@@ -24,9 +24,21 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 
 Include the library in your `app.gradle`:
 
-```ruby
-//TODO: Not uploaded yet
+```gradle
+compile 'com.kustomer.kustomersdk:kustomersdk:0.1.1'
 ```
+
+#### Or through Maven
+
+```xml
+<dependency>
+  <groupId>com.kustomer.kustomersdk</groupId>
+  <artifactId>kustomersdk</artifactId>
+  <version>0.1.1</version>
+  <type>pom</type>
+</dependency>
+```
+
 
 ## Setup
 
@@ -70,9 +82,48 @@ Kustomer.showSupport(activity);
 
 Note: If neither of the Multimedia Permissions is declared, the image attachments button will be hidden.
 
+##### Add File Provider for camera access (Optional):
+
+5. Add Provider in Manifest:
+
+First you need to add a FileProvider `<provider>` tag in `AndroidManifest.xml under` `<application>`
+tag like below:
+
+```xml
+<application
+        ...
+    <provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="@string/authorities"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths"/>
+    </provider>
+</application>
+```
+
+Add `res/xml/file_paths.xml` file in project and replace `com.kustomer.kustomer` with your package name.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="my_images"
+        path="Android/data/com.kustomer.kustomer/files/Pictures" />
+</paths>
+```
+
+Finally add the `authorities` string in your `strings.xml` file and replace `com.kustomer.kustomer`
+with your package name.
+
+```xml
+<string name="authorities">com.kustomer.kustomer.fileprovider</string>
+```
+
 ##### Declaring Activities
 
-5. Add `KUSSessionsActivity` & `KUSChatActivity` into your `AndroidManifest.xml`
+6. Add `KUSSessionsActivity` & `KUSChatActivity` into your `AndroidManifest.xml`
 ```xml
 <activity android:name="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
