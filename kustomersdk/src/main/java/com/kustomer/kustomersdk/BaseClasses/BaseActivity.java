@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 
@@ -34,6 +35,10 @@ public class BaseActivity extends AppCompatActivity {
     //endregion
 
     //region Activity LifeCycle
+    public BaseActivity() {
+        KUSLocalization.getSharedInstance().updateConfig(this);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -30,6 +30,7 @@ import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
+import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
@@ -149,8 +150,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     public void finish() {
         super.finish();
 
-        if (backPressed)
-            overridePendingTransition(R.anim.stay, R.anim.kus_slide_right);
+        if (backPressed) {
+           if (KUSLocalization.getSharedInstance().isLTR())
+                overridePendingTransition(R.anim.stay, R.anim.kus_slide_right);
+           else
+                overridePendingTransition(R.anim.stay, R.anim.kus_slide_right_rtl);
+        }
         else
             overridePendingTransition(R.anim.stay, R.anim.kus_slide_down);
     }
