@@ -31,10 +31,19 @@ public class KUSConstants {
     }
 
     public interface Keys {
-       String K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY = "x-kustomer-tracking-token";
-       String K_KUSTOMER_ORG_ID_KEY = "org";
-       String K_KUSTOMER_ORG_NAME_KEY = "orgName";
+        String K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY = "x-kustomer-tracking-token";
+        String K_KUSTOMER_ORG_ID_KEY = "org";
+        String K_KUSTOMER_ORG_NAME_KEY = "orgName";
         String K_KUSTOMER_URL_KEY= "url";
+    }
+
+    public interface HeaderKeys {
+        String K_KUSTOMER_LANGUAGE_KEY = "lang";
+        String K_KUSTOMER_X_KUSTOMER_KEY = "X-Kustomer";
+        String K_KUSTOMER_ACCEPT_LANGUAGE_KEY = "Accept-Language";
+        String K_KUSTOMER_USER_AGENT_KEY = "User_Agent";
+        String K_KUSTOMER_X_CLIENT_KEY = "x-kustomer-client";
+        String K_KUSTOMER_X_VERSION_KEY = "x-kustomer-version";
     }
 
     public interface PusherEventNames{

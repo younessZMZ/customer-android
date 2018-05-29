@@ -41,11 +41,13 @@ public class KUSLocalizationTests {
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(true, KUSLocalization.getSharedInstance().isLTR());
 
-        KUSLocalization.getSharedInstance().setUserLocale( new Locale("ar"));
-        KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
-        KUSLocalization.getSharedInstance().updateConfig(mContext);
-        assertEquals(false, KUSLocalization.getSharedInstance().isLTR());
+    }
 
+    /* We have to use qualifiers in roboelectric as urdu is not supported directly in testing*/
+    @Config(qualifiers="ur")
+    @Test
+    public void testUrduRTL(){
+        assertEquals(false, KUSLocalization.getSharedInstance().isLTR());
     }
 
     @Test
@@ -62,13 +64,14 @@ public class KUSLocalizationTests {
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
         assertEquals(expectedLocale, Locale.getDefault());
+    }
 
-        expectedLocale =new Locale("ar");
-        KUSLocalization.getSharedInstance().setUserLocale(expectedLocale);
-        KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
-        KUSLocalization.getSharedInstance().updateConfig(mContext);
+    /* We have to use qualifiers in roboelectric as urdu is not supported directly in testing*/
+    @Config(qualifiers="ur")
+    @Test
+    public void testUrduLocale(){
+        Locale expectedLocale = new Locale("ur");
         assertEquals(expectedLocale, Locale.getDefault());
-
     }
 
 

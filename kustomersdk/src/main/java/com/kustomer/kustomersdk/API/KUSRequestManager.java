@@ -1,14 +1,11 @@
 package com.kustomer.kustomersdk.API;
 
 
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.os.ConfigurationCompat;
 import android.support.v4.os.LocaleListCompat;
-import android.util.Log;
 
 import com.kustomer.kustomersdk.BuildConfig;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
@@ -43,7 +40,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -69,11 +65,11 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
         baseUrlString = String.format("https://%s.api.%s",userSession.getOrgName(), Kustomer.hostDomain());
         genericHTTPHeaderValues = new HashMap<String, String>(){
             {
-                put("X-Kustomer","kustomer");
-                put("Accept-Language",KUSAcceptLanguageHeaderValue());
-                put("User_Agent",KUSUserAgentHeaderValue());
-                put("x-kustomer-client","android");
-                put("x-kustomer-version", Kustomer.sdkVersion());
+                put(KUSConstants.HeaderKeys.K_KUSTOMER_X_KUSTOMER_KEY, "kustomer");
+                put(KUSConstants.HeaderKeys.K_KUSTOMER_ACCEPT_LANGUAGE_KEY, KUSAcceptLanguageHeaderValue());
+                put(KUSConstants.HeaderKeys.K_KUSTOMER_USER_AGENT_KEY, KUSUserAgentHeaderValue());
+                put(KUSConstants.HeaderKeys.K_KUSTOMER_X_CLIENT_KEY, "android");
+                put(KUSConstants.HeaderKeys.K_KUSTOMER_X_VERSION_KEY, Kustomer.sdkVersion());
             }
         };
 
@@ -385,11 +381,9 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
     private static String KUSAcceptLanguageHeaderValue() {
         StringBuilder output = new StringBuilder();
-        LocaleListCompat localeList =LocaleListCompat.getDefault();
-        int size = localeList.size();
-        if (size > 5) {
-            size = 5;
-        }
+        LocaleListCompat localeList = LocaleListCompat.getDefault();
+        int size = localeList.size() > 5 ? 5 :localeList.size();
+
         for (int i = 0; i < size; i++) {
             output.append(localeList.get(i).getLanguage()).append(";q=").append(1.0 - (0.1) * i);
             if (i != size - 1) {
