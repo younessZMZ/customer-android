@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 @Config(manifest= Config.NONE)
 public class KUSLocalizationTests {
 
-    Context mContext;
+    private Context mContext;
 
     @Before
     public void setUp(){
