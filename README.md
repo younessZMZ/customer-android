@@ -82,11 +82,9 @@ Kustomer.showSupport(activity);
 
 Note: If neither of the Multimedia Permissions is declared, the image attachments button will be hidden.
 
-##### Add File Provider for camera access (Optional):
+##### Add File Provider (Required only for Camera access):
 
-5. Add Provider in Manifest:
-
-First you need to add a FileProvider `<provider>` tag in `AndroidManifest.xml under` `<application>`
+First you need to add a FileProvider `<provider>` tag in `AndroidManifest.xml` under `<application>`
 tag like below:
 
 ```xml
@@ -123,7 +121,7 @@ with your package name.
 
 ##### Declaring Activities
 
-6. Add `KUSSessionsActivity` & `KUSChatActivity` into your `AndroidManifest.xml`
+5. Add `KUSSessionsActivity` & `KUSChatActivity` into your `AndroidManifest.xml`
 ```xml
 <activity android:name="com.kustomer.kustomersdk.Activities.KUSSessionsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
