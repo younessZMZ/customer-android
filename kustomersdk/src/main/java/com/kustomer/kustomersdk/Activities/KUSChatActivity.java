@@ -173,9 +173,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             if(resultCode == RESULT_OK){
                 String photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath)).toString();
 
-               /* if(photoUri.startsWith("file://")) {
-                    photoUri = photoUri.replace("file://", "");
-                }*/
                 kusInputBarView.attachImage(photoUri);
                 mCurrentPhotoPath = null;
             }else{
