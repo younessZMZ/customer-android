@@ -54,12 +54,12 @@ public class KUSLargeImageViewer implements View.OnClickListener {
     //endregion
 
     //region LifeCycle
-    public KUSLargeImageViewer(Context context){
+    public KUSLargeImageViewer(Context context) {
         mContext = context;
 
-        LayoutInflater layoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if(layoutInflater == null)
+        if (layoutInflater == null)
             return;
 
         header = layoutInflater.inflate(R.layout.kus_large_image_viewer_header, null);
@@ -73,7 +73,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
     }
     //endregion
 
-    public void showImages(final List<String> imageURIs, int startingIndex){
+    public void showImages(final List<String> imageURIs, int startingIndex) {
 
         currentImageLink = imageURIs.get(startingIndex);
 
@@ -86,6 +86,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
                         currentImageLink = imageURIs.get(position);
                     }
                 })
+                .setImageMarginPx(20)
                 .addDataSet(imageURIs)
                 .setStartPosition(startingIndex)
                 .setOverlayView(header)
@@ -93,10 +94,10 @@ public class KUSLargeImageViewer implements View.OnClickListener {
 
     }
 
-    private void shareImage(){
+    private void shareImage() {
 
         Matcher urlMatcher = Pattern.compile(KUSConstants.Pattern.URL_PATTERN).matcher(currentImageLink);
-        if(!urlMatcher.matches()) {
+        if (!urlMatcher.matches()) {
             Uri bitmapUri = Uri.parse(currentImageLink);
 
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -104,7 +105,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
             intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
             mContext.startActivity(Intent.createChooser(intent,
                     mContext.getResources().getString(R.string.share_via)));
-        }else{
+        } else {
             GlideUrl glideUrl = new GlideUrl(currentImageLink, new LazyHeaders.Builder()
                     .addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, Kustomer.getSharedInstance().getUserSession().getTrackingTokenDataSource().getCurrentTrackingToken())
                     .build());
@@ -136,7 +137,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
 
     }
 
-    private String saveBitmap(Bitmap resource){
+    private String saveBitmap(Bitmap resource) {
         String bitmapPath = null;
         try {
             File file = createImageFile();
@@ -151,9 +152,9 @@ public class KUSLargeImageViewer implements View.OnClickListener {
         return bitmapPath;
     }
 
-    private void shareImage(String imagePath){
-        if(imagePath != null) {
-            imagePath =imagePath.replaceFirst("file://","");
+    private void shareImage(String imagePath) {
+        if (imagePath != null) {
+            imagePath = imagePath.replaceFirst("file://", "");
             Uri bitmapUri = KUSUtils.getUriFromFile(mContext, new File(imagePath));
 
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -182,7 +183,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
             if (imageViewer != null) {
                 imageViewer.onDismiss();
             }
-            }else if(v == ivShare){
+        } else if (v == ivShare) {
             shareImage();
         }
     }

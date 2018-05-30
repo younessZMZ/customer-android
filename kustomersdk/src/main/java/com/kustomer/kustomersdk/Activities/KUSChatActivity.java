@@ -53,7 +53,7 @@ import com.kustomer.kustomersdk.Views.KUSInputBarView;
 import com.kustomer.kustomersdk.Views.KUSLargeImageViewer;
 import com.kustomer.kustomersdk.Views.KUSOptionsPickerView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
-import com.stfalcon.frescoimageviewer.ImageViewer;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -548,7 +548,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                     chatMessagesDataSource.sendMessageWithText(text, kusInputBarView.getAllImages());
                 }
             }).start();
-
 
             kusInputBarView.setText("");
             kusInputBarView.removeAllAttachments();
