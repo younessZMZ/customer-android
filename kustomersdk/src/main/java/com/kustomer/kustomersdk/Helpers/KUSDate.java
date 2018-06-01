@@ -120,7 +120,10 @@ public class KUSDate {
     }
 
     private static DateFormat ISO8601DateFormatterFromString(){
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", new Locale("en_US_POSIX"));
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", new Locale("en_US_POSIX"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return dateFormat;
     }
 
     private static DateFormat ISO8601DateFormatterFromDate(){
