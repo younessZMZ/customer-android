@@ -431,3 +431,14 @@ You can define any of the following items in their respective `res` files to cha
   <br><br>
   <img src="static/before_chat.png">&nbsp&nbsp&nbsp<img src="static/after_chat.png">
 </p>
+
+### Development
+
+#### Incrementing the build version
+
+- Update the version number references in the above **Installation** section
+- Update the `libraryVersion` in the SDK's `build.gradle` file (/kustomersdk/build.gradle)
+- Update the [changelog](CHANGELOG.md) if necessary
+- Run the following command on the root of the project. `./gradlew install bintrayUpload`. Make sure
+you have the correct `bintray.user` & `bintray.apikey` values in `local.properties` file.
+- Commit & push the changes
