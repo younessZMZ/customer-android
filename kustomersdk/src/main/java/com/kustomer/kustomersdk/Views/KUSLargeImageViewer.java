@@ -86,7 +86,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
                         currentImageLink = imageURIs.get(position);
                     }
                 })
-                .setImageMarginPx(20)
+                .setImageMarginPx((int)KUSUtils.dipToPixels(mContext,20.0f))
                 .addDataSet(imageURIs)
                 .setStartPosition(startingIndex)
                 .setOverlayView(header)
