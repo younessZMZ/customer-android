@@ -103,7 +103,7 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     compile 'com.android.support:exifinterface:27.1.1'
     compile 'com.android.support:cardview-v7:27.1.1'
-    compile 'com.brainx.android:bx-large-image-viewer:1.1'
+    compile 'com.brainx.android:bx-large-image-viewer:1.4'
 
 }
 

@@ -27,6 +27,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -155,7 +156,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
             for (String uri : imageURIs) {
                 if (!uri.startsWith("content")) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(new File(uri).getAbsolutePath());
+                    Bitmap bitmap = BitmapFactory.decodeFile(Uri.parse(uri).getPath());
 
                     try {
                         bitmap = KUSImage.rotateBitmapIfNeeded(bitmap,getContext().getContentResolver().openInputStream(Uri.parse(uri)));

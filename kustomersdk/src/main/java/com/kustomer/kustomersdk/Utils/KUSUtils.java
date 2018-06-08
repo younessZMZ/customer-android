@@ -103,7 +103,7 @@ public class KUSUtils {
             return Uri.fromFile(file);
         } else {
             return FileProvider.getUriForFile(context,
-                    context.getResources().getString(R.string.authorities),
+                    context.getPackageName(),
                     file);
         }
     }
