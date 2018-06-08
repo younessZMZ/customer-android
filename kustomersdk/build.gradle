@@ -68,8 +68,6 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 

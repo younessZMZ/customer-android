@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="processing">پروسیسنگ…</string>
+    <string name="no_internet_connection">کوئی انٹرنیٹ کنکشن نہیں</string>
+    <string name="chat_screen">چیٹ کی سکرین</string>
+    <string name="we_re_here_let_us_know_if_we_can_help">ہم یہاں ہیں, ہمیں بتائیں کہ اگر ہم مدد کرسکتے ہیں.</string>
+    <string name="example">مثال</string>
+    <string name="please_provide_a_message_body">براہ کرم ایک پیغام کا جسم فراہم کریں</string>
+    <string name="messaging_by_kustomer">کسٹمر کی طرف سے پیغام رسانی</string>
+    <string name="something_went_wrong_please_try_again">کچھ غلط ہو گیا. دوبارہ کوشش کریں.</string>
+    <string name="chat_with">کے ساتھ چیٹ کریں</string>
+
+    <string name="just_now">ابھی ابھی</string>
+    <string name="try_again">دوبارہ کوشش کریں</string>
+    <string name="no_internet_message">انٹرنیٹ کنکشن آف لائن ہونے لگتا ہے.</string>
+
+    <string name="kus_input_bar_hint_text">ایک پیغام ٹائپ کریں ...</string>
+    <string name="kus_email_input_prompt_text">جواب مت چھوڑیں ای میل کے ذریعہ اطلاع دیں</string>
+    <string name="kus_email_input_hint_text">example@domain.com</string>
+    <string name="kus_new_session_button_text">نئی بات چیت</string>
+    <string name="camera">کیمرے</string>
+    <string name="gallery">نگارخانہ</string>
+    <string name="cancel">منسوخ کریں</string>
+    <string name="camera_permission_denied">کیمرے کی اجازت رد کردی گئی ہے.</string>
+    <string name="storage_permission_denied">اسٹوریج کی اجازت رد کردی گئی ہے.</string>
+
+    <string name="attachment">منسلکہ</string>
+    <string name="share_via">اس کے ساتھ اشتراک کریں</string>
+    <string name="please_provide_storage_permission">اس ایپ کو اسٹوریج کی اجازت فراہم کریں</string>
+    <string name="dismiss">برخاست کرنا</string>
+
+</resources>

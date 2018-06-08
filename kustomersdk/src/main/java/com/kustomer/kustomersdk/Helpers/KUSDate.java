@@ -33,27 +33,14 @@ public class KUSDate {
 
     //region Static Methods
     public static String humanReadableTextFromDate(Date date){
-        if(date == null)
+        if (date == null)
             return null;
 
         long timeAgo = (Calendar.getInstance().getTimeInMillis() - date.getTime()) / 1000;
-        if(timeAgo >= SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK){
-            long count = timeAgo /(SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK);
-            return agoWithTextCountAndUnit(count, Kustomer.getContext().getString(R.string.week));
-        } else if(timeAgo >= SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY){
-            long count = timeAgo /(SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY);
-            return agoWithTextCountAndUnit(count,Kustomer.getContext().getString(R.string.day));
-        } else  if(timeAgo >= SECONDS_PER_MINUTE * MINUTES_PER_HOUR){
-            long count = timeAgo /(SECONDS_PER_MINUTE * MINUTES_PER_HOUR);
-            return agoWithTextCountAndUnit(count,Kustomer.getContext().getString(R.string.hour));
-        } else if(timeAgo >= SECONDS_PER_MINUTE){
-            long count = timeAgo /(SECONDS_PER_MINUTE);
-            return agoWithTextCountAndUnit(count,Kustomer.getContext().getString(R.string.minute));
-        } else {
+        if (timeAgo < SECONDS_PER_MINUTE)
             return Kustomer.getContext().getString(R.string.just_now);
-        }
 
-
+        return (String) DateUtils.getRelativeTimeSpanString(date.getTime(), Calendar.getInstance().getTimeInMillis(), 0);
     }
 
     private static String agoWithTextCountAndUnit(long count, String unit){
@@ -105,7 +92,7 @@ public class KUSDate {
     //region Private Methods
     private static DateFormat shortRelativeDateFormatter(){
         if(shortDateFormat == null) {
-            shortDateFormat = new SimpleDateFormat("dd/MM/yyyy h:mm a",new Locale("en_US_POSIX"));
+            shortDateFormat = new SimpleDateFormat("dd/MM/yyyy h:mm a", Locale.getDefault());
         }
 
         return shortDateFormat;
@@ -113,7 +100,7 @@ public class KUSDate {
 
     private static DateFormat shortTimeFormatter(){
         if(shortTimeFormat == null) {
-            shortTimeFormat = new SimpleDateFormat(", h:mm a",new Locale("en_US_POSIX"));
+            shortTimeFormat = new SimpleDateFormat(", h:mm a", Locale.getDefault());
         }
 
         return shortTimeFormat;

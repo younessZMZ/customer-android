@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
@@ -17,6 +16,8 @@ import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
+
+import java.util.Locale;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -63,21 +64,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 //        Kustomer.identify("[INSERT_JWT_TOKEN_HERE");
 
-        Kustomer.setListener(new KUSKustomerListener() {
-            @Override
-            public boolean kustomerShouldDisplayInAppNotification() {
-                return true;
-            }
-
-            @Override
-            public PendingIntent getPendingIntent(Context context) {
-                Intent intent = new Intent(context, KUSSessionsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                return PendingIntent.getActivity(context, 0, intent, 0);
-            }
-        });
+//        Kustomer.setListener(new KUSKustomerListener() {
+//            @Override
+//            public boolean kustomerShouldDisplayInAppNotification() {
+//                return true;
+//            }
+//
+//            @Override
+//            public PendingIntent getPendingIntent(Context context) {
+//                Intent intent = new Intent(context, KUSSessionsActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                return PendingIntent.getActivity(context, 0, intent, 0);
+//            }
+//        });
 
 //        Kustomer.presentCustomWebPage(this,"https://www.example.com");
+
     }
 
     //endregion
