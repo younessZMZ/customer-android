@@ -10,7 +10,7 @@ import io.fabric.sdk.android.Fabric;
 public class App extends Application {
 
     private static final String K_KUSTOMER_API_KEY =
-            "[INSERT_API_KEY_HERE]";
+            "[INSERT_API_KEY]";
     @Override
     public void onCreate() {
         super.onCreate();
