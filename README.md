@@ -92,7 +92,7 @@ tag like below:
         ...
     <provider
         android:name="android.support.v4.content.FileProvider"
-        android:authorities="@string/authorities"
+        android:authorities="${applicationId}"
         android:exported="false"
         android:grantUriPermissions="true">
         <meta-data
@@ -110,13 +110,6 @@ Add `res/xml/file_paths.xml` file in project and replace `com.kustomer.kustomer`
     <external-path name="my_images"
         path="Android/data/com.kustomer.kustomer/files/Pictures" />
 </paths>
-```
-
-Finally add the `authorities` string in your `strings.xml` file and replace `com.kustomer.kustomer`
-with your package name.
-
-```xml
-<string name="authorities">com.kustomer.kustomer.fileprovider</string>
 ```
 
 ##### Declaring Activities
