@@ -367,7 +367,7 @@ You can define any of the following items in their respective `res` files to cha
 <color name="kusNewSessionButtonColor">#DD2C00</color>
 <color name="kusNewSessionTextColor">#FFFFFF</color>
 
-<string name="kus_new_session_button_text">New Conversation</string>
+<string name="com_kustomer_new_conversation">New Conversation</string>
 
 <bool name="kusNewSessionButtonHasShadow">true</bool>
 ```
@@ -409,9 +409,9 @@ You can define any of the following items in their respective `res` files to cha
 <color name="kusOptionPickerButtonTextColor">#2962FF</color>
 <color name="kusOptionPickerButtonBackground">#F5F5F5</color>
 
-<string name="kus_input_bar_hint_text">Type a message...</string>
-<string name="kus_email_input_prompt_text">Don\'t miss a response! Get notified by email:</string>
-<string name="kus_email_input_hint_text">example@domain.com</string>
+<string name="com_kustomer_type_a_message">Type a message...</string>
+<string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Don\'t miss a response! Get notified by email:</string>
+<string name="com_kustomer_email_example">example@domain.com</string>
 
 <integer name="kusMaximumAvatarsToDisplay">3</integer>
 ```
@@ -426,33 +426,47 @@ Kustomer SDK support both <b>Right-to-left (RTL)</b> and <b>Left-to-right (LTR)<
 
 ```xml
 // List of all strings that you can override
- <string name="app_name">KustomerSDK</string>
- <string name="processing">Processing…</string>
- <string name="no_internet_connection">No Internet Connection</string>
- <string name="chat_screen">Chat Screen</string>
- <string name="we_re_here_let_us_know_if_we_can_help">We\'re here, Let us know if we can help.</string>
- <string name="example">Example</string>
- <string name="please_provide_a_message_body">Please provide a message body</string>
- <string name="messaging_by_kustomer">Messaging by Kustomer</string>
- <string name="something_went_wrong_please_try_again">Something went wrong. Please try again.</string>
- <string name="chat_with">Chat with</string>
- <string name="just_now">Just now</string>
- <string name="try_again">Try Again</string>
- <string name="no_internet_message">The Internet connection appears to be offline.</string>
- <string name="kus_input_bar_hint_text">Type a message...</string>
- <string name="kus_email_input_prompt_text">Don\'t miss a response! Get notified by email:</string>
- <string name="kus_email_input_hint_text">example@domain.com</string>
- <string name="kus_new_session_button_text">New Conversation</string>
- <string name="camera">Camera</string>
- <string name="gallery">Gallery</string>
- <string name="cancel">Cancel</string>
- <string name="camera_permission_denied">Camera permission is denied.</string>
- <string name="storage_permission_denied">Storage permission is denied.</string>
- <string name="authorities">authority</string>
- <string name="attachment">Attachment</string>
- <string name="share_via">Share Via</string>
- <string name="please_provide_storage_permission">Please provide storage permission to this app</string>
- <string name="dismiss">Dismiss</string>
+ <string name="com_kustomer_week">week</string>
+     <string name="com_kustomer_day">day</string>
+     <string name="com_kustomer_hour">hour</string>
+     <string name="com_kustomer_minute">minute</string>
+     <string name="com_kustomer_weeks">weeks</string>
+     <string name="com_kustomer_days">days</string>
+     <string name="com_kustomer_hours">hours</string>
+     <string name="com_kustomer_minutes">minutes</string>
+     <string name="com_kustomer_just_now">Just now</string>
+     <string name="com_kustomer_ago">ago</string>
+ 
+     <string name="com_kustomer_attachment">Attachment</string>
+     <string name="com_kustomer_camera">Camera</string>
+     <string name="com_kustomer_gallery">Gallery</string>
+     <string name="com_kustomer_cancel">Cancel</string>
+ 
+     <string name="com_kustomer_something_went_wrong_please_try_again">Something went wrong. Please try again.</string>
+     <string name="com_kustomer_try_again">Try Again</string>
+     <string name="com_kustomer_new_conversation">New Conversation</string>
+     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Don\'t miss a response! Get notified by email:</string>
+     <string name="com_kustomer_email_example">example@domain.com</string>
+     <string name="com_kustomer_type_a_message">Type a message...</string>
+     <string name="com_kustomer_Loading...">Loading...</string>
+ 
+     <string name="com_kustomer_chat_with">Chat with</string>
+     <string name="com_kustomer_processing">Processing…</string>
+     <string name="com_kustomer_no_internet_connection">No Internet Connection</string>
+     <string name="com_kustomer_chat_screen">Chat Screen</string>
+     <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">We\'re here, Let us know if we can help.</string>
+     <string name="com_kustomer_example">Example</string>
+     <string name="com_kustomer_please_provide_a_message_body">Please provide a message body</string>
+     <string name="com_kustomer_no_internet_message">The Internet connection appears to be offline.</string>
+     <string name="com_kustomer_camera_permission_denied">Camera permission is denied.</string>
+     <string name="com_kustomer_storage_permission_denied">Storage permission is denied.</string>
+     <string name="com_kustomer_authorities">authority</string>
+     <string name="com_kustomer_share_via">Share Via</string>
+     <string name="com_kustomer_please_provide_storage_permission">Please provide storage permission to this app</string>
+     <string name="com_kustomer_dismiss">Dismiss</string>
+     <string name="com_kustomer_closed">CLOSED</string>
+     <string name="com_kustomer_start_a_new_conversation">Start a New Conversation</string>
+     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Thank You! We\'ll follow up on your request.</string>
 ```
 
 #### Customize existing strings
