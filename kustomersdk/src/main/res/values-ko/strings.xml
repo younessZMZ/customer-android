@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">주</string>
+    <string name="com_kustomer_day">일</string>
+    <string name="com_kustomer_hour">시간</string>
+    <string name="com_kustomer_minute">분</string>
+    <string name="com_kustomer_weeks">주</string>
+    <string name="com_kustomer_days">일</string>
+    <string name="com_kustomer_hours">시간</string>
+    <string name="com_kustomer_minutes">의사록</string>
+    <string name="com_kustomer_just_now">방금</string>
+    <string name="com_kustomer_attachment">부착</string>
+    <string name="com_kustomer_camera">카메라</string>
+    <string name="com_kustomer_gallery">갱도</string>
+    <string name="com_kustomer_cancel">취소</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">뭔가 잘못 됐어. 다시 시도하십시오.</string>
+    <string name="com_kustomer_try_again">다시 시도하십시오.</string>
+    <string name="com_kustomer_new_conversation">새 대화</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">응답을 놓치지 마세요! 이메일로 알림 받기 :</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">메시지를 입력하십시오 ...</string>
+    <string name="com_kustomer_Loading...">로드 중 ...</string>
+    <string name="com_kustomer_ago">...전에</string>
+    <string name="com_kustomer_chat_with">채팅하기</string>
+    <string name="com_kustomer_processing">처리 중 ...</string>
+    <string name="com_kustomer_no_internet_connection">인터넷에 연결되지 않음</string>
+    <string name="com_kustomer_chat_screen">채팅 화면</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">우리가 여기 있습니다, 우리가 도울 수 있다면 알려주세요.</string>
+    <string name="com_kustomer_example">예</string>
+    <string name="com_kustomer_please_provide_a_message_body">메시지 본문을 입력하십시오.</string>
+    <string name="com_kustomer_no_internet_message">인터넷 연결이 오프라인 인 것 같습니다.</string>
+    <string name="com_kustomer_camera_permission_denied">카메라 권한이 거부되었습니다.</string>
+    <string name="com_kustomer_storage_permission_denied">저장 권한이 거부되었습니다.</string>
+    <string name="com_kustomer_authorities">권위</string>
+    <string name="com_kustomer_share_via">비아 공유</string>
+    <string name="com_kustomer_please_provide_storage_permission">이 앱에 저장 권한을 제공하십시오.</string>
+    <string name="com_kustomer_dismiss">버리다</string>
+    <string name="com_kustomer_closed">닫은</string>
+    <string name="com_kustomer_start_a_new_conversation">새 대화 시작하기</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">고맙습니다! 귀하의 요청에 대해 후속 조치를 취하겠습니다.</string>
+</resources>

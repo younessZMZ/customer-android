@@ -52,7 +52,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textSize="10sp"
-                    android:text="@string/messaging_by_kustomer"/>
+                    android:text="Messaging by Kustomer"/>
             </LinearLayout>
 
         </LinearLayout>

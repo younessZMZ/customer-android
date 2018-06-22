@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">тиждень</string>
+    <string name="com_kustomer_day">день</string>
+    <string name="com_kustomer_hour">година</string>
+    <string name="com_kustomer_minute">хвилина</string>
+    <string name="com_kustomer_weeks">тижні</string>
+    <string name="com_kustomer_days">дні</string>
+    <string name="com_kustomer_hours">годин</string>
+    <string name="com_kustomer_minutes">хвилин</string>
+    <string name="com_kustomer_just_now">Прямо зараз</string>
+    <string name="com_kustomer_attachment">Вкладення</string>
+    <string name="com_kustomer_camera">Камера</string>
+    <string name="com_kustomer_gallery">Галерея</string>
+    <string name="com_kustomer_cancel">Скасувати</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Щось пішло не так. Будь ласка спробуйте ще раз.</string>
+    <string name="com_kustomer_try_again">Спробуй ще раз</string>
+    <string name="com_kustomer_new_conversation">Нова розмова</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Не пропустіть відповідь! Отримати сповіщення електронною поштою:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Введіть повідомлення ...</string>
+    <string name="com_kustomer_Loading...">Завантаження ...</string>
+    <string name="com_kustomer_ago">тому назад</string>
+    <string name="com_kustomer_chat_with">Говорити з</string>
+    <string name="com_kustomer_processing">Обробка ...</string>
+    <string name="com_kustomer_no_internet_connection">Немає підключення до Інтернету</string>
+    <string name="com_kustomer_chat_screen">Екран чату</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Ми тут, Дайте нам знати, якщо ми можемо допомогти.</string>
+    <string name="com_kustomer_example">Приклад</string>
+    <string name="com_kustomer_please_provide_a_message_body">Будь ласка, надайте тіло повідомлення</string>
+    <string name="com_kustomer_no_internet_message">З'єднання з Інтернетом, здається, є автономним.</string>
+    <string name="com_kustomer_camera_permission_denied">Дозвіл камери заборонено.</string>
+    <string name="com_kustomer_storage_permission_denied">Дозвіл на зберігання відхилено.</string>
+    <string name="com_kustomer_authorities">влада</string>
+    <string name="com_kustomer_share_via">Поділитися через</string>
+    <string name="com_kustomer_please_provide_storage_permission">Будь ласка, надайте дозвіл на зберігання в цьому додатку</string>
+    <string name="com_kustomer_dismiss">Відхилити</string>
+    <string name="com_kustomer_closed">ЗАЧИНЕНО</string>
+    <string name="com_kustomer_start_a_new_conversation">Почніть нову бесіду</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Дякую! Ми розглянемо ваш запит.</string>
+</resources>

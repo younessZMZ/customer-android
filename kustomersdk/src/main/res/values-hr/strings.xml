@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">tjedan</string>
+    <string name="com_kustomer_day">dan</string>
+    <string name="com_kustomer_hour">sat</string>
+    <string name="com_kustomer_minute">minuta</string>
+    <string name="com_kustomer_weeks">tjedni</string>
+    <string name="com_kustomer_days">dana</string>
+    <string name="com_kustomer_hours">sati</string>
+    <string name="com_kustomer_minutes">minuta</string>
+    <string name="com_kustomer_just_now">Upravo sad</string>
+    <string name="com_kustomer_attachment">vezanost</string>
+    <string name="com_kustomer_camera">Fotoaparat</string>
+    <string name="com_kustomer_gallery">Galerija</string>
+    <string name="com_kustomer_cancel">Otkazati</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Nešto je pošlo po zlu. Molim te pokušaj ponovno.</string>
+    <string name="com_kustomer_try_again">Pokušajte ponovo</string>
+    <string name="com_kustomer_new_conversation">Nova razgovora</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ne propustite odgovor! Primajte obavijest putem e-pošte:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Upišite poruku ...</string>
+    <string name="com_kustomer_Loading...">Učitavam...</string>
+    <string name="com_kustomer_ago">prije</string>
+    <string name="com_kustomer_chat_with">Razgovor s</string>
+    <string name="com_kustomer_processing">Obrada…</string>
+    <string name="com_kustomer_no_internet_connection">Nema internetske veze</string>
+    <string name="com_kustomer_chat_screen">Zaslon za chat</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Ovdje smo, javite nam ako vam možemo pomoći.</string>
+    <string name="com_kustomer_example">Primjer</string>
+    <string name="com_kustomer_please_provide_a_message_body">Navedite tijelo poruke</string>
+    <string name="com_kustomer_no_internet_message">Internetska veza izgleda da je offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Dozvola za fotoaparat odbijena je.</string>
+    <string name="com_kustomer_storage_permission_denied">Dozvola za pohranu je odbijena.</string>
+    <string name="com_kustomer_authorities">vlast</string>
+    <string name="com_kustomer_share_via">Podijeli putem</string>
+    <string name="com_kustomer_please_provide_storage_permission">Dopustite dopuštenje za pohranu ovoj aplikaciji</string>
+    <string name="com_kustomer_dismiss">Odbaciti</string>
+    <string name="com_kustomer_closed">ZATVORENO</string>
+    <string name="com_kustomer_start_a_new_conversation">Započnite novu razgovor</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Hvala vam! Pratit ćemo vaš zahtjev.</string>
+</resources>

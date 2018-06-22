@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">hafta</string>
+    <string name="com_kustomer_day">gün</string>
+    <string name="com_kustomer_hour">saat</string>
+    <string name="com_kustomer_minute">dakika</string>
+    <string name="com_kustomer_weeks">haftalar</string>
+    <string name="com_kustomer_days">günler</string>
+    <string name="com_kustomer_hours">saatler</string>
+    <string name="com_kustomer_minutes">dakika</string>
+    <string name="com_kustomer_just_now">Şu anda</string>
+    <string name="com_kustomer_attachment">Ek dosya</string>
+    <string name="com_kustomer_camera">Kamera</string>
+    <string name="com_kustomer_gallery">Galeri</string>
+    <string name="com_kustomer_cancel">İptal etmek</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Bir şeyler yanlış gitti. Lütfen tekrar deneyin.</string>
+    <string name="com_kustomer_try_again">Tekrar deneyin</string>
+    <string name="com_kustomer_new_conversation">Yeni Konuşma</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Cevapları kaçırmayın! E-posta ile haberdar olun:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Mesaj yaz ...</string>
+    <string name="com_kustomer_Loading...">Yükleniyor...</string>
+    <string name="com_kustomer_ago">önce</string>
+    <string name="com_kustomer_chat_with">İle sohbet et</string>
+    <string name="com_kustomer_processing">İşleme…</string>
+    <string name="com_kustomer_no_internet_connection">İnternet bağlantısı yok</string>
+    <string name="com_kustomer_chat_screen">Sohbet ekranı</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Buradayız, yardımcı olabilirsek bize bildirin.</string>
+    <string name="com_kustomer_example">Örnek</string>
+    <string name="com_kustomer_please_provide_a_message_body">Lütfen bir mesaj gövdesi sağlayın</string>
+    <string name="com_kustomer_no_internet_message">İnternet bağlantısı çevrimdışı görünüyor.</string>
+    <string name="com_kustomer_camera_permission_denied">Kamera izni reddedildi.</string>
+    <string name="com_kustomer_storage_permission_denied">Depolama izni reddedildi.</string>
+    <string name="com_kustomer_authorities">yetki</string>
+    <string name="com_kustomer_share_via">Via paylaş</string>
+    <string name="com_kustomer_please_provide_storage_permission">Lütfen bu uygulamaya depolama izni verin</string>
+    <string name="com_kustomer_dismiss">Reddet</string>
+    <string name="com_kustomer_closed">KAPALI</string>
+    <string name="com_kustomer_start_a_new_conversation">Yeni Bir Konuşma Başlat</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Teşekkür ederim! İsteğinizi takip edeceğiz.</string>
+</resources>

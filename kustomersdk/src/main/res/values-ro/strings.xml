@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">săptămână</string>
+    <string name="com_kustomer_day">zi</string>
+    <string name="com_kustomer_hour">ora</string>
+    <string name="com_kustomer_minute">minut</string>
+    <string name="com_kustomer_weeks">săptămâni</string>
+    <string name="com_kustomer_days">zi</string>
+    <string name="com_kustomer_hours">ore</string>
+    <string name="com_kustomer_minutes">minute</string>
+    <string name="com_kustomer_just_now">Chiar acum</string>
+    <string name="com_kustomer_attachment">Atașament</string>
+    <string name="com_kustomer_camera">aparat foto</string>
+    <string name="com_kustomer_gallery">Galerie</string>
+    <string name="com_kustomer_cancel">Anulare</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Ceva n-a mers bine. Vă rugăm să încercați din nou.</string>
+    <string name="com_kustomer_try_again">Încearcă din nou</string>
+    <string name="com_kustomer_new_conversation">Conversație nouă</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nu ratați un răspuns! Obțineți notificarea prin e-mail:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Scrie un mesaj...</string>
+    <string name="com_kustomer_Loading...">Se incarca...</string>
+    <string name="com_kustomer_ago">în urmă</string>
+    <string name="com_kustomer_chat_with">Chat cu</string>
+    <string name="com_kustomer_processing">Prelucrare…</string>
+    <string name="com_kustomer_no_internet_connection">Fără conexiune internet</string>
+    <string name="com_kustomer_chat_screen">Ecran de chat</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Suntem aici, anunță-ne dacă ne putem ajuta.</string>
+    <string name="com_kustomer_example">Exemplu</string>
+    <string name="com_kustomer_please_provide_a_message_body">Furnizați un corp de mesaj</string>
+    <string name="com_kustomer_no_internet_message">Conexiunea la Internet pare să fie offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Opțiunea pentru camera este respinsă.</string>
+    <string name="com_kustomer_storage_permission_denied">Permisiunea de stocare este refuzată.</string>
+    <string name="com_kustomer_authorities">autoritate</string>
+    <string name="com_kustomer_share_via">Distribuiți Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Furnizați permisiunea de stocare pentru această aplicație</string>
+    <string name="com_kustomer_dismiss">destitui</string>
+    <string name="com_kustomer_closed">ÎNCHIS</string>
+    <string name="com_kustomer_start_a_new_conversation">Porniți o nouă conversație</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Mulțumesc! Vom urmări solicitarea dvs.</string>
+</resources>

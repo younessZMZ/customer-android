@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">Woche</string>
+    <string name="com_kustomer_day">Tag</string>
+    <string name="com_kustomer_hour">Stunde</string>
+    <string name="com_kustomer_minute">Minute</string>
+    <string name="com_kustomer_weeks">Wochen</string>
+    <string name="com_kustomer_days">Tage</string>
+    <string name="com_kustomer_hours">Std.</string>
+    <string name="com_kustomer_minutes">Protokoll</string>
+    <string name="com_kustomer_just_now">Gerade jetzt</string>
+    <string name="com_kustomer_attachment">Befestigung</string>
+    <string name="com_kustomer_camera">Kamera</string>
+    <string name="com_kustomer_gallery">Galerie</string>
+    <string name="com_kustomer_cancel">Stornieren</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Etwas ist schief gelaufen. Bitte versuche es erneut.</string>
+    <string name="com_kustomer_try_again">Versuch es noch einmal</string>
+    <string name="com_kustomer_new_conversation">Neue Konversation</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Verpasse keine Antwort! Werde per E-Mail benachrichtigt:</string>
+    <string name="com_kustomer_email_example">beispiel@domain.com</string>
+    <string name="com_kustomer_type_a_message">Geben Sie eine Nachricht ein ...</string>
+    <string name="com_kustomer_Loading...">Wird geladen...</string>
+    <string name="com_kustomer_ago">vor</string>
+    <string name="com_kustomer_chat_with">Plaudern mit</string>
+    <string name="com_kustomer_processing">Wird bearbeitet…</string>
+    <string name="com_kustomer_no_internet_connection">Keine Internetverbindung</string>
+    <string name="com_kustomer_chat_screen">Chat-Bildschirm</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Wir sind hier, lassen Sie uns wissen, ob wir helfen können.</string>
+    <string name="com_kustomer_example">Beispiel</string>
+    <string name="com_kustomer_please_provide_a_message_body">Bitte geben Sie einen Nachrichtentext an</string>
+    <string name="com_kustomer_no_internet_message">Die Internetverbindung scheint offline zu sein.</string>
+    <string name="com_kustomer_camera_permission_denied">Die Kameraberechtigung wurde verweigert.</string>
+    <string name="com_kustomer_storage_permission_denied">Speicherberechtigung wird verweigert.</string>
+    <string name="com_kustomer_authorities">Behörde</string>
+    <string name="com_kustomer_share_via">Teilen per</string>
+    <string name="com_kustomer_please_provide_storage_permission">Bitte gib Speicherrechte für diese App an</string>
+    <string name="com_kustomer_dismiss">Entlassen</string>
+    <string name="com_kustomer_closed">GESCHLOSSEN</string>
+    <string name="com_kustomer_start_a_new_conversation">Starten Sie eine neue Unterhaltung</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Danke! Wir werden auf Ihre Anfrage folgen.</string>
+</resources>

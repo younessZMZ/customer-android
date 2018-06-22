@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">minggu</string>
+    <string name="com_kustomer_day">hari</string>
+    <string name="com_kustomer_hour">jam</string>
+    <string name="com_kustomer_minute">menit</string>
+    <string name="com_kustomer_weeks">minggu</string>
+    <string name="com_kustomer_days">hari</string>
+    <string name="com_kustomer_hours">jam</string>
+    <string name="com_kustomer_minutes">menit</string>
+    <string name="com_kustomer_just_now">Baru saja</string>
+    <string name="com_kustomer_attachment">Lampiran</string>
+    <string name="com_kustomer_camera">Kamera</string>
+    <string name="com_kustomer_gallery">Galeri</string>
+    <string name="com_kustomer_cancel">Membatalkan</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Ada yang salah. Silakan coba lagi.</string>
+    <string name="com_kustomer_try_again">Coba lagi</string>
+    <string name="com_kustomer_new_conversation">Percakapan Baru</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Jangan lewatkan jawaban! Dapatkan pemberitahuan melalui email:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Ketik pesan...</string>
+    <string name="com_kustomer_Loading...">Pemuatan...</string>
+    <string name="com_kustomer_ago">lalu</string>
+    <string name="com_kustomer_chat_with">Chat dengan</string>
+    <string name="com_kustomer_processing">Pengolahan…</string>
+    <string name="com_kustomer_no_internet_connection">Tidak ada koneksi internet</string>
+    <string name="com_kustomer_chat_screen">Layar Obrolan</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Kami di sini, Beri tahu kami jika kami dapat membantu.</string>
+    <string name="com_kustomer_example">Contoh</string>
+    <string name="com_kustomer_please_provide_a_message_body">Harap berikan badan pesan</string>
+    <string name="com_kustomer_no_internet_message">Koneksi Internet tampaknya offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Izin kamera ditolak.</string>
+    <string name="com_kustomer_storage_permission_denied">Izin penyimpanan ditolak.</string>
+    <string name="com_kustomer_authorities">wewenang</string>
+    <string name="com_kustomer_share_via">Bagikan Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Harap berikan izin penyimpanan ke aplikasi ini</string>
+    <string name="com_kustomer_dismiss">Memberhentikan</string>
+    <string name="com_kustomer_closed">TUTUP</string>
+    <string name="com_kustomer_start_a_new_conversation">Mulai Percakapan Baru</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Terima kasih! Kami akan menindaklanjuti permintaan Anda.</string>
+</resources>

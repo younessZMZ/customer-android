@@ -1,6 +1,5 @@
 package com.kustomer.kustomersdk.Helpers;
 
-import android.content.Context;
 import android.text.format.DateUtils;
 
 import com.kustomer.kustomersdk.Kustomer;
@@ -38,7 +37,7 @@ public class KUSDate {
 
         long timeAgo = (Calendar.getInstance().getTimeInMillis() - date.getTime()) / 1000;
         if (timeAgo < SECONDS_PER_MINUTE)
-            return Kustomer.getContext().getString(R.string.just_now);
+            return Kustomer.getContext().getString(R.string.com_kustomer_just_now);
 
         return (String) DateUtils.getRelativeTimeSpanString(date.getTime(), Calendar.getInstance().getTimeInMillis(), 0);
     }

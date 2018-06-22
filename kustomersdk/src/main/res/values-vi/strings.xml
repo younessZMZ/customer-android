@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">tuần</string>
+    <string name="com_kustomer_day">ngày</string>
+    <string name="com_kustomer_hour">giờ</string>
+    <string name="com_kustomer_minute">phút</string>
+    <string name="com_kustomer_weeks">tuần</string>
+    <string name="com_kustomer_days">ngày</string>
+    <string name="com_kustomer_hours">giờ</string>
+    <string name="com_kustomer_minutes">phút</string>
+    <string name="com_kustomer_just_now">Vừa nãy</string>
+    <string name="com_kustomer_attachment">Tập tin đính kèm</string>
+    <string name="com_kustomer_camera">Máy ảnh</string>
+    <string name="com_kustomer_gallery">Bộ sưu tập</string>
+    <string name="com_kustomer_cancel">Hủy bỏ</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Đã xảy ra sự cố. Vui lòng thử lại.</string>
+    <string name="com_kustomer_try_again">Thử lại</string>
+    <string name="com_kustomer_new_conversation">Cuộc hội thoại mới</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Đừng bỏ lỡ câu trả lời! Nhận thông báo qua email:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Gõ một tin nhắn...</string>
+    <string name="com_kustomer_Loading...">Tải...</string>
+    <string name="com_kustomer_ago">trước đây</string>
+    <string name="com_kustomer_chat_with">Trò chuyện với</string>
+    <string name="com_kustomer_processing">Chế biến…</string>
+    <string name="com_kustomer_no_internet_connection">Không có kết nối Internet</string>
+    <string name="com_kustomer_chat_screen">Màn hình trò chuyện</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Chúng tôi ở đây, Hãy cho chúng tôi biết nếu chúng tôi có thể giúp đỡ.</string>
+    <string name="com_kustomer_example">Thí dụ</string>
+    <string name="com_kustomer_please_provide_a_message_body">Vui lòng cung cấp nội dung thư</string>
+    <string name="com_kustomer_no_internet_message">Kết nối Internet dường như ngoại tuyến.</string>
+    <string name="com_kustomer_camera_permission_denied">Quyền đối với máy ảnh bị từ chối.</string>
+    <string name="com_kustomer_storage_permission_denied">Quyền lưu trữ bị từ chối.</string>
+    <string name="com_kustomer_authorities">thẩm quyền</string>
+    <string name="com_kustomer_share_via">Chia sẻ qua</string>
+    <string name="com_kustomer_please_provide_storage_permission">Vui lòng cấp quyền lưu trữ cho ứng dụng này</string>
+    <string name="com_kustomer_dismiss">Bỏ qua</string>
+    <string name="com_kustomer_closed">ĐÃ ĐÓNG CỬA</string>
+    <string name="com_kustomer_start_a_new_conversation">Bắt đầu cuộc trò chuyện mới</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Cảm ơn bạn! Chúng tôi sẽ theo dõi yêu cầu của bạn.</string>
+</resources>

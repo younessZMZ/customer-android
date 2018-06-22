@@ -39,10 +39,10 @@ public class KUSLocalization {
         Configuration config = new Configuration(mContext.getResources().getConfiguration());
 
         config.setLocale(locale);
-        String result = mContext.createConfigurationContext(config).getResources().getString(R.string.chat_with);
+        String result = mContext.createConfigurationContext(config).getResources().getString(R.string.com_kustomer_chat_with);
 
         config.setLocale(Locale.ENGLISH);
-        String englishString = mContext.createConfigurationContext(config).getResources().getString(R.string.chat_with);
+        String englishString = mContext.createConfigurationContext(config).getResources().getString(R.string.com_kustomer_chat_with);
 
         if (result.equals(englishString)) {
             if (locale.getLanguage().equals(Locale.ENGLISH.getLanguage()))

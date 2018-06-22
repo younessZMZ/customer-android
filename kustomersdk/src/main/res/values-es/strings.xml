@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">semana</string>
+    <string name="com_kustomer_day">día</string>
+    <string name="com_kustomer_hour">hora</string>
+    <string name="com_kustomer_minute">minuto</string>
+    <string name="com_kustomer_weeks">semanas</string>
+    <string name="com_kustomer_days">dias</string>
+    <string name="com_kustomer_hours">horas</string>
+    <string name="com_kustomer_minutes">minutos</string>
+    <string name="com_kustomer_just_now">Justo ahora</string>
+    <string name="com_kustomer_attachment">Adjunto archivo</string>
+    <string name="com_kustomer_camera">Cámara</string>
+    <string name="com_kustomer_gallery">galería</string>
+    <string name="com_kustomer_cancel">Cancelar</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Algo salió mal. Inténtalo de nuevo.</string>
+    <string name="com_kustomer_try_again">Inténtalo de nuevo</string>
+    <string name="com_kustomer_new_conversation">Nueva conversación</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">¡No te pierdas una respuesta! Recibe notificaciones por correo electrónico:</string>
+    <string name="com_kustomer_email_example">ejemplo@dominio.com</string>
+    <string name="com_kustomer_type_a_message">Escriba un mensaje ...</string>
+    <string name="com_kustomer_Loading...">Cargando...</string>
+    <string name="com_kustomer_ago">hace</string>
+    <string name="com_kustomer_chat_with">Chatear con</string>
+    <string name="com_kustomer_processing">Tratamiento…</string>
+    <string name="com_kustomer_no_internet_connection">Sin conexión a Internet</string>
+    <string name="com_kustomer_chat_screen">Pantalla de chat</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Estamos aquí. Avísenos si podemos ayudar.</string>
+    <string name="com_kustomer_example">Ejemplo</string>
+    <string name="com_kustomer_please_provide_a_message_body">Proporcione un cuerpo del mensaje</string>
+    <string name="com_kustomer_no_internet_message">La conexión a Internet parece estar fuera de línea.</string>
+    <string name="com_kustomer_camera_permission_denied">El permiso de la cámara está denegado.</string>
+    <string name="com_kustomer_storage_permission_denied">Se niega el permiso de almacenamiento.</string>
+    <string name="com_kustomer_authorities">autoridad</string>
+    <string name="com_kustomer_share_via">Compartir via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Proporcione permiso de almacenamiento para esta aplicación</string>
+    <string name="com_kustomer_dismiss">Despedir</string>
+    <string name="com_kustomer_closed">CERRADO</string>
+    <string name="com_kustomer_start_a_new_conversation">Comienza una nueva conversación</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">¡Gracias! Realizaremos un seguimiento de su solicitud.</string>
+</resources>

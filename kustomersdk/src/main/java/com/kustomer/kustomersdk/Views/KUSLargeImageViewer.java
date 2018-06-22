@@ -104,7 +104,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
             intent.setType("image/png");
             intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
             mContext.startActivity(Intent.createChooser(intent,
-                    mContext.getResources().getString(R.string.share_via)));
+                    mContext.getResources().getString(R.string.com_kustomer_share_via)));
         } else {
             GlideUrl glideUrl = new GlideUrl(currentImageLink, new LazyHeaders.Builder()
                     .addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, Kustomer.getSharedInstance().getUserSession().getTrackingTokenDataSource().getCurrentTrackingToken())
@@ -120,7 +120,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (!KUSPermission.isStoragePermissionAvailable(mContext)) {
                                     Toast.makeText(mContext,
-                                            mContext.getResources().getString(R.string.please_provide_storage_permission),
+                                            mContext.getResources().getString(R.string.com_kustomer_please_provide_storage_permission),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     String path = saveBitmap(resource);
@@ -161,7 +161,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
             intent.setType("image/png");
             intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
             mContext.startActivity(Intent.createChooser(intent,
-                    mContext.getResources().getString(R.string.share_via)));
+                    mContext.getResources().getString(R.string.com_kustomer_share_via)));
         }
     }
 

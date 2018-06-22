@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">εβδομάδα</string>
+    <string name="com_kustomer_day">ημέρα</string>
+    <string name="com_kustomer_hour">ώρα</string>
+    <string name="com_kustomer_minute">λεπτό</string>
+    <string name="com_kustomer_weeks">εβδομάδες</string>
+    <string name="com_kustomer_days">ημέρες</string>
+    <string name="com_kustomer_hours">ώρες</string>
+    <string name="com_kustomer_minutes">λεπτά</string>
+    <string name="com_kustomer_just_now">Μόλις τώρα</string>
+    <string name="com_kustomer_attachment">Συνημμένο</string>
+    <string name="com_kustomer_camera">ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ</string>
+    <string name="com_kustomer_gallery">εκθεσιακός χώρος</string>
+    <string name="com_kustomer_cancel">Ματαίωση</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Κάτι πήγε στραβά. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα.</string>
+    <string name="com_kustomer_try_again">Προσπάθησε ξανά</string>
+    <string name="com_kustomer_new_conversation">Νέα συζήτηση</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Μη χάσετε μια απάντηση! Ενημερώστε μέσω ηλεκτρονικού ταχυδρομείου:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Πληκτρολογήστε ένα μήνυμα ...</string>
+    <string name="com_kustomer_Loading...">Φόρτωση...</string>
+    <string name="com_kustomer_ago">πριν</string>
+    <string name="com_kustomer_chat_with">Συζήτηση με</string>
+    <string name="com_kustomer_processing">Επεξεργασία…</string>
+    <string name="com_kustomer_no_internet_connection">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
+    <string name="com_kustomer_chat_screen">Οθόνη συνομιλίας</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Είμαστε εδώ, ενημερώστε μας αν μπορούμε να βοηθήσουμε.</string>
+    <string name="com_kustomer_example">Παράδειγμα</string>
+    <string name="com_kustomer_please_provide_a_message_body">Καταχωρίστε ένα σώμα μηνυμάτων</string>
+    <string name="com_kustomer_no_internet_message">Η σύνδεση στο Internet φαίνεται να είναι εκτός σύνδεσης.</string>
+    <string name="com_kustomer_camera_permission_denied">Η άδεια κάμερας απορρίφθηκε.</string>
+    <string name="com_kustomer_storage_permission_denied">Η άδεια αποθήκευσης απορρίπτεται.</string>
+    <string name="com_kustomer_authorities">εξουσία</string>
+    <string name="com_kustomer_share_via">Κοινή χρήση μέσω</string>
+    <string name="com_kustomer_please_provide_storage_permission">Καταχωρίστε δικαιώματα αποθήκευσης σε αυτήν την εφαρμογή</string>
+    <string name="com_kustomer_dismiss">Απολύω</string>
+    <string name="com_kustomer_closed">ΚΛΕΙΣΤΟ</string>
+    <string name="com_kustomer_start_a_new_conversation">Ξεκινήστε μια νέα συνομιλία</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Ευχαριστώ! Θα ακολουθήσουμε το αίτημά σας.</string>
+</resources>

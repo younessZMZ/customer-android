@@ -192,7 +192,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             @Override
             public void run() {
                 hideProgressBar();
-                String errorText = getResources().getString(R.string.something_went_wrong_please_try_again);
+                String errorText = getResources().getString(R.string.com_kustomer_something_went_wrong_please_try_again);
                 showErrorWithText(errorText);
                 rvSessions.setVisibility(View.INVISIBLE);
                 btnNewConversation.setVisibility(View.INVISIBLE);

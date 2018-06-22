@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">สัปดาห์</string>
+    <string name="com_kustomer_day">วัน</string>
+    <string name="com_kustomer_hour">ชั่วโมง</string>
+    <string name="com_kustomer_minute">นาที</string>
+    <string name="com_kustomer_weeks">สัปดาห์ที่ผ่านมา</string>
+    <string name="com_kustomer_days">วัน</string>
+    <string name="com_kustomer_hours">ชั่วโมง</string>
+    <string name="com_kustomer_minutes">นาที</string>
+    <string name="com_kustomer_just_now">ตอนนี้</string>
+    <string name="com_kustomer_attachment">ความผูกพัน</string>
+    <string name="com_kustomer_camera">กล้อง</string>
+    <string name="com_kustomer_gallery">เฉลียง</string>
+    <string name="com_kustomer_cancel">ยกเลิก</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">บางอย่างผิดพลาด. กรุณาลองอีกครั้ง.</string>
+    <string name="com_kustomer_try_again">ลองอีกครั้ง</string>
+    <string name="com_kustomer_new_conversation">การสนทนาใหม่</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">อย่าพลาดการตอบสนอง! รับแจ้งทางอีเมลล์:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">พิมพ์ข้อความ ...</string>
+    <string name="com_kustomer_Loading...">กำลังโหลด ...</string>
+    <string name="com_kustomer_ago">มาแล้ว</string>
+    <string name="com_kustomer_chat_with">สนทนากับ</string>
+    <string name="com_kustomer_processing">กำลังประมวลผล ...</string>
+    <string name="com_kustomer_no_internet_connection">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="com_kustomer_chat_screen">หน้าจอแชท</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">เรามาที่นี่แจ้งให้เราทราบหากเราสามารถช่วยได้</string>
+    <string name="com_kustomer_example">ตัวอย่าง</string>
+    <string name="com_kustomer_please_provide_a_message_body">โปรดระบุเนื้อหาของข้อความ</string>
+    <string name="com_kustomer_no_internet_message">การเชื่อมต่ออินเทอร์เน็ตดูเหมือนออฟไลน์</string>
+    <string name="com_kustomer_camera_permission_denied">สิทธิ์กล้องถ่ายรูปถูกปฏิเสธ</string>
+    <string name="com_kustomer_storage_permission_denied">สิทธิ์พื้นที่เก็บข้อมูลถูกปฏิเสธ</string>
+    <string name="com_kustomer_authorities">ผู้มีอำนาจ</string>
+    <string name="com_kustomer_share_via">แบ่งปันผ่าน</string>
+    <string name="com_kustomer_please_provide_storage_permission">โปรดให้สิทธิ์พื้นที่เก็บข้อมูลแก่แอปพลิเคชันนี้</string>
+    <string name="com_kustomer_dismiss">ยกเลิก</string>
+    <string name="com_kustomer_closed">ปิด</string>
+    <string name="com_kustomer_start_a_new_conversation">เริ่มการสนทนาใหม่</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">ขอขอบคุณ! เราจะติดตามคำขอของคุณต่อ</string>
+</resources>

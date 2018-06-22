@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">nädal</string>
+    <string name="com_kustomer_day">päev</string>
+    <string name="com_kustomer_hour">tunnis</string>
+    <string name="com_kustomer_minute">minut</string>
+    <string name="com_kustomer_weeks">nädalat</string>
+    <string name="com_kustomer_days">päeva</string>
+    <string name="com_kustomer_hours">tundi</string>
+    <string name="com_kustomer_minutes">minutit</string>
+    <string name="com_kustomer_just_now">Just praegu</string>
+    <string name="com_kustomer_attachment">Manus</string>
+    <string name="com_kustomer_camera">Kaamera</string>
+    <string name="com_kustomer_gallery">Galerii</string>
+    <string name="com_kustomer_cancel">Loobu</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Midagi läks valesti. Palun proovi uuesti.</string>
+    <string name="com_kustomer_try_again">Proovi uuesti</string>
+    <string name="com_kustomer_new_conversation">Uus vestlus</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ära jäta vastust! Saate teatada e-posti teel:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Sisestage sõnum ...</string>
+    <string name="com_kustomer_Loading...">Laadimine ...</string>
+    <string name="com_kustomer_ago">tagasi</string>
+    <string name="com_kustomer_chat_with">Vestlema koos</string>
+    <string name="com_kustomer_processing">Töötlemine ...</string>
+    <string name="com_kustomer_no_internet_connection">Interneti-ühendus puudub</string>
+    <string name="com_kustomer_chat_screen">Vestluskuva</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Oleme siin, andke meile teada, kas me saame aidata.</string>
+    <string name="com_kustomer_example">Näide</string>
+    <string name="com_kustomer_please_provide_a_message_body">Palun anna sõnumi keha</string>
+    <string name="com_kustomer_no_internet_message">Interneti-ühendus tundub olevat võrguühenduseta.</string>
+    <string name="com_kustomer_camera_permission_denied">Kaamera luba on keelatud.</string>
+    <string name="com_kustomer_storage_permission_denied">Säilitamise luba on keelatud.</string>
+    <string name="com_kustomer_authorities">asutus</string>
+    <string name="com_kustomer_share_via">Jaga Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Palun andke selle rakenduse jaoks säilitamise luba</string>
+    <string name="com_kustomer_dismiss">Vabaks laskma</string>
+    <string name="com_kustomer_closed">Suletud</string>
+    <string name="com_kustomer_start_a_new_conversation">Alusta uut vestlust</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Aitäh! Järgime teie soovi.</string>
+</resources>

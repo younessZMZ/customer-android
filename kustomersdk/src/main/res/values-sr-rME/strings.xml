@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">Недеља</string>
+    <string name="com_kustomer_day">дан</string>
+    <string name="com_kustomer_hour">сат</string>
+    <string name="com_kustomer_minute">минута</string>
+    <string name="com_kustomer_weeks">недељама</string>
+    <string name="com_kustomer_days">дана</string>
+    <string name="com_kustomer_hours">сати</string>
+    <string name="com_kustomer_minutes">минута</string>
+    <string name="com_kustomer_just_now">Управо сада</string>
+    <string name="com_kustomer_attachment">Прилог</string>
+    <string name="com_kustomer_camera">Камера</string>
+    <string name="com_kustomer_gallery">Галерија</string>
+    <string name="com_kustomer_cancel">Поништити, отказати</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Нешто није у реду. Молим вас, покушајте поново.</string>
+    <string name="com_kustomer_try_again">Покушајте поново</string>
+    <string name="com_kustomer_new_conversation">Нови разговор</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Не пропустите одговор! Примите обавештење путем е-поште:</string>
+    <string name="com_kustomer_email_example">екампле@домаин.цом</string>
+    <string name="com_kustomer_type_a_message">Упишите поруку ...</string>
+    <string name="com_kustomer_Loading...">Учитавање ...</string>
+    <string name="com_kustomer_ago">пре</string>
+    <string name="com_kustomer_chat_with">Цхат са</string>
+    <string name="com_kustomer_processing">Обрада ...</string>
+    <string name="com_kustomer_no_internet_connection">Нема Интернет везе</string>
+    <string name="com_kustomer_chat_screen">Цхат Сцреен</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Овде смо, јавите нам ако можемо помоћи.</string>
+    <string name="com_kustomer_example">Пример</string>
+    <string name="com_kustomer_please_provide_a_message_body">Молимо Вас да наведете тело поруке</string>
+    <string name="com_kustomer_no_internet_message">Изгледа да је интернет веза ван мреже.</string>
+    <string name="com_kustomer_camera_permission_denied">Дозвола за камеру је одбијена.</string>
+    <string name="com_kustomer_storage_permission_denied">Дозвола за складиштење је одбијена.</string>
+    <string name="com_kustomer_authorities">Управа</string>
+    <string name="com_kustomer_share_via">Делите Виа</string>
+    <string name="com_kustomer_please_provide_storage_permission">Молимо наведите дозволу за складиштење ове апликације</string>
+    <string name="com_kustomer_dismiss">Одбиј</string>
+    <string name="com_kustomer_closed">ЗАТВОРЕНО</string>
+    <string name="com_kustomer_start_a_new_conversation">Започните нови разговор</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Хвала вам! Пратит ћемо ваш захтев.</string>
+</resources>

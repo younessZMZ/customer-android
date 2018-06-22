@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">week</string>
+    <string name="com_kustomer_day">dag</string>
+    <string name="com_kustomer_hour">uur</string>
+    <string name="com_kustomer_minute">minuut</string>
+    <string name="com_kustomer_weeks">weken</string>
+    <string name="com_kustomer_days">dagen</string>
+    <string name="com_kustomer_hours">uur</string>
+    <string name="com_kustomer_minutes">notulen</string>
+    <string name="com_kustomer_just_now">Net nu</string>
+    <string name="com_kustomer_attachment">gehechtheid</string>
+    <string name="com_kustomer_camera">Camera</string>
+    <string name="com_kustomer_gallery">Galerij</string>
+    <string name="com_kustomer_cancel">Annuleer</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Er is iets fout gegaan. Probeer het opnieuw.</string>
+    <string name="com_kustomer_try_again">Probeer het nog eens</string>
+    <string name="com_kustomer_new_conversation">Nieuw gesprek</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Mis geen reactie! Ontvang een melding per e-mail:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Type een bericht...</string>
+    <string name="com_kustomer_Loading...">Bezig met laden...</string>
+    <string name="com_kustomer_ago">geleden</string>
+    <string name="com_kustomer_chat_with">Kletsen met</string>
+    <string name="com_kustomer_processing">Verwerken…</string>
+    <string name="com_kustomer_no_internet_connection">Geen internet verbinding</string>
+    <string name="com_kustomer_chat_screen">Chatscherm</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">We zijn er, laat het ons weten als we kunnen helpen.</string>
+    <string name="com_kustomer_example">Voorbeeld</string>
+    <string name="com_kustomer_please_provide_a_message_body">Geef een bericht op</string>
+    <string name="com_kustomer_no_internet_message">De internetverbinding lijkt offline te zijn.</string>
+    <string name="com_kustomer_camera_permission_denied">Cameratoegang wordt geweigerd.</string>
+    <string name="com_kustomer_storage_permission_denied">Opslagrechten worden geweigerd.</string>
+    <string name="com_kustomer_authorities">autoriteit</string>
+    <string name="com_kustomer_share_via">Deel via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Geef opslagrechten op voor deze app</string>
+    <string name="com_kustomer_dismiss">ontslaan</string>
+    <string name="com_kustomer_closed">GESLOTEN</string>
+    <string name="com_kustomer_start_a_new_conversation">Start een nieuw gesprek</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Dank je! We zullen uw verzoek opvolgen.</string>
+</resources>

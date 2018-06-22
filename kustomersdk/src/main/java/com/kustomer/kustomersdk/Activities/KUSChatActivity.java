@@ -198,7 +198,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openCamera();
                 } else {
-                    Toast.makeText(this, R.string.camera_permission_denied,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.com_kustomer_camera_permission_denied,Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -207,7 +207,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openGallery();
                 } else {
-                    Toast.makeText(this, R.string.storage_permission_denied,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.com_kustomer_storage_permission_denied,Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -505,9 +505,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         String[] items = null;
 
         if(KUSPermission.isCameraPermissionDeclared(this))
-            itemsList.add(getString(R.string.camera));
+            itemsList.add(getString(R.string.com_kustomer_camera));
         if(KUSPermission.isReadPermissionDeclared(this))
-            itemsList.add(getString(R.string.gallery));
+            itemsList.add(getString(R.string.com_kustomer_gallery));
 
         if(itemsList.size() > 0) {
             items = new String[itemsList.size()];
@@ -529,7 +529,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 }
             }
         });
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setNegativeButton(R.string.com_kustomer_cancel, null);
 
         // create and show the alert dialog
         AlertDialog dialog = builder.create();

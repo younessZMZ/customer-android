@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">viikko</string>
+    <string name="com_kustomer_day">päivä</string>
+    <string name="com_kustomer_hour">tunnin</string>
+    <string name="com_kustomer_minute">minuutti</string>
+    <string name="com_kustomer_weeks">viikkoa</string>
+    <string name="com_kustomer_days">päivää</string>
+    <string name="com_kustomer_hours">tuntia</string>
+    <string name="com_kustomer_minutes">minuutit</string>
+    <string name="com_kustomer_just_now">Juuri nyt</string>
+    <string name="com_kustomer_attachment">liite</string>
+    <string name="com_kustomer_camera">Kamera</string>
+    <string name="com_kustomer_gallery">galleria</string>
+    <string name="com_kustomer_cancel">Peruuttaa</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Jotain meni pieleen. Yritä uudelleen.</string>
+    <string name="com_kustomer_try_again">Yritä uudelleen</string>
+    <string name="com_kustomer_new_conversation">Uusi keskustelu</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Älä missaa vastausta! Saat ilmoituksen sähköpostilla:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Kirjoita viesti ...</string>
+    <string name="com_kustomer_Loading...">Ladataan...</string>
+    <string name="com_kustomer_ago">sitten</string>
+    <string name="com_kustomer_chat_with">Jutella</string>
+    <string name="com_kustomer_processing">Processing ...</string>
+    <string name="com_kustomer_no_internet_connection">Ei Internet-yhteyttä</string>
+    <string name="com_kustomer_chat_screen">Chat-näyttö</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Olemme täällä, kerro meille, voimmeko auttaa.</string>
+    <string name="com_kustomer_example">esimerkki</string>
+    <string name="com_kustomer_please_provide_a_message_body">Anna viestin elin</string>
+    <string name="com_kustomer_no_internet_message">Internet-yhteys näyttää olevan offline-tilassa.</string>
+    <string name="com_kustomer_camera_permission_denied">Kamerilupa on kielletty.</string>
+    <string name="com_kustomer_storage_permission_denied">Tallennuslupa kielletään.</string>
+    <string name="com_kustomer_authorities">auktoriteetti</string>
+    <string name="com_kustomer_share_via">Jaa Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Anna varastolupa tälle sovellukselle</string>
+    <string name="com_kustomer_dismiss">erottaa</string>
+    <string name="com_kustomer_closed">SULJETTU</string>
+    <string name="com_kustomer_start_a_new_conversation">Aloita uusi keskustelu</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Kiitos! Seuraamme pyyntöäsi.</string>
+</resources>

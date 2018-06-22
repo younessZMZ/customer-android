@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">सप्ताह</string>
+    <string name="com_kustomer_day">दिन</string>
+    <string name="com_kustomer_hour">घंटा</string>
+    <string name="com_kustomer_minute">मिनट</string>
+    <string name="com_kustomer_weeks">सप्ताह</string>
+    <string name="com_kustomer_days">दिन</string>
+    <string name="com_kustomer_hours">घंटे</string>
+    <string name="com_kustomer_minutes">मिनट</string>
+    <string name="com_kustomer_just_now">अभी</string>
+    <string name="com_kustomer_attachment">आसक्ति</string>
+    <string name="com_kustomer_camera">कैमरा</string>
+    <string name="com_kustomer_gallery">गेलरी</string>
+    <string name="com_kustomer_cancel">रद्द करना</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">कुछ गलत हो गया। कृपया पुन: प्रयास करें।</string>
+    <string name="com_kustomer_try_again">पुनः प्रयास करें</string>
+    <string name="com_kustomer_new_conversation">नया वार्तालाप</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">प्रतिक्रिया याद मत करो! ईमेल द्वारा अधिसूचित हो जाओ:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">एक संदेश लिखें...</string>
+    <string name="com_kustomer_Loading...">लोड हो रहा है...</string>
+    <string name="com_kustomer_ago">पूर्व</string>
+    <string name="com_kustomer_chat_with">साथ बात</string>
+    <string name="com_kustomer_processing">प्रसंस्करण ...</string>
+    <string name="com_kustomer_no_internet_connection">कोई इंटरनेट कनेक्शन नहीं</string>
+    <string name="com_kustomer_chat_screen">चैट स्क्रीन</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">हम यहां हैं, हमें बताएं कि क्या हम मदद कर सकते हैं।</string>
+    <string name="com_kustomer_example">उदाहरण</string>
+    <string name="com_kustomer_please_provide_a_message_body">कृपया एक संदेश निकाय प्रदान करें</string>
+    <string name="com_kustomer_no_internet_message">इंटरनेट कनेक्शन ऑफ़लाइन प्रतीत होता है।</string>
+    <string name="com_kustomer_camera_permission_denied">कैमरा अनुमति अस्वीकार कर दी गई है।</string>
+    <string name="com_kustomer_storage_permission_denied">भंडारण अनुमति अस्वीकार कर दी गई है।</string>
+    <string name="com_kustomer_authorities">अधिकार</string>
+    <string name="com_kustomer_share_via">के माध्यम से बाँटे</string>
+    <string name="com_kustomer_please_provide_storage_permission">कृपया इस ऐप को स्टोरेज अनुमति प्रदान करें</string>
+    <string name="com_kustomer_dismiss">खारिज</string>
+    <string name="com_kustomer_closed">बन्द है</string>
+    <string name="com_kustomer_start_a_new_conversation">एक नया वार्तालाप शुरू करें</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">धन्यवाद! हम आपके अनुरोध पर अनुवर्ती करेंगे।</string>
+</resources>

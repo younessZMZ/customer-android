@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">nedēļa</string>
+    <string name="com_kustomer_day">diena</string>
+    <string name="com_kustomer_hour">stunda</string>
+    <string name="com_kustomer_minute">minūti</string>
+    <string name="com_kustomer_weeks">nedēļas</string>
+    <string name="com_kustomer_days">dienas</string>
+    <string name="com_kustomer_hours">stundas</string>
+    <string name="com_kustomer_minutes">minūtes</string>
+    <string name="com_kustomer_just_now">Tikko</string>
+    <string name="com_kustomer_attachment">Pielikums</string>
+    <string name="com_kustomer_camera">Kamera</string>
+    <string name="com_kustomer_gallery">Galerija</string>
+    <string name="com_kustomer_cancel">Atcelt</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Kaut kas nogāja greizi. Lūdzu mēģiniet vēlreiz.</string>
+    <string name="com_kustomer_try_again">Mēģini vēlreiz</string>
+    <string name="com_kustomer_new_conversation">Jauna saruna</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nepalaidiet garām atbildi! Saņemiet paziņojumu pa e-pastu:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Ierakstiet ziņojumu ...</string>
+    <string name="com_kustomer_Loading...">Ielādē ...</string>
+    <string name="com_kustomer_ago">pirms</string>
+    <string name="com_kustomer_chat_with">Čatot ar</string>
+    <string name="com_kustomer_processing">Apstrāde ...</string>
+    <string name="com_kustomer_no_internet_connection">Nav interneta savienojuma</string>
+    <string name="com_kustomer_chat_screen">Tērzēšanas ekrāns</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Mēs esam šeit, informējiet mūs, ja mēs varam palīdzēt.</string>
+    <string name="com_kustomer_example">Piemērs</string>
+    <string name="com_kustomer_please_provide_a_message_body">Lūdzu, norādiet ziņojuma kopumu</string>
+    <string name="com_kustomer_no_internet_message">Šķiet, ka interneta savienojums ir bezsaistē.</string>
+    <string name="com_kustomer_camera_permission_denied">Kameras atļauja tiek liegta.</string>
+    <string name="com_kustomer_storage_permission_denied">Uzglabāšanas atļauja tiek liegta.</string>
+    <string name="com_kustomer_authorities">iestāde</string>
+    <string name="com_kustomer_share_via">Kopīgot Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Lūdzu, sniedziet šīs lietotnes atmiņas atļauju</string>
+    <string name="com_kustomer_dismiss">Atlaist</string>
+    <string name="com_kustomer_closed">Slēgts</string>
+    <string name="com_kustomer_start_a_new_conversation">Sāciet jaunu sarunu</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Paldies! Mēs veiksim jūsu pieprasījumu.</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">tydzień</string>
+    <string name="com_kustomer_day">dzień</string>
+    <string name="com_kustomer_hour">godzina</string>
+    <string name="com_kustomer_minute">minuta</string>
+    <string name="com_kustomer_weeks">tygodnie</string>
+    <string name="com_kustomer_days">dni</string>
+    <string name="com_kustomer_hours">godziny</string>
+    <string name="com_kustomer_minutes">minuty</string>
+    <string name="com_kustomer_just_now">Właśnie</string>
+    <string name="com_kustomer_attachment">Załącznik</string>
+    <string name="com_kustomer_camera">Aparat fotograficzny</string>
+    <string name="com_kustomer_gallery">Galeria</string>
+    <string name="com_kustomer_cancel">Anuluj</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Coś poszło nie tak. Proszę spróbuj ponownie.</string>
+    <string name="com_kustomer_try_again">Spróbuj ponownie</string>
+    <string name="com_kustomer_new_conversation">Nowa rozmowa</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nie przegap odpowiedzi! Otrzymuj powiadomienia e-mailem:</string>
+    <string name="com_kustomer_email_example">przykład@domena.com</string>
+    <string name="com_kustomer_type_a_message">Wpisz wiadomość...</string>
+    <string name="com_kustomer_Loading...">Ładuję...</string>
+    <string name="com_kustomer_ago">temu</string>
+    <string name="com_kustomer_chat_with">Czatuj z</string>
+    <string name="com_kustomer_processing">Przetwarzanie…</string>
+    <string name="com_kustomer_no_internet_connection">Brak połączenia z internetem</string>
+    <string name="com_kustomer_chat_screen">Ekran czatu</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Jesteśmy tutaj, Daj nam znać, jeśli możemy pomóc.</string>
+    <string name="com_kustomer_example">Przykład</string>
+    <string name="com_kustomer_please_provide_a_message_body">Podaj treść wiadomości</string>
+    <string name="com_kustomer_no_internet_message">Połączenie internetowe wydaje się być offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Odmowa uprawnienia do kamery.</string>
+    <string name="com_kustomer_storage_permission_denied">Zezwolono na przechowywanie.</string>
+    <string name="com_kustomer_authorities">autorytet</string>
+    <string name="com_kustomer_share_via">Podziel się przez</string>
+    <string name="com_kustomer_please_provide_storage_permission">Prześlij pozwolenie na przechowywanie do tej aplikacji</string>
+    <string name="com_kustomer_dismiss">Oddalić</string>
+    <string name="com_kustomer_closed">ZAMKNIĘTE</string>
+    <string name="com_kustomer_start_a_new_conversation">Rozpocznij nową rozmowę</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Dziękuję Ci! Sprawdzimy Twoją prośbę.</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">uke</string>
+    <string name="com_kustomer_day">dag</string>
+    <string name="com_kustomer_hour">time</string>
+    <string name="com_kustomer_minute">minutt</string>
+    <string name="com_kustomer_weeks">uker</string>
+    <string name="com_kustomer_days">dager</string>
+    <string name="com_kustomer_hours">timer</string>
+    <string name="com_kustomer_minutes">minutter</string>
+    <string name="com_kustomer_just_now">Akkurat nå</string>
+    <string name="com_kustomer_attachment">Vedlegg</string>
+    <string name="com_kustomer_camera">Kamera</string>
+    <string name="com_kustomer_gallery">Galleri</string>
+    <string name="com_kustomer_cancel">Avbryt</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Noe gikk galt. Vær så snill, prøv på nytt.</string>
+    <string name="com_kustomer_try_again">Prøv igjen</string>
+    <string name="com_kustomer_new_conversation">Ny samtale</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ikke gå glipp av et svar! Få beskjed via e-post:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Skriv inn en melding ...</string>
+    <string name="com_kustomer_Loading...">Laster ...</string>
+    <string name="com_kustomer_ago">siden</string>
+    <string name="com_kustomer_chat_with">Snakke med</string>
+    <string name="com_kustomer_processing">Behandling…</string>
+    <string name="com_kustomer_no_internet_connection">Ingen Internett-tilkobling</string>
+    <string name="com_kustomer_chat_screen">Chat-skjerm</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Vi er her, Gi oss beskjed hvis vi kan hjelpe.</string>
+    <string name="com_kustomer_example">Eksempel</string>
+    <string name="com_kustomer_please_provide_a_message_body">Vennligst oppgi et meldingsorgan</string>
+    <string name="com_kustomer_no_internet_message">Internett-tilkoblingen ser ut til å være offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Kameratillatelse er nektet.</string>
+    <string name="com_kustomer_storage_permission_denied">Lagringstillatelse nektes.</string>
+    <string name="com_kustomer_authorities">autoritet</string>
+    <string name="com_kustomer_share_via">Del Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Gi lagringsrettigheter til denne appen</string>
+    <string name="com_kustomer_dismiss">Avskjedige</string>
+    <string name="com_kustomer_closed">LUKKET</string>
+    <string name="com_kustomer_start_a_new_conversation">Start en ny samtale</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Takk skal du ha! Vi følger opp på forespørselen din.</string>
+</resources>

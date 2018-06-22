@@ -28,7 +28,7 @@ public class BaseActivity extends AppCompatActivity implements NetworkStateRecei
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getString(R.string.processing));
+        progressDialog.setMessage(getString(R.string.com_kustomer_processing));
         progressDialog.setCancelable(false);
 
 

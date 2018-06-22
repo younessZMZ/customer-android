@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">uge</string>
+    <string name="com_kustomer_day">dag</string>
+    <string name="com_kustomer_hour">time</string>
+    <string name="com_kustomer_minute">minut</string>
+    <string name="com_kustomer_weeks">uger</string>
+    <string name="com_kustomer_days">dage</string>
+    <string name="com_kustomer_hours">timer</string>
+    <string name="com_kustomer_minutes">minutter</string>
+    <string name="com_kustomer_just_now">Lige nu</string>
+    <string name="com_kustomer_attachment">Vedhæftet fil</string>
+    <string name="com_kustomer_camera">Kamera</string>
+    <string name="com_kustomer_gallery">galleri</string>
+    <string name="com_kustomer_cancel">Afbestille</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Noget gik galt. Prøv igen.</string>
+    <string name="com_kustomer_try_again">Prøv igen</string>
+    <string name="com_kustomer_new_conversation">Ny samtale</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Gå ikke glip af et svar! Få besked via e-mail:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Skriv en besked ...</string>
+    <string name="com_kustomer_Loading...">Indlæser...</string>
+    <string name="com_kustomer_ago">siden</string>
+    <string name="com_kustomer_chat_with">Chatte med</string>
+    <string name="com_kustomer_processing">Forarbejdning…</string>
+    <string name="com_kustomer_no_internet_connection">Ingen internetforbindelse</string>
+    <string name="com_kustomer_chat_screen">Chat skærm</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Vi er her, Lad os vide, om vi kan hjælpe.</string>
+    <string name="com_kustomer_example">Eksempel</string>
+    <string name="com_kustomer_please_provide_a_message_body">Giv venligst et beskedlegeme</string>
+    <string name="com_kustomer_no_internet_message">Internetforbindelsen ser ud til at være offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Kamera tilladelse nægtes.</string>
+    <string name="com_kustomer_storage_permission_denied">Opbevaringstilladelse nægtes.</string>
+    <string name="com_kustomer_authorities">myndighed</string>
+    <string name="com_kustomer_share_via">Del Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Giv venligst tilladelse til opbevaring til denne app</string>
+    <string name="com_kustomer_dismiss">Afskedige</string>
+    <string name="com_kustomer_closed">LUKKET</string>
+    <string name="com_kustomer_start_a_new_conversation">Start en ny samtale</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Tak skal du have! Vi følger op på din anmodning.</string>
+</resources>

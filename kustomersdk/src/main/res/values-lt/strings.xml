@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">savaitę</string>
+    <string name="com_kustomer_day">diena</string>
+    <string name="com_kustomer_hour">valandą</string>
+    <string name="com_kustomer_minute">minutė</string>
+    <string name="com_kustomer_weeks">savaitės</string>
+    <string name="com_kustomer_days">dienos</string>
+    <string name="com_kustomer_hours">valandos</string>
+    <string name="com_kustomer_minutes">minutės</string>
+    <string name="com_kustomer_just_now">Dabar</string>
+    <string name="com_kustomer_attachment">Priedas</string>
+    <string name="com_kustomer_camera">Fotoaparatas</string>
+    <string name="com_kustomer_gallery">Galerija</string>
+    <string name="com_kustomer_cancel">Atšaukti</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Kažkas nutiko. Prašau, pabandykite dar kartą.</string>
+    <string name="com_kustomer_try_again">Bandyk iš naujo</string>
+    <string name="com_kustomer_new_conversation">Nauja pokalbis</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nepraleiskite atsakymo! Gaukite pranešimą elektroniniu paštu:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Įveskite pranešimą ...</string>
+    <string name="com_kustomer_Loading...">Kraunasi ...</string>
+    <string name="com_kustomer_ago">prieš</string>
+    <string name="com_kustomer_chat_with">Kalbėtis su</string>
+    <string name="com_kustomer_processing">Apdorojimas…</string>
+    <string name="com_kustomer_no_internet_connection">Nėra interneto ryšio</string>
+    <string name="com_kustomer_chat_screen">Pokalbių ekranas</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Mes esame čia, praneškite mums, jei galime padėti.</string>
+    <string name="com_kustomer_example">Pavyzdys</string>
+    <string name="com_kustomer_please_provide_a_message_body">Pateikite pranešimo korpusą</string>
+    <string name="com_kustomer_no_internet_message">Atrodo, kad interneto ryšys yra neprisijungęs.</string>
+    <string name="com_kustomer_camera_permission_denied">Kameros leidimas neleidžiamas.</string>
+    <string name="com_kustomer_storage_permission_denied">Leidimas saugoti atmestas.</string>
+    <string name="com_kustomer_authorities">institucija</string>
+    <string name="com_kustomer_share_via">Dalintis Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Prašome pateikti šios programos saugojimo leidimą</string>
+    <string name="com_kustomer_dismiss">Atleisti</string>
+    <string name="com_kustomer_closed">UŽDARYTA</string>
+    <string name="com_kustomer_start_a_new_conversation">Pradėkite naują pokalbį</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Ačiū! Mes atliksime jūsų prašymą.</string>
+</resources>

@@ -70,7 +70,7 @@ public class BaseActivity extends AppCompatActivity {
     //region Methods
     private void setupDialog(){
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getString(R.string.processing));
+        progressDialog.setMessage(getString(R.string.com_kustomer_processing));
         progressDialog.setCancelable(false);
     }
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">linggo</string>
+    <string name="com_kustomer_day">araw</string>
+    <string name="com_kustomer_hour">oras</string>
+    <string name="com_kustomer_minute">minuto</string>
+    <string name="com_kustomer_weeks">linggo</string>
+    <string name="com_kustomer_days">araw</string>
+    <string name="com_kustomer_hours">oras</string>
+    <string name="com_kustomer_minutes">minuto</string>
+    <string name="com_kustomer_just_now">Ngayon lang</string>
+    <string name="com_kustomer_attachment">Attachment</string>
+    <string name="com_kustomer_camera">Camera</string>
+    <string name="com_kustomer_gallery">Gallery</string>
+    <string name="com_kustomer_cancel">Kanselahin</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">May nagkamali. Pakisubukang muli.</string>
+    <string name="com_kustomer_try_again">Subukan muli</string>
+    <string name="com_kustomer_new_conversation">Bagong Pag-uusap</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Huwag palampasin ang sagot! Maabisuhan sa pamamagitan ng email:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Mag-type ng mensahe ...</string>
+    <string name="com_kustomer_Loading...">Naglo-load ...</string>
+    <string name="com_kustomer_ago">nakaraan</string>
+    <string name="com_kustomer_chat_with">Makipag-usap kay</string>
+    <string name="com_kustomer_processing">Pinoproseso ...</string>
+    <string name="com_kustomer_no_internet_connection">Walang Koneksyon sa Internet</string>
+    <string name="com_kustomer_chat_screen">Chat Screen</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Nandito kami, Ipaalam sa amin kung makakatulong kami.</string>
+    <string name="com_kustomer_example">Halimbawa</string>
+    <string name="com_kustomer_please_provide_a_message_body">Mangyaring magbigay ng isang mensahe katawan</string>
+    <string name="com_kustomer_no_internet_message">Lumilitaw na offline ang koneksyon sa Internet.</string>
+    <string name="com_kustomer_camera_permission_denied">Ang pahintulot sa kamera ay tinanggihan.</string>
+    <string name="com_kustomer_storage_permission_denied">Ang pahintulot sa imbakan ay tinanggihan.</string>
+    <string name="com_kustomer_authorities">awtoridad</string>
+    <string name="com_kustomer_share_via">Ibahagi ang Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Mangyaring magbigay ng pahintulot sa imbakan sa app na ito</string>
+    <string name="com_kustomer_dismiss">Huwag pansinin</string>
+    <string name="com_kustomer_closed">Nakasara</string>
+    <string name="com_kustomer_start_a_new_conversation">Magsimula ng Bagong Pag-uusap</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Salamat! Susundan namin ang iyong kahilingan.</string>
+</resources>

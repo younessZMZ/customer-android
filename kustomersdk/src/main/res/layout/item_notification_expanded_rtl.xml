@@ -100,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/kusSessionTitleColor"
-        android:text="@string/dismiss"
+        android:text="@string/com_kustomer_dismiss"
         android:background="@drawable/session_item_background"/>
 
 </LinearLayout>

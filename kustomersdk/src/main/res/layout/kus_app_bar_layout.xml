@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     style="@style/KUSToolbarNameTextAppearance"
                     android:layout_gravity="center"
-                    android:text="@string/example"
+                    android:text="@string/com_kustomer_example"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:textColor="@color/kusToolbarNameColor"
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     style="@style/KUSToolbarGreetingTextAppearance"
                     android:layout_gravity="center"
-                    android:text="@string/we_re_here_let_us_know_if_we_can_help"
+                    android:text="@string/com_kustomer_we_re_here_let_us_know_if_we_can_help"
                     android:textSize="11sp"
                     android:textColor="@color/kusToolbarGreetingColor"
                     tools:ignore="SmallSp" />
@@ -140,7 +140,7 @@
             style="@style/KUSEmailInputPromptTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/kus_email_input_prompt_text"
+            android:text="@string/com_kustomer_dont_miss_a_response_get_notified_soon_by_email"
             android:textSize="13sp"
             android:textColor="@color/kusEmailInputPromptColor"/>
 
@@ -167,7 +167,7 @@
                 android:layout_marginRight="35dp"
                 android:background="@android:color/transparent"
                 android:gravity="center"
-                android:hint="@string/kus_email_input_hint_text"
+                android:hint="@string/com_kustomer_email_example"
                 android:inputType="textEmailAddress"
                 android:padding="5dp"
                 android:textColorHint="@color/colorLightGrey"

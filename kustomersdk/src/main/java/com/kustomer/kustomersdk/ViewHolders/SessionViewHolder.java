@@ -19,7 +19,6 @@ import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
-import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
@@ -139,7 +138,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
                     chatSettings.getTeamName() : mUserSession.getOrganizationName();
         }
 
-        tvSessionTitle.setText(String.format(itemView.getContext().getString(R.string.chat_with)+" %s",responderName));
+        tvSessionTitle.setText(String.format(itemView.getContext().getString(R.string.com_kustomer_chat_with)+" %s",responderName));
 
 
         //Subtitle text (from last message, or preview text)

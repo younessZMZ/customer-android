@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">שָׁבוּעַ</string>
+    <string name="com_kustomer_day">יְוֹם</string>
+    <string name="com_kustomer_hour">שָׁעָה</string>
+    <string name="com_kustomer_minute">דַקָה</string>
+    <string name="com_kustomer_weeks">שבועות</string>
+    <string name="com_kustomer_days">ימים</string>
+    <string name="com_kustomer_hours">שעות</string>
+    <string name="com_kustomer_minutes">דקות</string>
+    <string name="com_kustomer_just_now">זֶה עַתָה</string>
+    <string name="com_kustomer_attachment">הִתקַשְׁרוּת</string>
+    <string name="com_kustomer_camera">מַצלֵמָה</string>
+    <string name="com_kustomer_gallery">גלריה</string>
+    <string name="com_kustomer_cancel">לְבַטֵל</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">משהו השתבש. בבקשה נסה שוב.</string>
+    <string name="com_kustomer_try_again">נסה שוב</string>
+    <string name="com_kustomer_new_conversation">שיחה חדשה</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">אל תחמיצו תגובה! קבל הודעה בדוא\"ל:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">הקלד הודעה...</string>
+    <string name="com_kustomer_Loading...">טוען...</string>
+    <string name="com_kustomer_ago">לִפנֵי</string>
+    <string name="com_kustomer_chat_with">לשוחח עם</string>
+    <string name="com_kustomer_processing">מעבד…</string>
+    <string name="com_kustomer_no_internet_connection">אין חיבור אינטרנט</string>
+    <string name="com_kustomer_chat_screen">מסך צ'אט</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">אנחנו כאן, יידע אותנו אם נוכל לעזור.</string>
+    <string name="com_kustomer_example">דוגמא</string>
+    <string name="com_kustomer_please_provide_a_message_body">ספק גוף הודעה</string>
+    <string name="com_kustomer_no_internet_message">נראה שהחיבור לאינטרנט אינו מקוון.</string>
+    <string name="com_kustomer_camera_permission_denied">אישור המצלמה נדחה.</string>
+    <string name="com_kustomer_storage_permission_denied">אישור אחסון נדחה.</string>
+    <string name="com_kustomer_authorities">רָשׁוּת</string>
+    <string name="com_kustomer_share_via">שתף באמצעות</string>
+    <string name="com_kustomer_please_provide_storage_permission">ספק הרשאה לאחסון באפליקציה הזו</string>
+    <string name="com_kustomer_dismiss">לשחרר</string>
+    <string name="com_kustomer_closed">סָגוּר</string>
+    <string name="com_kustomer_start_a_new_conversation">התחל שיחה חדשה</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">תודה! אנו נעקוב אחר בקשתך.</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">أسبوع</string>
+    <string name="com_kustomer_day">يوم</string>
+    <string name="com_kustomer_hour">ساعة</string>
+    <string name="com_kustomer_minute">اللحظة</string>
+    <string name="com_kustomer_weeks">أسابيع</string>
+    <string name="com_kustomer_days">أيام</string>
+    <string name="com_kustomer_hours">ساعات</string>
+    <string name="com_kustomer_minutes">الدقائق</string>
+    <string name="com_kustomer_just_now">الآن فقط</string>
+    <string name="com_kustomer_attachment">المرفق</string>
+    <string name="com_kustomer_camera">الة تصوير</string>
+    <string name="com_kustomer_gallery">صالة عرض</string>
+    <string name="com_kustomer_cancel">إلغاء</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">هناك خطأ ما. حاول مرة اخرى.</string>
+    <string name="com_kustomer_try_again">حاول ثانية</string>
+    <string name="com_kustomer_new_conversation">محادثة جديدة</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">لا تفوت الرد! الحصول على إشعار عبر البريد الإلكتروني:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">اكتب رسالة ...</string>
+    <string name="com_kustomer_Loading...">جار التحميل...</string>
+    <string name="com_kustomer_ago">منذ</string>
+    <string name="com_kustomer_chat_with">الدردشة مع</string>
+    <string name="com_kustomer_processing">معالجة…</string>
+    <string name="com_kustomer_no_internet_connection">لا اتصال إنترنت</string>
+    <string name="com_kustomer_chat_screen">شاشة الدردشة</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">نحن هنا ، دعنا نعرف ما إذا كان يمكننا تقديم المساعدة.</string>
+    <string name="com_kustomer_example">مثال</string>
+    <string name="com_kustomer_please_provide_a_message_body">يرجى تقديم نص رسالة</string>
+    <string name="com_kustomer_no_internet_message">يبدو أن اتصال الإنترنت غير متصل.</string>
+    <string name="com_kustomer_camera_permission_denied">تم رفض إذن الكاميرا.</string>
+    <string name="com_kustomer_storage_permission_denied">تم رفض إذن التخزين.</string>
+    <string name="com_kustomer_authorities">السلطة</string>
+    <string name="com_kustomer_share_via">شارك عبر</string>
+    <string name="com_kustomer_please_provide_storage_permission">يرجى تقديم إذن تخزين لهذا التطبيق</string>
+    <string name="com_kustomer_dismiss">رفض</string>
+    <string name="com_kustomer_closed">مغلق</string>
+    <string name="com_kustomer_start_a_new_conversation">بدء محادثة جديدة</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">شكرا! سنقوم بمتابعة طلبك.</string>
+</resources>

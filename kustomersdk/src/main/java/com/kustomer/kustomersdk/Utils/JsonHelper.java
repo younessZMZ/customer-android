@@ -287,7 +287,7 @@ public class JsonHelper {
                     KUSChatMessage imageMessage = new KUSChatMessage(imageJson,
                             KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_IMAGE, imageUrl);
 
-                    imageMessage.setBody(context.getString(R.string.attachment));
+                    imageMessage.setBody(context.getString(R.string.com_kustomer_attachment));
                     chatMessages.add(imageMessage);
                     lastId++;
                 } catch (MalformedURLException | JSONException | KUSInvalidJsonException e) {

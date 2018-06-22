@@ -40,7 +40,6 @@ import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver;
-import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 
@@ -271,7 +270,7 @@ public class KUSNotificationWindow {
 
         RemoteViews view = createNotificationView(
                 bitmap,
-                String.format(mContext.getString(R.string.chat_with)+" %s",responderName),
+                String.format(mContext.getString(R.string.com_kustomer_chat_with)+" %s",responderName),
                 subtitleText, getDate(),getUnreadCount());
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext,NOTIFICATION_CHANNEL_ID)
@@ -292,7 +291,7 @@ public class KUSNotificationWindow {
 
             RemoteViews expandedView = createExpandedNotificationView(
                     bitmap,
-                    String.format(mContext.getString(R.string.chat_with)+" %s",responderName),
+                    String.format(mContext.getString(R.string.com_kustomer_chat_with)+" %s",responderName),
                     subtitleText, getDate(),getUnreadCount());
 
             Intent dismiss = new Intent(mContext, NotificationDismissReceiver.class);
@@ -358,7 +357,7 @@ public class KUSNotificationWindow {
         contentView.setTextViewText(R.id.tvNotificationSubtitle, subtitle);
         contentView.setTextViewText(R.id.tvNotificationDate, KUSDate.humanReadableTextFromDate(date));
         contentView.setTextViewText(R.id.tvUnreadCount,String.valueOf(unreadCount));
-        contentView.setTextViewText(R.id.closeButton,mContext.getResources().getString(R.string.dismiss));
+        contentView.setTextViewText(R.id.closeButton,mContext.getResources().getString(R.string.com_kustomer_dismiss));
 
         return contentView;
 

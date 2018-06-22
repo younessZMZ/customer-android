@@ -1,10 +1,7 @@
 package com.kustomer.kustomer.Activities;
 
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +9,8 @@ import android.widget.ImageView;
 
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
-import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
-import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Kustomer;
-
-import java.util.Locale;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -32,7 +25,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setLayout(R.layout.activity_main,R.id.toolbar_main,getResources().getString(R.string.app_name),false);
+        setLayout(R.layout.activity_main,R.id.toolbar_main,getResources().getString(R.string.com_kustomer_app_name),false);
         super.onCreate(savedInstanceState);
 
         initViews();

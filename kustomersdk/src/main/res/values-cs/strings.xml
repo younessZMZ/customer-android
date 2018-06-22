@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">týden</string>
+    <string name="com_kustomer_day">den</string>
+    <string name="com_kustomer_hour">hodina</string>
+    <string name="com_kustomer_minute">minuta</string>
+    <string name="com_kustomer_weeks">týdny</string>
+    <string name="com_kustomer_days">dnů</string>
+    <string name="com_kustomer_hours">hodin</string>
+    <string name="com_kustomer_minutes">minut</string>
+    <string name="com_kustomer_just_now">Právě teď</string>
+    <string name="com_kustomer_attachment">Příloha</string>
+    <string name="com_kustomer_camera">Fotoaparát</string>
+    <string name="com_kustomer_gallery">galerie</string>
+    <string name="com_kustomer_cancel">zrušení</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Něco se pokazilo. Prosím zkuste to znovu.</string>
+    <string name="com_kustomer_try_again">Zkus to znovu</string>
+    <string name="com_kustomer_new_conversation">Nová konverzace</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nenechte si ujít odpověď! Obdržte oznámení prostřednictvím e-mailu:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Zadejte zprávu ...</string>
+    <string name="com_kustomer_Loading...">Načítání...</string>
+    <string name="com_kustomer_ago">před</string>
+    <string name="com_kustomer_chat_with">Chatovat s</string>
+    <string name="com_kustomer_processing">Zpracovává se…</string>
+    <string name="com_kustomer_no_internet_connection">Žádné internetové připojení</string>
+    <string name="com_kustomer_chat_screen">Obrazovka chatu</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Jsme tady, dejte nám vědět, jestli můžeme pomoci.</string>
+    <string name="com_kustomer_example">Příklad</string>
+    <string name="com_kustomer_please_provide_a_message_body">Uveďte prosím tělo zprávy</string>
+    <string name="com_kustomer_no_internet_message">Připojení k Internetu se zdá být offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Povolení kamery je zamítnuta.</string>
+    <string name="com_kustomer_storage_permission_denied">Povolení k ukládání je zamítnuto.</string>
+    <string name="com_kustomer_authorities">pravomocí</string>
+    <string name="com_kustomer_share_via">Sdílet přes</string>
+    <string name="com_kustomer_please_provide_storage_permission">Do této aplikace uveďte oprávnění k ukládání</string>
+    <string name="com_kustomer_dismiss">Propustit</string>
+    <string name="com_kustomer_closed">ZAVŘENO</string>
+    <string name="com_kustomer_start_a_new_conversation">Spusťte novou konverzaci</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Děkuji! Budeme pokračovat ve Vaší žádosti.</string>
+</resources>

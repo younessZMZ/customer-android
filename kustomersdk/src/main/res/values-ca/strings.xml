@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">setmana</string>
+    <string name="com_kustomer_day">dia</string>
+    <string name="com_kustomer_hour">hores</string>
+    <string name="com_kustomer_minute">minut</string>
+    <string name="com_kustomer_weeks">setmanes</string>
+    <string name="com_kustomer_days">dies</string>
+    <string name="com_kustomer_hours">hores</string>
+    <string name="com_kustomer_minutes">minuts</string>
+    <string name="com_kustomer_just_now">Ara mateix</string>
+    <string name="com_kustomer_attachment">Adjunt</string>
+    <string name="com_kustomer_camera">Càmera</string>
+    <string name="com_kustomer_gallery">galeria</string>
+    <string name="com_kustomer_cancel">Cancel · lar</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Alguna cosa ha anat malament. Siusplau torna-ho a provar.</string>
+    <string name="com_kustomer_try_again">Torna-ho a provar</string>
+    <string name="com_kustomer_new_conversation">Nova conversa</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">No et perdis cap resposta! Rebeu notificacions per correu electrònic:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Escriu un missatge ...</string>
+    <string name="com_kustomer_Loading...">S\'està carregant ...</string>
+    <string name="com_kustomer_ago">fa</string>
+    <string name="com_kustomer_chat_with">Xatejar amb</string>
+    <string name="com_kustomer_processing">S\'està processant ...</string>
+    <string name="com_kustomer_no_internet_connection">No hi ha connexió a Internet</string>
+    <string name="com_kustomer_chat_screen">Pantalla de xat</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Estem aquí, feu-nos-ho saber si podem ajudar-nos.</string>
+    <string name="com_kustomer_example">Exemple</string>
+    <string name="com_kustomer_please_provide_a_message_body">Proporcioneu un cos de missatge</string>
+    <string name="com_kustomer_no_internet_message">La connexió a Internet sembla estar fora de línia.</string>
+    <string name="com_kustomer_camera_permission_denied">S\'ha denegat el permís de la càmera</string>
+    <string name="com_kustomer_storage_permission_denied">Es denega el permís d\'emmagatzematge.</string>
+    <string name="com_kustomer_authorities">autoritat</string>
+    <string name="com_kustomer_share_via">Comparteix Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Proporcioneu permís d\'emmagatzematge a aquesta aplicació</string>
+    <string name="com_kustomer_dismiss">Esborrar</string>
+    <string name="com_kustomer_closed">TANCAT</string>
+    <string name="com_kustomer_start_a_new_conversation">Comença una nova conversa</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Gràcies! Seguirem la vostra sol·licitud.</string>
+</resources>

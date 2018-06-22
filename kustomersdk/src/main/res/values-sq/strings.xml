@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">javë</string>
+    <string name="com_kustomer_day">ditë</string>
+    <string name="com_kustomer_hour">orë</string>
+    <string name="com_kustomer_minute">minutë</string>
+    <string name="com_kustomer_weeks">javë</string>
+    <string name="com_kustomer_days">ditë</string>
+    <string name="com_kustomer_hours">orë</string>
+    <string name="com_kustomer_minutes">minuta</string>
+    <string name="com_kustomer_just_now">Tani</string>
+    <string name="com_kustomer_attachment">Attachment</string>
+    <string name="com_kustomer_camera">aparat fotografik</string>
+    <string name="com_kustomer_gallery">Galeri</string>
+    <string name="com_kustomer_cancel">anuloj</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Dicka shkoi keq. Ju lutemi provoni përsëri.</string>
+    <string name="com_kustomer_try_again">Provo përsëri</string>
+    <string name="com_kustomer_new_conversation">Biseda e re</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Mos humbisni një përgjigje! Merrni njoftimin me email:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Shkruaj një mesazh ...</string>
+    <string name="com_kustomer_Loading...">Loading ...</string>
+    <string name="com_kustomer_ago">më parë</string>
+    <string name="com_kustomer_chat_with">Bisedo me</string>
+    <string name="com_kustomer_processing">Të përpunimit të ...</string>
+    <string name="com_kustomer_no_internet_connection">Asnjë lidhje interneti</string>
+    <string name="com_kustomer_chat_screen">Ekrani i Chat</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Ne jemi këtu, na tregoni nëse mund të ndihmojmë.</string>
+    <string name="com_kustomer_example">shembull</string>
+    <string name="com_kustomer_please_provide_a_message_body">Ju lutemi jepni një trup të mesazhit</string>
+    <string name="com_kustomer_no_internet_message">Lidhja e internetit duket të jetë offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Leja e kamerës mohohet.</string>
+    <string name="com_kustomer_storage_permission_denied">Leja e ruajtjes mohohet.</string>
+    <string name="com_kustomer_authorities">autoritet</string>
+    <string name="com_kustomer_share_via">Ndani Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Jepni leje ruajtjeje për këtë aplikacion</string>
+    <string name="com_kustomer_dismiss">shkarkoj</string>
+    <string name="com_kustomer_closed">MBYLLUR</string>
+    <string name="com_kustomer_start_a_new_conversation">Filloni një bisedë të re</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Faleminderit! Ne do të ndjekim kërkesën tuaj.</string>
+</resources>

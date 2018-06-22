@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">vika</string>
+    <string name="com_kustomer_day">dagur</string>
+    <string name="com_kustomer_hour">klukkustund</string>
+    <string name="com_kustomer_minute">mínútu</string>
+    <string name="com_kustomer_weeks">vikur</string>
+    <string name="com_kustomer_days">daga</string>
+    <string name="com_kustomer_hours">klukkustundir</string>
+    <string name="com_kustomer_minutes">mínútur</string>
+    <string name="com_kustomer_just_now">Rétt í þessu</string>
+    <string name="com_kustomer_attachment">Viðhengi</string>
+    <string name="com_kustomer_camera">Myndavél</string>
+    <string name="com_kustomer_gallery">Gallerí</string>
+    <string name="com_kustomer_cancel">Hætta við</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Eitthvað fór úrskeiðis. Vinsamlegast reyndu aftur.</string>
+    <string name="com_kustomer_try_again">Reyndu aftur</string>
+    <string name="com_kustomer_new_conversation">Nýtt samtal</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ekki missa af svari! Fáðu tilkynningu í tölvupósti:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Skrifaðu skilaboð ...</string>
+    <string name="com_kustomer_Loading...">Hleð inn ...</string>
+    <string name="com_kustomer_ago">síðan</string>
+    <string name="com_kustomer_chat_with">Spjalla við</string>
+    <string name="com_kustomer_processing">Vinnsla ...</string>
+    <string name="com_kustomer_no_internet_connection">Engin nettenging</string>
+    <string name="com_kustomer_chat_screen">Spjallsvæði</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Við erum hér, láttu okkur vita ef við getum hjálpað.</string>
+    <string name="com_kustomer_example">Dæmi</string>
+    <string name="com_kustomer_please_provide_a_message_body">Vinsamlegast gefðu skilaboðareyðublað</string>
+    <string name="com_kustomer_no_internet_message">Netaðgangur virðist vera ótengdur.</string>
+    <string name="com_kustomer_camera_permission_denied">Kvikmyndaleyfi er hafnað.</string>
+    <string name="com_kustomer_storage_permission_denied">Bílskírteini er hafnað.</string>
+    <string name="com_kustomer_authorities">vald</string>
+    <string name="com_kustomer_share_via">Deila Via</string>
+    <string name="com_kustomer_please_provide_storage_permission">Gefðu geymsluleyfi fyrir þennan app</string>
+    <string name="com_kustomer_dismiss">Sleppa</string>
+    <string name="com_kustomer_closed">Lokað</string>
+    <string name="com_kustomer_start_a_new_conversation">Byrja nýtt samtal</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Þakka þér fyrir! Við munum fylgja eftir beiðni þinni.</string>
+</resources>

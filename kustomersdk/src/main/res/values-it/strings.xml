@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">settimana</string>
+    <string name="com_kustomer_day">giorno</string>
+    <string name="com_kustomer_hour">ora</string>
+    <string name="com_kustomer_minute">minuto</string>
+    <string name="com_kustomer_weeks">settimane</string>
+    <string name="com_kustomer_days">giorni</string>
+    <string name="com_kustomer_hours">ore</string>
+    <string name="com_kustomer_minutes">minuti</string>
+    <string name="com_kustomer_just_now">Proprio adesso</string>
+    <string name="com_kustomer_attachment">attaccamento</string>
+    <string name="com_kustomer_camera">telecamera</string>
+    <string name="com_kustomer_gallery">Galleria</string>
+    <string name="com_kustomer_cancel">Annulla</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Qualcosa è andato storto. Per favore riprova.</string>
+    <string name="com_kustomer_try_again">Riprova</string>
+    <string name="com_kustomer_new_conversation">Nuova conversazione</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Non perdere una risposta! Ricevi una notifica via email:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Scrivi un messaggio...</string>
+    <string name="com_kustomer_Loading...">Caricamento in corso...</string>
+    <string name="com_kustomer_ago">fa</string>
+    <string name="com_kustomer_chat_with">Chattare con</string>
+    <string name="com_kustomer_processing">In lavorazione…</string>
+    <string name="com_kustomer_no_internet_connection">Nessuna connessione internet</string>
+    <string name="com_kustomer_chat_screen">Schermata della chat</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Siamo qui, facci sapere se possiamo aiutarti.</string>
+    <string name="com_kustomer_example">Esempio</string>
+    <string name="com_kustomer_please_provide_a_message_body">Si prega di fornire un corpo del messaggio</string>
+    <string name="com_kustomer_no_internet_message">La connessione Internet sembra essere offline.</string>
+    <string name="com_kustomer_camera_permission_denied">Il permesso della macchina fotografica è negato.</string>
+    <string name="com_kustomer_storage_permission_denied">Il permesso di archiviazione è negato.</string>
+    <string name="com_kustomer_authorities">autorità</string>
+    <string name="com_kustomer_share_via">Condividere tramite</string>
+    <string name="com_kustomer_please_provide_storage_permission">Fornisci il permesso di archiviazione a questa app</string>
+    <string name="com_kustomer_dismiss">Respingere</string>
+    <string name="com_kustomer_closed">CHIUSO</string>
+    <string name="com_kustomer_start_a_new_conversation">Inizia una nuova conversazione</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Grazie! Seguiremo la tua richiesta.</string>
+</resources>

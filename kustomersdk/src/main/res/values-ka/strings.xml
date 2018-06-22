@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">კვირაში</string>
+    <string name="com_kustomer_day">დღეს</string>
+    <string name="com_kustomer_hour">საათი</string>
+    <string name="com_kustomer_minute">წუთი</string>
+    <string name="com_kustomer_weeks">კვირის განმავლობაში</string>
+    <string name="com_kustomer_days">დღის განმავლობაში</string>
+    <string name="com_kustomer_hours">საათი</string>
+    <string name="com_kustomer_minutes">წუთი</string>
+    <string name="com_kustomer_just_now">ახლახანს</string>
+    <string name="com_kustomer_attachment">დანართი</string>
+    <string name="com_kustomer_camera">კამერა</string>
+    <string name="com_kustomer_gallery">გალერეა</string>
+    <string name="com_kustomer_cancel">გაუქმება</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">რაღაც არასწორად წავიდა. გთხოვთ კიდევ სცადეთ.</string>
+    <string name="com_kustomer_try_again">კიდევ სცადე</string>
+    <string name="com_kustomer_new_conversation">ახალი საუბარი</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">არ გამოტოვოთ პასუხი! მიიღეთ შეტყობინება ელფოსტით:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">გაგზავნა გაგზავნა ...</string>
+    <string name="com_kustomer_Loading...">ჩატვირთვა...</string>
+    <string name="com_kustomer_ago">წინ</string>
+    <string name="com_kustomer_chat_with">ემესიჯო</string>
+    <string name="com_kustomer_processing">დამუშავება ...</string>
+    <string name="com_kustomer_no_internet_connection">არ არის ინტერნეტ კავშირი</string>
+    <string name="com_kustomer_chat_screen">ჩეთის ეკრანი</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">ჩვენ აქ ვართ, გავიგოთ, თუ შეგვიძლია დაგეხმაროთ.</string>
+    <string name="com_kustomer_example">მაგალითი</string>
+    <string name="com_kustomer_please_provide_a_message_body">გთხოვთ, მოგვაწოდოთ შეტყობინება</string>
+    <string name="com_kustomer_no_internet_message">ინტერნეტ კავშირი ხაზგარეშე ჩანს.</string>
+    <string name="com_kustomer_camera_permission_denied">კამერა ნებართვა უარყოფილია.</string>
+    <string name="com_kustomer_storage_permission_denied">შენახვის ნებართვა უარყოფილია.</string>
+    <string name="com_kustomer_authorities">უფლებამოსილება</string>
+    <string name="com_kustomer_share_via">გაზიარება</string>
+    <string name="com_kustomer_please_provide_storage_permission">გთხოვთ, მოგვაწოდოთ შენახვის ნებართვა ამ აპზე</string>
+    <string name="com_kustomer_dismiss">გაუქმება</string>
+    <string name="com_kustomer_closed">დახურულია</string>
+    <string name="com_kustomer_start_a_new_conversation">ახალი მიმოწერის დაწყება</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">გმადლობთ! ჩვენ მივყვებით თქვენს თხოვნას.</string>
+</resources>

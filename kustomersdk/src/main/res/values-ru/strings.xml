@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_kustomer_week">неделю</string>
+    <string name="com_kustomer_day">день</string>
+    <string name="com_kustomer_hour">час</string>
+    <string name="com_kustomer_minute">минут</string>
+    <string name="com_kustomer_weeks">недель</string>
+    <string name="com_kustomer_days">дней</string>
+    <string name="com_kustomer_hours">часов</string>
+    <string name="com_kustomer_minutes">минут</string>
+    <string name="com_kustomer_just_now">Прямо сейчас</string>
+    <string name="com_kustomer_attachment">прикрепление</string>
+    <string name="com_kustomer_camera">камера</string>
+    <string name="com_kustomer_gallery">Галерея</string>
+    <string name="com_kustomer_cancel">Отмена</string>
+    <string name="com_kustomer_something_went_wrong_please_try_again">Что-то пошло не так. Пожалуйста, попробуйте еще раз.</string>
+    <string name="com_kustomer_try_again">Попробуй еще раз</string>
+    <string name="com_kustomer_new_conversation">Новый диалог</string>
+    <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Не пропустите ответ! Получить уведомление по электронной почте:</string>
+    <string name="com_kustomer_email_example">example@domain.com</string>
+    <string name="com_kustomer_type_a_message">Введите сообщение ...</string>
+    <string name="com_kustomer_Loading...">Loading ...</string>
+    <string name="com_kustomer_ago">тому назад</string>
+    <string name="com_kustomer_chat_with">Чат с</string>
+    <string name="com_kustomer_processing">Обработка ...</string>
+    <string name="com_kustomer_no_internet_connection">Нет соединения с интернетом</string>
+    <string name="com_kustomer_chat_screen">Экран чата</string>
+    <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Мы здесь, дайте нам знать, если мы сможем помочь.</string>
+    <string name="com_kustomer_example">пример</string>
+    <string name="com_kustomer_please_provide_a_message_body">Пожалуйста, предоставьте тело сообщения</string>
+    <string name="com_kustomer_no_internet_message">Подключение к Интернету отключено.</string>
+    <string name="com_kustomer_camera_permission_denied">Разрешение камеры отклонено.</string>
+    <string name="com_kustomer_storage_permission_denied">Разрешение на хранение запрещено.</string>
+    <string name="com_kustomer_authorities">власть</string>
+    <string name="com_kustomer_share_via">Отправить по</string>
+    <string name="com_kustomer_please_provide_storage_permission">Предоставьте разрешение на хранение в этом приложении.</string>
+    <string name="com_kustomer_dismiss">отклонять</string>
+    <string name="com_kustomer_closed">ЗАКРЫТО</string>
+    <string name="com_kustomer_start_a_new_conversation">Начать новый разговор</string>
+    <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Спасибо! Мы будем следить за вашей просьбой.</string>
+</resources>
