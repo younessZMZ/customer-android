@@ -1,7 +1,9 @@
 package com.kustomer.kustomersdk.Activities;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,6 +18,7 @@ import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
+import java.lang.reflect.Method;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -43,7 +46,8 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
         setLayout(R.layout.activity_knowledge_base, R.id.toolbar_main, null, true);
         super.onCreate(savedInstanceState);
 
-        wvKnowledge.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        enableMixedContentModeCompat(wvKnowledge.getSettings());
+
         wvKnowledge.getSettings().setDomStorageEnabled(true);
         wvKnowledge.getSettings().setJavaScriptEnabled(true);
         wvKnowledge.getSettings().setLoadsImagesAutomatically(true);
@@ -53,6 +57,25 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
         //wvKnowledge.loadUrl(String.format(Locale.getDefault(), "https://%s.kustomer.help/", userSession.getOrgName()));
         wvKnowledge.loadUrl(getUrl());
         updateButtons();
+    }
+
+    private void enableMixedContentModeCompat(WebSettings settings) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            wvKnowledge.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        } else {
+            //setMixedContentMode() was made public in API 21. Use reflection to get it for older SDK
+            try {
+                Method m = WebSettings.class.getMethod("setMixedContentMode", int.class);
+                if (m == null) {
+                    Log.e("WebSettings", "Error getting setMixedContentMode method");
+                } else {
+                    m.invoke(settings, 0); // 0 = MIXED_CONTENT_ALWAYS_ALLOW
+                    Log.i("WebSettings", "Successfully set MIXED_CONTENT_ALWAYS_ALLOW");
+                }
+            } catch (Exception ex) {
+                Log.e("WebSettings", "Error calling setMixedContentMode: " + ex.getMessage(), ex);
+            }
+        }
     }
 
     @Override
