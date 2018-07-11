@@ -1,9 +1,11 @@
 package com.kustomer.kustomersdk.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -62,8 +64,12 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         setupToolbar();
 
         if(!getResources().getBoolean(R.bool.kusNewSessionButtonHasShadow)) {
-            btnNewConversation.setElevation(0);
-            btnNewConversation.setStateListAnimator(null);
+            ViewCompat.setElevation(btnNewConversation, 0);
+
+            //This StateList is null, so no need to create a compat call for <21
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                btnNewConversation.setStateListAnimator(null);
+            }
         }
 
         if(chatSessionsDataSource.isFetched()){
