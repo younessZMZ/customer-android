@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/session_item_background"
     android:layoutDirection="rtl">
@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/tvUnreadCount"
                         style="@style/KUSChatSessionUnreadTextAppearance"
                         android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textSize="10sp"
-                        android:backgroundTint="@color/kusSessionUnreadBackground"
+                        app:backgroundTint="@color/kusSessionUnreadBackground"
                         android:background="@drawable/shape_unread_count_background" />
                 </FrameLayout>
 

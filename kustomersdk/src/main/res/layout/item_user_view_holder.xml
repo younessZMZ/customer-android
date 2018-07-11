@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="5dp"
     android:background="@color/kusChatItemBackground"
     android:gravity="end"
@@ -30,7 +31,7 @@
             android:orientation="vertical"
             android:layout_gravity="end">
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tvMessage"
                 style="@style/KUSChatMessageTextAppearance"
                 android:layout_width="wrap_content"
@@ -38,7 +39,7 @@
                 android:layout_gravity="end"
                 android:autoLink="web|email"
                 android:background="@drawable/shape_user_message_background"
-                android:backgroundTint="@color/kusUserBubbleColor"
+                app:backgroundTint="@color/kusUserBubbleColor"
                 android:padding="10dp"
                 android:textColor="@color/kusUserTextColor"
                 android:textColorLink="@color/kusUserTextColor" />
