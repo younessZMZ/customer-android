@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -27,10 +29,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
-
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +69,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         super(context, attrs, defStyleAttr);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public KUSInputBarView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

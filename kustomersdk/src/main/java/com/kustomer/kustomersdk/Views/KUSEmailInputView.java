@@ -1,18 +1,18 @@
 package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
-import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
@@ -46,6 +46,7 @@ public class KUSEmailInputView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public KUSEmailInputView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
