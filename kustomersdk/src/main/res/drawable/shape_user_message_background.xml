@@ -4,7 +4,7 @@
     android:shape="rectangle">
 
     <solid
-        android:color="@color/colorBlueMessage"/>
+        android:color="@color/kusUserBubbleColor"/>
 
     <size
         android:width="30dp"

@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.util.Size;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +28,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
+import com.kustomer.kustomersdk.Helpers.KSize;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
@@ -41,7 +41,6 @@ import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
-
 
 import java.net.URL;
 import java.util.Date;
@@ -120,7 +119,7 @@ public class KUSNotificationWindow {
             name = mUserSession.getOrganizationName();
 
         final Bitmap placeHolderImage = KUSImage.defaultAvatarBitmapForName(mContext,
-                new Size((int) KUSUtils.dipToPixels(mContext,IMAGE_SIZE_IN_DP),
+                new KSize((int) KUSUtils.dipToPixels(mContext,IMAGE_SIZE_IN_DP),
                         (int)KUSUtils.dipToPixels(mContext,IMAGE_SIZE_IN_DP)),
                 name,
                 0,

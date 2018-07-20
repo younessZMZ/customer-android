@@ -13,12 +13,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.support.media.ExifInterface;
 import android.support.v4.content.ContextCompat;
-import android.util.Size;
 
 import com.kustomer.kustomersdk.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,7 +38,7 @@ public class KUSImage {
     //endregion
 
     //region Public Methods
-    private static Bitmap circularImage(Size size, int color, int strokeColor, int strokeWidth){
+    private static Bitmap circularImage(KSize size, int color, int strokeColor, int strokeWidth){
         Bitmap dstBitmap = Bitmap.createBitmap(
                 size.getWidth(), // Width
                 size.getHeight(), // Height
@@ -82,7 +80,7 @@ public class KUSImage {
 
     }
 
-    private static Bitmap getBitmapWithText(Context mContext, Size size, int color, int strokeColor, int strokeWidth, String text, int textSize){
+    private static Bitmap getBitmapWithText(Context mContext, KSize size, int color, int strokeColor, int strokeWidth, String text, int textSize){
 
 
 
@@ -111,7 +109,7 @@ public class KUSImage {
         return src;
     }
 
-    public static Bitmap defaultAvatarBitmapForName(Context context, Size size, String name, int strokeWidth, int fontSize){
+    public static Bitmap defaultAvatarBitmapForName(Context context, KSize size, String name, int strokeWidth, int fontSize){
         Bitmap bitmap = new KUSCache().getBitmapFromMemCache(name + "w:" + strokeWidth);
         if(bitmap != null)
             return bitmap;

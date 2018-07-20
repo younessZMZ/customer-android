@@ -1,32 +1,28 @@
 package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.Size;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestFutureTarget;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
+import com.kustomer.kustomersdk.Helpers.KSize;
 import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
@@ -70,6 +66,7 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
         super(context, attrs, defStyleAttr);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public KUSAvatarImageView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -186,7 +183,7 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
             name = userSession.getOrganizationName();
 
         Bitmap placeHolderImage = KUSImage.defaultAvatarBitmapForName(getContext(),
-                new Size((int)KUSUtils.dipToPixels(getContext(),drawableSize),
+                new KSize((int)KUSUtils.dipToPixels(getContext(),drawableSize),
                         (int)KUSUtils.dipToPixels(getContext(),drawableSize)),
                 name,
                 strokeWidth,

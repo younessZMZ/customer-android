@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="5dp"
     android:background="@color/kusChatItemBackground"
     android:orientation="vertical">
@@ -24,7 +24,7 @@
 
         </FrameLayout>
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tvMessage"
             style="@style/KUSChatMessageTextAppearance"
             android:layout_width="wrap_content"
@@ -33,7 +33,6 @@
             android:layout_marginEnd="60dp"
             android:autoLink="web|email"
             android:background="@drawable/shape_agent_message_background"
-            android:backgroundTint="@color/kusCompanyBubbleColor"
             android:padding="10dp"
             android:textColor="@color/kusCompanyTextColor"
             android:textColorLink="@color/kusCompanyTextColor" />

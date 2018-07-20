@@ -42,14 +42,13 @@
                     android:tint="@color/kusToolbarTintColor"
                     tools:ignore="ContentDescription" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/tvToolbarUnreadCount"
                     style="@style/KUSToolbarUnreadTextAppearance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/shape_unread_count_background"
-                    android:backgroundTint="@color/kusToolbarUnreadBackground"
                     android:gravity="center"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
