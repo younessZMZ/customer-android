@@ -53,9 +53,8 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
         wvKnowledge.getSettings().setLoadsImagesAutomatically(true);
         wvKnowledge.getSettings().setBlockNetworkImage(false);
         wvKnowledge.setWebViewClient(new WebViewController());
-
-        //wvKnowledge.loadUrl(String.format(Locale.getDefault(), "https://%s.kustomer.help/", userSession.getOrgName()));
         wvKnowledge.loadUrl(getUrl());
+
         updateButtons();
     }
 

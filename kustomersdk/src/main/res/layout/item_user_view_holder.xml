@@ -39,7 +39,6 @@
                 android:layout_gravity="end"
                 android:autoLink="web|email"
                 android:background="@drawable/shape_user_message_background"
-                app:backgroundTint="@color/kusUserBubbleColor"
                 android:padding="10dp"
                 android:textColor="@color/kusUserTextColor"
                 android:textColorLink="@color/kusUserTextColor" />

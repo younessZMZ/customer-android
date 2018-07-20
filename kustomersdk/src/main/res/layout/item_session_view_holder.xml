@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:id="@+id/tvUnreadCount"
                         style="@style/KUSChatSessionUnreadTextAppearance"
                         android:layout_width="wrap_content"
@@ -84,7 +84,6 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textSize="10sp"
-                        app:backgroundTint="@color/kusSessionUnreadBackground"
                         android:background="@drawable/shape_unread_count_background"
                         android:visibility="invisible"/>
                 </FrameLayout>
