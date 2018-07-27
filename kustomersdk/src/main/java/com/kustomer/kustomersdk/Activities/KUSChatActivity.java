@@ -152,12 +152,11 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         super.finish();
 
         if (backPressed) {
-           if (KUSLocalization.getSharedInstance().isLTR())
+            if (KUSLocalization.getSharedInstance().isLTR())
                 overridePendingTransition(R.anim.stay, R.anim.kus_slide_right);
-           else
+            else
                 overridePendingTransition(R.anim.stay, R.anim.kus_slide_right_rtl);
-        }
-        else
+        } else
             overridePendingTransition(R.anim.stay, R.anim.kus_slide_down);
     }
 
@@ -173,15 +172,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 String photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath)).toString();
 
                 kusInputBarView.attachImage(photoUri);
                 mCurrentPhotoPath = null;
-            }else{
+            } else {
                 mCurrentPhotoPath = null;
             }
-        }else if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
+        } else if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
             if (data != null) {
                 String photoUri = data.getDataString();
                 kusInputBarView.attachImage(photoUri);
@@ -198,7 +197,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openCamera();
                 } else {
-                    Toast.makeText(this, R.string.com_kustomer_camera_permission_denied,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.com_kustomer_camera_permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -207,7 +206,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openGallery();
                 } else {
-                    Toast.makeText(this, R.string.com_kustomer_storage_permission_denied,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.com_kustomer_storage_permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -276,6 +275,16 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void checkShouldShowOptionPicker() {
+
+        ArrayList<String> vcFormOptions = chatMessagesDataSource.vcFormOptions();
+        if (vcFormOptions != null) {
+            kusInputBarView.setVisibility(View.GONE);
+            kusInputBarView.clearInputFocus();
+
+            kusOptionPickerView.setVisibility(View.VISIBLE);
+            return;
+        }
+
         KUSFormQuestion currentQuestion = chatMessagesDataSource.currentQuestion();
         boolean wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM
@@ -305,9 +314,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void updateOptionsPickerOptions() {
-        List<String> options = new ArrayList<>();
+        ArrayList<String> vcFormOptions = chatMessagesDataSource.vcFormOptions();
+        if (vcFormOptions != null) {
+            kusOptionPickerView.setOptions(vcFormOptions);
+            return;
+        }
 
-        for(KUSModel model : teamOptionsDatasource.getList()){
+        List<String> options = new ArrayList<>();
+        for (KUSModel model : teamOptionsDatasource.getList()) {
             KUSTeam team = (KUSTeam) model;
             options.add(team.fullDisplay());
         }
@@ -325,7 +339,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         adapter.notifyDataSetChanged();
     }
 
-    private void openCamera(){
+    private void openCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!KUSPermission.isCameraPermissionAvailable(this)) {
 
@@ -341,7 +355,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         }
     }
 
-    private void dispatchTakePictureIntent(){
+    private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -394,8 +408,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
 
-
-    private void startGalleryIntent(){
+    private void startGalleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -504,12 +517,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         ArrayList<String> itemsList = new ArrayList<>();
         String[] items = null;
 
-        if(KUSPermission.isCameraPermissionDeclared(this))
+        if (KUSPermission.isCameraPermissionDeclared(this))
             itemsList.add(getString(R.string.com_kustomer_camera));
-        if(KUSPermission.isReadPermissionDeclared(this))
+        if (KUSPermission.isReadPermissionDeclared(this))
             itemsList.add(getString(R.string.com_kustomer_gallery));
 
-        if(itemsList.size() > 0) {
+        if (itemsList.size() > 0) {
             items = new String[itemsList.size()];
             items = itemsList.toArray(items);
         }
@@ -521,11 +534,11 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 switch (which) {
                     case 0: // camera
                         openCamera();
-                    break;
+                        break;
 
                     case 1: // gallery
                         openGallery();
-                    break;
+                        break;
                 }
             }
         });
@@ -543,7 +556,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         final String text = kusInputBarView.getText();
 
-        if(!text.isEmpty()) {
+        if (!text.isEmpty()) {
             //Sending Data in background
             new Thread(new Runnable() {
                 @Override
@@ -591,16 +604,16 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         List<String> imageURIs = new ArrayList<>();
 
-        for(int i = chatMessagesDataSource.getSize() -1 ; i >= 0; i--){
+        for (int i = chatMessagesDataSource.getSize() - 1; i >= 0; i--) {
             KUSChatMessage kusChatMessage = (KUSChatMessage) chatMessagesDataSource.get(i);
-            if(kusChatMessage.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_IMAGE){
+            if (kusChatMessage.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_IMAGE) {
                 imageURIs.add(kusChatMessage.getImageUrl().toString());
             }
         }
 
         startingIndex = imageURIs.indexOf(chatMessage.getImageUrl().toString());
 
-        new KUSLargeImageViewer(this).showImages(imageURIs,startingIndex);
+        new KUSLargeImageViewer(this).showImages(imageURIs, startingIndex);
     }
 
     @Override

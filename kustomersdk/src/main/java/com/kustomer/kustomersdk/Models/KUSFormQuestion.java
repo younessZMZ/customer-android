@@ -28,31 +28,33 @@ public class KUSFormQuestion extends KUSModel {
     public KUSFormQuestion(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        name = JsonHelper.stringFromKeyPath(json,"name");
-        prompt = JsonHelper.stringFromKeyPath(json,"prompt");
-        skipIfSatisfied = JsonHelper.boolFromKeyPath(json,"skipIfSatisfied");
-        type = KUSFormQuestionTypeFromString(JsonHelper.stringFromKeyPath(json,"type"));
-        property = KUSFormQuestionPropertyFromString(JsonHelper.stringFromKeyPath(json,"property"));
-        values = JsonHelper.arrayListFromKeyPath(json,"values");
+        name = JsonHelper.stringFromKeyPath(json, "name");
+        prompt = JsonHelper.stringFromKeyPath(json, "prompt");
+        skipIfSatisfied = JsonHelper.boolFromKeyPath(json, "skipIfSatisfied");
+        type = KUSFormQuestionTypeFromString(JsonHelper.stringFromKeyPath(json, "type"));
+        property = KUSFormQuestionPropertyFromString(JsonHelper.stringFromKeyPath(json, "property"));
+        values = JsonHelper.arrayListFromKeyPath(json, "values");
     }
     //endregion
 
     //region Class Methods
-    public String modelType(){
+    public String modelType() {
         return null;
     }
-    public boolean enforcesModelType(){
+
+    public boolean enforcesModelType() {
         return false;
     }
-    public static boolean KUSFormQuestionRequiresResponse(KUSFormQuestion question){
-        if(question == null || question.type == null)
+
+    public static boolean KUSFormQuestionRequiresResponse(KUSFormQuestion question) {
+        if (question == null || question.type == null)
             return false;
 
         return question.type == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_PROPERTY ||
                 question.type == KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_RESPONSE;
     }
 
-    private static KUSFormQuestionType KUSFormQuestionTypeFromString(String string){
+    private static KUSFormQuestionType KUSFormQuestionTypeFromString(String string) {
         switch (string) {
             case "message":
                 return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_MESSAGE;
@@ -65,8 +67,8 @@ public class KUSFormQuestion extends KUSModel {
         return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN;
     }
 
-    private static KUSFormQuestionProperty KUSFormQuestionPropertyFromString(String string){
-        if(string == null)
+    private static KUSFormQuestionProperty KUSFormQuestionPropertyFromString(String string) {
+        if (string == null)
             return null;
 
         switch (string) {
@@ -76,6 +78,10 @@ public class KUSFormQuestion extends KUSModel {
                 return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL;
             case "conversation_team":
                 return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM;
+            case "customer_phone":
+                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_PHONE;
+            case "followup_channel":
+                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL;
         }
 
         return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_UNKNOWN;

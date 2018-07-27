@@ -6,7 +6,6 @@ import android.os.Looper;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
-import com.kustomer.kustomersdk.Enums.KUSFormQuestionType;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
@@ -40,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -73,8 +73,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private boolean submittingForm = false;
     private boolean creatingSession = false;
 
+    private int vcFormQuestionIndex;
+    private boolean vcTrackingStarted;
+    private boolean vcTrackingDelayCompleted;
+    private boolean vcFormActive;
+    private boolean vcFormEnd;
+    private ArrayList<KUSModel> temporaryVCMessagesResponses;
+
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
-    private HashMap<String,KUSRetry> messageRetryHashMap;
+    private HashMap<String, KUSRetry> messageRetryHashMap;
     //endregion
 
     //region Initializer
@@ -82,6 +89,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         super(userSession);
 
         questionIndex = -1;
+        vcFormQuestionIndex = 0;
+        vcFormActive = false;
+        temporaryVCMessagesResponses = new ArrayList<>();
         delayedChatMessageIds = new HashSet<>();
         messageRetryHashMap = new HashMap<>();
 
@@ -184,6 +194,40 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
             return;
 
+        } else if (sessionId != null && vcFormActive) {
+            if (attachments != null && attachments.size() > 0)
+                throw new AssertionError("Should not have been able to send attachments without a sessionId");
+            JSONObject attributes = new JSONObject();
+            try {
+                attributes.put("body", text);
+                attributes.put("direction", "in");
+                attributes.put("createdAt", KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JSONObject messageJSON = new JSONObject();
+            try {
+                messageJSON.put("type", "chat_message");
+                messageJSON.put("id", UUID.randomUUID().toString());
+                messageJSON.put("attributes", attributes);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            List<KUSModel> temporaryMessages = objectsFromJSON(messageJSON);
+
+            if (temporaryMessages != null) {
+
+                for (KUSModel model : temporaryMessages) {
+                    KUSChatMessage message = (KUSChatMessage) model;
+                    message.setValue(value);
+                    temporaryVCMessagesResponses.add(message);
+                }
+                upsertNewMessages(temporaryMessages);
+            }
+
+            return;
         }
 
         actuallySendMessage(text, attachments);
@@ -255,7 +299,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
                     URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(tempMessageId, attachmentId);
                     String imageKey = attachmentURL.toString();
-                    new KUSCache().addBitmapToMemoryCache(imageKey, KUSImage.getScaledImage(bitmap,MAX_PIXEL_COUNT_FOR_CACHED_IMAGES));
+                    new KUSCache().addBitmapToMemoryCache(imageKey, KUSImage.getScaledImage(bitmap, MAX_PIXEL_COUNT_FOR_CACHED_IMAGES));
                     attachmentObjects.put(new JSONObject() {{
                         put("id", attachmentId);
                     }});
@@ -306,25 +350,24 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         List<KUSModel> temporaryMessages = objectsFromJSON(messageJSON);
 
         if (temporaryMessages != null) {
-            for(KUSModel model : temporaryMessages){
+            for (KUSModel model : temporaryMessages) {
                 KUSChatMessage temporaryMessage = (KUSChatMessage) model;
-                messageRetryHashMap.put(temporaryMessage.getId(),new KUSMessageRetry(temporaryMessages,attachments,text,cachedImageKeys));
+                messageRetryHashMap.put(temporaryMessage.getId(), new KUSMessageRetry(temporaryMessages, attachments, text, cachedImageKeys));
             }
 
             fullySendMessage(temporaryMessages, attachments, text, cachedImageKeys);
         }
     }
 
-    public void  resendMessage(KUSChatMessage chatMessage){
-        if(chatMessage != null){
+    public void resendMessage(KUSChatMessage chatMessage) {
+        if (chatMessage != null) {
             KUSRetry retry = messageRetryHashMap.get(chatMessage.getId());
-            if(retry != null && retry instanceof KUSMessageRetry) {
+            if (retry != null && retry instanceof KUSMessageRetry) {
                 KUSMessageRetry messageRetry = (KUSMessageRetry) retry;
                 fullySendMessage(messageRetry.getTemporaryMessages(), messageRetry.getAttachments()
                         , messageRetry.getText(), messageRetry.getCachedImages());
 
-            }
-            else if(retry != null && retry instanceof KUSFormRetry){
+            } else if (retry != null && retry instanceof KUSFormRetry) {
                 KUSFormRetry formRetry = (KUSFormRetry) retry;
                 retrySubmittingForm(formRetry);
             }
@@ -383,6 +426,51 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         return false;
     }
 
+    public boolean shouldPreventVCFormSendingMessage() {
+        if (sessionId != null) {
+            return true;
+        }
+
+        // If we haven't loaded the chat settings data source, prevent input
+        if (this.getUserSession().getChatSettingsDataSource().isFetched()) {
+            return true;
+        }
+
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        if (!chatSettings.isVolumeControlEnabled()) {
+            return true;
+        }
+        if (!vcTrackingDelayCompleted) {
+            return true;
+        }
+
+        // If we are about to insert an artificial message, prevent input
+        if (delayedChatMessageIds.size() > 0) {
+            return true;
+        }
+
+        // When submitting the form, prevent sending more responses
+        if (submittingForm) {
+            return true;
+        }
+        if (vcFormEnd) {
+            return true;
+        }
+
+        // Check that last message is VC form last message
+        KUSChatMessage lastMessage = this.getLatestMessage();
+        if (lastMessage.getId().equals("vc_question_2")) {
+            return false;
+        }
+
+        // Check that response of previous asked question is already entered ? if not return
+        if (vcFormActive && !KUSChatMessageSentByUser(lastMessage)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public KUSFormQuestion currentQuestion() {
         if (sessionId != null)
             return null;
@@ -392,6 +480,39 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         return formQuestion;
     }
+
+    public ArrayList<String> vcFormOptions() {
+        if (sessionId != null) {
+            return null;
+        }
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        if (!chatSettings.isVolumeControlEnabled()) {
+            return null;
+        }
+
+        if (vcFormEnd) {
+            return null;
+
+        }
+
+        if (vcFormQuestionIndex == 1) {
+            ArrayList<String> options = new ArrayList<>();
+            for (String option : chatSettings.getFollowUpChannels()) {
+                options.add(option.substring(0, 1).toUpperCase() + option.substring(1));
+            }
+
+            if (!chatSettings.isHideWaitOption()) {
+                options.add("I'll wait");
+
+            }
+            return options;
+
+        }
+
+        return null;
+
+    }
+
     //endregion
 
     //region Private Methods
@@ -607,6 +728,202 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         formQuestion = form.getQuestions().get(questionIndex);
     }
 
+    private JSONObject createMessageJson(String messageId, String messageBody, Date createdAt)
+            throws KUSInvalidJsonException {
+
+        JSONObject attributes = new JSONObject();
+        try {
+            attributes.put("body", messageBody);
+            attributes.put("direction", "out");
+            attributes.put("createdAt", KUSDate.stringFromDate(createdAt));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject messageJSON = new JSONObject();
+        try {
+            messageJSON.put("type", "chat_message");
+            messageJSON.put("id", messageId);
+            messageJSON.put("attributes", attributes);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return messageJSON;
+    }
+
+    // Volume control form message sending
+    private void insertVolumeControlFormMessageIfNecessary() {
+        // If any pre-condition not fulfilled
+        if (shouldPreventVCFormSendingMessage()) {
+            return;
+        }
+        // If any message sent by Server apart from auto response or form message.
+        if (getOtherUserIds().size() > 0) {
+            endVolumeControlTracking();
+            return;
+        }
+
+        KUSChatMessage lastMessage = getLatestMessage();
+        String previousMessage = lastMessage.getBody();
+        if (vcFormQuestionIndex == 1 && previousMessage.equals("I'll wait")) {
+            endVolumeControlTracking();
+            return;
+        }
+
+        // If last question, send request on backend
+        if (vcFormQuestionIndex == 3) {
+            endVolumeControlTracking();
+            submitVCFormResponses();
+            return;
+
+        }
+
+        // Ask next question
+        Date createdAt = new Date(lastMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
+        if (!vcFormActive) {
+            createdAt = new Date((new Date()).getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
+        }
+
+        String questionId = "vc_question_" + vcFormQuestionIndex;
+        vcFormActive = true;
+        if (vcFormQuestionIndex == 0) {
+
+            try {
+                KUSChatMessage formMessage = new KUSChatMessage(createMessageJson(questionId,
+                        "Sorry, it looks like no one has become available in the time we expected. Please select an alternate contact method for us to followup with you…",
+                        createdAt));
+                insertDelayedMessage(formMessage);
+
+            } catch (KUSInvalidJsonException e) {
+                e.printStackTrace();
+            }
+        } else if (vcFormQuestionIndex == 1) {
+            String previousChannel = lastMessage.getBody().toLowerCase();
+
+            try {
+                KUSChatMessage formMessage = new KUSChatMessage(createMessageJson(questionId,
+                        "Great, what's the best " + previousChannel + " to reach you at?",
+                        createdAt));
+                insertDelayedMessage(formMessage);
+
+            } catch (KUSInvalidJsonException e) {
+                e.printStackTrace();
+            }
+
+        } else if (vcFormQuestionIndex == 2) {
+            try {
+                KUSChatMessage formMessage = new KUSChatMessage(createMessageJson(questionId,
+                        "Thank you. We'll get back to you shortly.",
+                        createdAt));
+                insertDelayedMessage(formMessage);
+
+            } catch (KUSInvalidJsonException e) {
+                e.printStackTrace();
+            }
+        }
+
+        vcFormQuestionIndex++;
+    }
+
+    private void submitVCFormResponses() {
+        if (this.getSize() <= 5) {
+            return;
+        }
+        if (this.getOtherUserIds().size() > 0) {
+            return;
+
+        }
+
+        ArrayList<HashMap<String, Object>> messagesJSON = new ArrayList<>();
+
+        int currentMessageIndex = 4;
+        String property = null;
+        for (int i = 0; i < 3; i++) {
+            HashMap<String, Object> formMessage = new HashMap<>();
+
+            KUSChatMessage questionMessage = (KUSChatMessage) getList().get(currentMessageIndex);
+            currentMessageIndex--;
+            formMessage.put("prompt", questionMessage.getBody());
+            formMessage.put("promptAt", KUSDate.stringFromDate(questionMessage.getCreatedAt()));
+
+            if (i != 2) {
+                KUSChatMessage responseMessage = (KUSChatMessage) getList().get(currentMessageIndex);
+                currentMessageIndex--;
+                formMessage.put("input", responseMessage.getBody());
+                formMessage.put("inputAt", KUSDate.stringFromDate(responseMessage.getCreatedAt()));
+                if (i == 0) {
+                    property = responseMessage.getBody();
+                }
+            }
+
+            if (i == 0) {
+                formMessage.put("property", "conversation_replyChannel");
+            } else if (i == 1) {
+                formMessage.put("property", "customer_" + property);
+            }
+            messagesJSON.add(formMessage);
+        }
+
+        submittingForm = true;
+
+        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+        getUserSession().getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_POST,
+                "/c/v1/chat/volume-control/responses",
+                new HashMap<String, Object>() {{
+                    put("messages", messagesJSON);
+                    put("session", messagesJSON);
+                }},
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+                        KUSChatMessagesDataSource strongReference = weakReference.get();
+                        if (strongReference == null) {
+                            return;
+                        }
+
+                        if (error != null) {
+                            return;
+                        }
+
+                        ArrayList<KUSModel> chatMessages = new ArrayList<>();
+                        JSONArray includedModelsJSON = JsonHelper.arrayFromKeyPath(response, "included");
+
+                        if (includedModelsJSON != null) {
+                            for (int i = 0; i < includedModelsJSON.length(); i++) {
+                                try {
+                                    JSONObject includedModelJSON = includedModelsJSON.getJSONObject(i);
+                                    String type = JsonHelper.stringFromKeyPath(includedModelJSON, "type");
+
+                                    if (type != null && type.equals(new KUSChatMessage().modelType())) {
+                                        KUSChatMessage chatMessage = new KUSChatMessage(includedModelJSON);
+                                        chatMessages.add(chatMessage);
+                                    }
+                                } catch (JSONException | KUSInvalidJsonException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            ArrayList<KUSModel> temporaryMessages = new ArrayList<>();
+                            for (KUSModel model : getList()) {
+                                KUSChatMessage chatMessage = (KUSChatMessage) model;
+                                if (chatMessage.getId().contains("vc_question_")) {
+                                    temporaryMessages.add(chatMessage);
+                                }
+                            }
+
+                            removeAll(temporaryMessages);
+                            removeAll(temporaryVCMessagesResponses);
+                            upsertNewMessages(chatMessages);
+
+                        }
+                        strongReference.lockMessaging();
+                        submittingForm = false;
+                    }
+                });
+    }
+
     private void submitFormResponses() {
         JSONArray messagesJSON = new JSONArray();
 
@@ -669,18 +986,22 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             }
         }
 
-        if(lastUserChatMessage != null)
+        if (lastUserChatMessage != null)
             messageRetryHashMap.put(lastUserChatMessage.getId(),
-                    new KUSFormRetry(messagesJSON,form.getId(),lastUserChatMessage));
+                    new KUSFormRetry(messagesJSON, form.getId(), lastUserChatMessage));
 
         actuallySubmitForm(messagesJSON, form.getId(), lastUserChatMessage);
     }
 
-    private void retrySubmittingForm(final KUSFormRetry formRetry){
-        if(formRetry.getLastUserChatMessage() != null){
-            removeAll(new ArrayList<KUSModel>(){{add(formRetry.getLastUserChatMessage());}});
+    private void retrySubmittingForm(final KUSFormRetry formRetry) {
+        if (formRetry.getLastUserChatMessage() != null) {
+            removeAll(new ArrayList<KUSModel>() {{
+                add(formRetry.getLastUserChatMessage());
+            }});
             formRetry.getLastUserChatMessage().setState(KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENDING);
-            upsertNewMessages(new ArrayList<KUSModel>(){{add(formRetry.getLastUserChatMessage());}});
+            upsertNewMessages(new ArrayList<KUSModel>() {{
+                add(formRetry.getLastUserChatMessage());
+            }});
         }
 
         actuallySubmitForm(formRetry.getMessagesJSON(), formRetry.getFormId(), formRetry.getLastUserChatMessage());
@@ -779,9 +1100,89 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     }
 
+    private void startVolumeControlTracking() {
+        if (getSessionId() == null) {
+            return;
+        }
+
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        if (!chatSettings.isVolumeControlEnabled()) {
+            return;
+        }
+
+        if (vcTrackingStarted) {
+            return;
+        }
+        vcTrackingStarted = true;
+        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+
+        long delay = chatSettings.getPromptDelay();
+
+        Handler delayHandler = new Handler(Looper.getMainLooper());
+        Runnable delayRunnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSChatMessagesDataSource strongReference = weakReference.get();
+                if (strongReference == null) {
+                    return;
+                }
+                strongReference.vcTrackingDelayCompleted = true;
+                strongReference.insertVolumeControlFormMessageIfNecessary();
+            }
+        };
+        delayHandler.postDelayed(delayRunnable, delay);
+
+        // Automatically end chat
+        if (chatSettings.isMarkDoneAfterTimeout()) {
+
+            long timeOutDelay = chatSettings.getTimeOut();
+            Handler timeOutHandler = new Handler(Looper.getMainLooper());
+            Runnable timeOutRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    KUSChatMessagesDataSource strongReference = weakReference.get();
+                    if (strongReference == null) {
+                        return;
+                    }
+
+                    // End Control Tracking and Automatically marked it Closed, if form not end
+                    if (!strongReference.vcFormEnd) {
+                        strongReference.endVolumeControlTracking();
+                        strongReference.lockMessaging();
+                    }
+                }
+            };
+            timeOutHandler.postDelayed(timeOutRunnable, timeOutDelay);
+        }
+    }
+
+    private void endVolumeControlTracking() {
+        vcFormEnd = true;
+        vcFormActive = false;
+    }
+
+    private void lockMessaging() {
+        getUserSession().getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_POST,
+                String.format("c/v1/chat/sessions/%s", sessionId),
+                new HashMap<String, Object>() {{
+                    put("locked", true);
+                }},
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+                        if (error != null) {
+                            return;
+                        }
+                        //todo Update UIs with respect to locking
+                    }
+                });
+    }
+
     @Override
     public List<KUSModel> objectsFromJSON(JSONObject jsonObject) {
-        return JsonHelper.kusChatModelsFromJSON(Kustomer.getContext(),jsonObject);
+        return JsonHelper.kusChatModelsFromJSON(Kustomer.getContext(), jsonObject);
     }
 
     private void handleMessageSent(JSONObject response, List<KUSModel> temporaryMessages, List<Bitmap> attachments, List<String> cachedImageKeys) {
@@ -793,7 +1194,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         //Store the local image data in our cache for the remote image urls
         KUSChatMessage firstMessage = (KUSChatMessage) finalMessages.get(0);
         for (int i = 0; i < (firstMessage.getAttachmentIds() != null ? firstMessage.getAttachmentIds().size() : 0); i++) {
-            Bitmap attachment = KUSImage.getScaledImage(attachments.get(i),MAX_PIXEL_COUNT_FOR_CACHED_IMAGES);
+            Bitmap attachment = KUSImage.getScaledImage(attachments.get(i), MAX_PIXEL_COUNT_FOR_CACHED_IMAGES);
             String attachmentId = (String) firstMessage.getAttachmentIds().get(i);
             try {
                 URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(firstMessage.getId(), attachmentId);
@@ -814,7 +1215,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 new KUSCache().removeBitmapFromMemCache(imageKey);
             }
 
-        for(KUSModel model : temporaryMessages){
+        for (KUSModel model : temporaryMessages) {
             KUSChatMessage temporaryMessage = (KUSChatMessage) model;
             messageRetryHashMap.remove(temporaryMessage.getId());
         }
@@ -874,7 +1275,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         return createdLocally || super.isFetchedAll();
     }
 
-    public String getSessionId(){
+    public String getSessionId() {
         return sessionId;
     }
     //endregion
@@ -906,6 +1307,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
         insertAutoReplyIfNecessary();
+        startVolumeControlTracking();
     }
 
     @Override
@@ -921,13 +1323,14 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         insertAutoReplyIfNecessary();
         insertFormMessageIfNecessary();
+        insertVolumeControlFormMessageIfNecessary();
     }
 
-    //endregion
+//endregion
 
     //region Interface
     public interface onCreateSessionListener {
         void onComplete(boolean success, Error error);
     }
-    //endregion
+//endregion
 }
