@@ -51,27 +51,30 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
     TextView tvSessionSubtitle;
     @BindView(R2.id.tvUnreadCount)
     TextView tvUnreadCount;
+    @BindView(R2.id.closedView)
+    View closedView;
 
     private KUSUserSession mUserSession;
     private KUSChatMessagesDataSource chatMessagesDataSource;
     private KUSUserDataSource userDataSource;
     private KUSChatSession mChatSession;
+    private Date sessionDate = null;
     //endregion
 
     public SessionViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 
     public void onBind(final KUSChatSession chatSession, KUSUserSession userSession,
-                       final SessionListAdapter.onItemClickListener listener){
+                       final SessionListAdapter.onItemClickListener listener) {
         mUserSession = userSession;
         mChatSession = chatSession;
 
         mUserSession.getChatSettingsDataSource().addListener(this);
         chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
         chatMessagesDataSource.addListener(this);
-        if(!chatMessagesDataSource.isFetched() && !chatMessagesDataSource.isFetching())
+        if (!chatMessagesDataSource.isFetched() && !chatMessagesDataSource.isFetching())
             chatMessagesDataSource.fetchLatest();
 
         updateAvatar();
@@ -85,19 +88,19 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
         });
     }
 
-    public void onDetached(){
-        if(mUserSession != null && mUserSession.getChatSettingsDataSource() != null)
+    public void onDetached() {
+        if (mUserSession != null && mUserSession.getChatSettingsDataSource() != null)
             mUserSession.getChatSettingsDataSource().removeListener(this);
 
-        if(userDataSource != null)
+        if (userDataSource != null)
             userDataSource.removeListener(this);
 
-        if(chatMessagesDataSource != null)
+        if (chatMessagesDataSource != null)
             chatMessagesDataSource.removeListener(this);
     }
 
     //region Private Methods
-    private void updateAvatar(){
+    private void updateAvatar() {
         imageLayout.removeAllViews();
 
         KUSAvatarImageView avatarImageView = new KUSAvatarImageView(itemView.getContext());
@@ -117,20 +120,20 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
         imageLayout.addView(avatarImageView);
     }
 
-    private void updateLabels(){
-        if(userDataSource != null)
+    private void updateLabels() {
+        if (userDataSource != null)
             userDataSource.removeListener(this);
 
         userDataSource = mUserSession.userDataSourceForUserId(chatMessagesDataSource.getFirstOtherUserId());
 
-        if(userDataSource != null)
+        if (userDataSource != null)
             userDataSource.addListener(this);
 
         //Title text (from last responder, chat settings or organization name)
         KUSUser firstOtherUser = userDataSource != null ? (KUSUser) userDataSource.getObject() : null;
 
 
-        String responderName = firstOtherUser != null ? firstOtherUser.getDisplayName() : null ;
+        String responderName = firstOtherUser != null ? firstOtherUser.getDisplayName() : null;
 
         if (responderName == null || responderName.length() == 0) {
             KUSChatSettings chatSettings = (KUSChatSettings) mUserSession.getChatSettingsDataSource().getObject();
@@ -138,14 +141,14 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
                     chatSettings.getTeamName() : mUserSession.getOrganizationName();
         }
 
-        tvSessionTitle.setText(String.format(itemView.getContext().getString(R.string.com_kustomer_chat_with)+" %s",responderName));
+        tvSessionTitle.setText(String.format(itemView.getContext().getString(R.string.com_kustomer_chat_with) + " %s", responderName));
 
 
         //Subtitle text (from last message, or preview text)
         KUSChatMessage latestTextMessage = null;
-        for(KUSModel model : chatMessagesDataSource.getList()){
+        for (KUSModel model : chatMessagesDataSource.getList()) {
             KUSChatMessage message = (KUSChatMessage) model;
-            if(message.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT){
+            if (message.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT) {
                 latestTextMessage = message;
                 break;
             }
@@ -163,7 +166,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
         }
 
         //Date text (from last message date, or session created at)
-        Date sessionDate = null;
+
         if (latestTextMessage != null) {
             sessionDate = latestTextMessage.getCreatedAt() != null ?
                     latestTextMessage.getCreatedAt() : mChatSession.getCreatedAt();
@@ -176,13 +179,29 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
         int unreadCount = 0;
         unreadCount = chatMessagesDataSource.unreadCountAfterDate(sessionLastSeenAt);
 
-        if(unreadCount > 0){
+        if (unreadCount > 0) {
             tvUnreadCount.setText(String.valueOf(unreadCount));
             tvUnreadCount.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tvUnreadCount.setVisibility(View.INVISIBLE);
         }
+        updateClosedChatView();
+    }
 
+    private void updateClosedChatView() {
+        if (mChatSession.getLockedAt() != null) {
+            tvSessionDate.setText(itemView.getContext().getString(R.string.com_kustomer_closed));
+            closedView.setVisibility(View.VISIBLE);
+            tvSessionTitle.setAlpha(0.5f);
+            tvSessionSubtitle.setAlpha(0.5f);
+            imageLayout.setAlpha(0.5f);
+        } else {
+            tvSessionDate.setText(KUSDate.humanReadableTextFromDate(sessionDate));
+            closedView.setVisibility(View.GONE);
+            tvSessionTitle.setAlpha(1f);
+            tvSessionSubtitle.setAlpha(1f);
+            imageLayout.setAlpha(1f);
+        }
     }
     //endregion
 
@@ -222,6 +241,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
             public void run() {
                 updateLabels();
                 updateAvatar();
+                updateClosedChatView();
             }
         };
         handler.post(runnable);

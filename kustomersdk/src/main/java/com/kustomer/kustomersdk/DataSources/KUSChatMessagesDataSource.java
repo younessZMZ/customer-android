@@ -783,8 +783,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (!vcFormActive) {
             createdAt = new Date((new Date()).getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
         }
-
-        String questionId = "vc_question_" + vcFormQuestionIndex;
+        
+        String questionId = String.format("vc_question_%s", vcFormQuestionIndex);
         vcFormActive = true;
         if (vcFormQuestionIndex == 0) {
 
@@ -802,7 +802,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
             try {
                 KUSChatMessage formMessage = new KUSChatMessage(createMessageJson(questionId,
-                        "Great, what's the best " + previousChannel + " to reach you at?",
+                        String.format("Great, what's the best %s to reach you at?", previousChannel),
                         createdAt));
                 insertDelayedMessage(formMessage);
 
@@ -834,7 +834,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         }
 
-        ArrayList<HashMap<String, Object>> messagesJSON = new ArrayList<>();
+        final ArrayList<HashMap<String, Object>> messagesJSON = new ArrayList<>();
 
         int currentMessageIndex = 4;
         String property = null;
@@ -859,7 +859,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             if (i == 0) {
                 formMessage.put("property", "conversation_replyChannel");
             } else if (i == 1) {
-                formMessage.put("property", "customer_" + property);
+                formMessage.put("property", String.format("customer_%s", property.toLowerCase()));
             }
             messagesJSON.add(formMessage);
         }
@@ -869,10 +869,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
         getUserSession().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_POST,
-                "/c/v1/chat/volume-control/responses",
+                KUSConstants.URL.VOLUME_CONTROL_ENDPOINT,
                 new HashMap<String, Object>() {{
                     put("messages", messagesJSON);
-                    put("session", messagesJSON);
+                    put("session", getSessionId());
                 }},
                 true,
                 new KUSRequestCompletionListener() {
@@ -1163,8 +1163,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     private void lockMessaging() {
         getUserSession().getRequestManager().performRequestType(
-                KUSRequestType.KUS_REQUEST_TYPE_POST,
-                String.format("c/v1/chat/sessions/%s", sessionId),
+                KUSRequestType.KUS_REQUEST_TYPE_PUT,
+                String.format(KUSConstants.URL.SESSION_LOCK_ENDPOINT, sessionId),
                 new HashMap<String, Object>() {{
                     put("locked", true);
                 }},
