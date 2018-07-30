@@ -148,14 +148,14 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             tvName.setTextSize(15f);
             tvGreetingMessage.setTextSize(13f);
 
-            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),40),
-                    0, (int) KUSUtils.dipToPixels(getContext(),40));
+            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 40),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 40));
 
-            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),4),
-                    0,(int) KUSUtils.dipToPixels(getContext(),4));
+            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 4),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 4));
 
-            vlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),4),
-                    0,(int) KUSUtils.dipToPixels(getContext(),4));
+            vlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 4),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 4));
 
 
             kusMultipleAvatarsView.setLayoutParams(avatarlp);
@@ -167,14 +167,14 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             tvName.setTextSize(13f);
             tvGreetingMessage.setTextSize(11f);
 
-            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),10),
-                    0, (int) KUSUtils.dipToPixels(getContext(),5));
+            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 10),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 5));
 
-            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),2),
-                    0,(int) KUSUtils.dipToPixels(getContext(),2));
+            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 2),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 2));
 
             vlp.setMargins(0, 0,
-                    0,0);
+                    0, 0);
 
             kusMultipleAvatarsView.setLayoutParams(avatarlp);
             tvName.setLayoutParams(vlp);
@@ -231,10 +231,16 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
                     responderName = userSession.getOrganizationName();
             }
 
-            tvGreetingMessage.setText(chatSettings.getGreeting());
+            if (chatSettings.isVolumeControlEnabled()) {
+                if (chatSettings.isUseDynamicWaitMessage())
+                    tvGreetingMessage.setText(chatSettings.getWaitMessage());
+                else
+                    tvGreetingMessage.setText(chatSettings.getCustomWaitMessage());
+            } else {
+                tvGreetingMessage.setText(chatSettings.getGreeting());
+            }
         }
         tvName.setText(responderName);
-
     }
 
     private void updateBackButtonBadge() {
@@ -374,7 +380,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if(sessionId.equals(mSessionId))
+                if (sessionId.equals(mSessionId))
                     return;
 
                 sessionId = mSessionId;
@@ -389,8 +395,6 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             }
         };
         handler.post(runnable);
-
-
 
 
     }

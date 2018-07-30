@@ -24,6 +24,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private String pusherAccessKey;
     private Boolean enabled;
 
+    private String waitMessage;
     private String customWaitMessage;
     private Integer timeOut;
     private Integer promptDelay;
@@ -46,6 +47,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         pusherAccessKey = JsonHelper.stringFromKeyPath(json, "attributes.pusherAccessKey");
         enabled = JsonHelper.boolFromKeyPath(json, "attributes.enabled");
 
+        waitMessage = JsonHelper.stringFromKeyPath(json, "attributes.waitMessage");
         customWaitMessage = JsonHelper.stringFromKeyPath(json, "attributes.volumeControl.customWaitMessage");
         timeOut = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.timeout");
         promptDelay = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.promptDelay");
@@ -130,6 +132,26 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     }
 
     public boolean isVolumeControlEnabled() {
+        return volumeControlEnabled;
+    }
+
+    public String getWaitMessage() {
+        return waitMessage;
+    }
+
+    public Boolean getHideWaitOption() {
+        return hideWaitOption;
+    }
+
+    public Boolean getUseDynamicWaitMessage() {
+        return useDynamicWaitMessage;
+    }
+
+    public Boolean getMarkDoneAfterTimeout() {
+        return markDoneAfterTimeout;
+    }
+
+    public Boolean getVolumeControlEnabled() {
         return volumeControlEnabled;
     }
 
