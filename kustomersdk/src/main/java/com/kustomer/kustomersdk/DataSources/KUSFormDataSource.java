@@ -22,7 +22,7 @@ import org.json.JSONObject;
 public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectDataSourceListener {
 
     //region LifeCycle
-    public KUSFormDataSource (KUSUserSession userSession){
+    public KUSFormDataSource(KUSUserSession userSession) {
         super(userSession);
         userSession.getChatSettingsDataSource().addListener(this);
     }
@@ -33,36 +33,41 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
     //endregion
 
     //region Subclass Methods
-    public void performRequest(KUSRequestCompletionListener listener){
+    public void performRequest(KUSRequestCompletionListener listener) {
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+
+        String formId = getUserSession().getSharedPreferences().getFormId();
+        if (formId == null)
+            formId = chatSettings.getActiveFormId();
+        
         getUserSession().getRequestManager().getEndpoint(
-                String.format(KUSConstants.URL.FORMS_ENDPOINT,chatSettings.getActiveFormId()),
-                        true,
-                        listener);
+                String.format(KUSConstants.URL.FORMS_ENDPOINT, formId),
+                true,
+                listener);
     }
 
-    public void fetch(){
-        if(!getUserSession().getChatSettingsDataSource().isFetched()){
+    public void fetch() {
+        if (!getUserSession().getChatSettingsDataSource().isFetched()) {
             getUserSession().getChatSettingsDataSource().fetch();
             return;
         }
 
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if(chatSettings != null && chatSettings.getActiveFormId() != null)
+        if (chatSettings != null && chatSettings.getActiveFormId() != null)
             super.fetch();
     }
 
-    public boolean isFetching(){
-        if(getUserSession().getChatSettingsDataSource().isFetching()){
+    public boolean isFetching() {
+        if (getUserSession().getChatSettingsDataSource().isFetching()) {
             return getUserSession().getChatSettingsDataSource().isFetching();
         }
 
         return super.isFetching();
     }
 
-    public boolean isFetched(){
+    public boolean isFetched() {
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if(chatSettings != null && chatSettings.getActiveFormId() == null)
+        if (chatSettings != null && chatSettings.getActiveFormId() == null)
             return true;
 
         return super.isFetched();
@@ -70,7 +75,7 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
 
     public Error getError() {
         Error error = getUserSession().getChatSettingsDataSource().getError();
-        return  error != null ? error : super.getError() ;
+        return error != null ? error : super.getError();
     }
     //endregion
 
@@ -82,7 +87,7 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
 
     @Override
     public void objectDataSourceOnError(final KUSObjectDataSource dataSource, Error error) {
-        if(!dataSource.isFetched()){
+        if (!dataSource.isFetched()) {
             Handler handler = new Handler(Looper.getMainLooper());
             Runnable runnable = new Runnable() {
                 @Override
