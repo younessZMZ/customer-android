@@ -428,51 +428,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         return false;
     }
 
-    public boolean shouldPreventVCFormSendingMessage() {
-        if (sessionId != null) {
-            return true;
-        }
-
-        // If we haven't loaded the chat settings data source, prevent input
-        if (this.getUserSession().getChatSettingsDataSource().isFetched()) {
-            return true;
-        }
-
-        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if (!chatSettings.isVolumeControlEnabled()) {
-            return true;
-        }
-        if (!vcTrackingDelayCompleted) {
-            return true;
-        }
-
-        // If we are about to insert an artificial message, prevent input
-        if (delayedChatMessageIds.size() > 0) {
-            return true;
-        }
-
-        // When submitting the form, prevent sending more responses
-        if (submittingForm) {
-            return true;
-        }
-        if (vcFormEnd) {
-            return true;
-        }
-
-        // Check that last message is VC form last message
-        KUSChatMessage lastMessage = this.getLatestMessage();
-        if (lastMessage.getId().equals("vc_question_2")) {
-            return false;
-        }
-
-        // Check that response of previous asked question is already entered ? if not return
-        if (vcFormActive && !KUSChatMessageSentByUser(lastMessage) && getOtherUserIds().size() == 0) {
-            return true;
-        }
-
-        return false;
-    }
-
     public KUSFormQuestion currentQuestion() {
         if (sessionId != null)
             return null;
@@ -744,10 +699,55 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         formQuestion = form.getQuestions().get(questionIndex);
     }
 
+    private boolean shouldPreventVCFormQuestionMessage() {
+        if (sessionId != null) {
+            return true;
+        }
+
+        // If we haven't loaded the chat settings data source, prevent input
+        if (this.getUserSession().getChatSettingsDataSource().isFetched()) {
+            return true;
+        }
+
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        if (!chatSettings.isVolumeControlEnabled()) {
+            return true;
+        }
+        if (!vcTrackingDelayCompleted) {
+            return true;
+        }
+
+        // If we are about to insert an artificial message, prevent input
+        if (delayedChatMessageIds.size() > 0) {
+            return true;
+        }
+
+        // When submitting the form, prevent sending more responses
+        if (submittingForm) {
+            return true;
+        }
+        if (vcFormEnd) {
+            return true;
+        }
+
+        // Check that last message is VC form last message
+        KUSChatMessage lastMessage = this.getLatestMessage();
+        if (lastMessage.getId().equals("vc_question_2")) {
+            return false;
+        }
+
+        // Check that response of previous asked question is already entered ? if not return
+        if (vcFormActive && !KUSChatMessageSentByUser(lastMessage) && getOtherUserIds().size() == 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     // Volume control form message sending
     private void insertVolumeControlFormMessageIfNecessary() {
         // If any pre-condition not fulfilled
-        if (shouldPreventVCFormSendingMessage()) {
+        if (shouldPreventVCFormQuestionMessage()) {
             return;
         }
         // If any message sent by Server apart from auto response or form message.
@@ -1207,17 +1207,20 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         } else if (index == 1) {
             String property = "";
-            if (previousChannel.toLowerCase().equals("email"))
+            String channel = previousChannel;
+            if (previousChannel.toLowerCase().equals("email")) {
                 property = "customer_email";
-            else if (previousChannel.toLowerCase().equals("voice"))
+                channel = "email";
+            } else if (previousChannel.toLowerCase().equals("voice")) {
                 property = "customer_phone";
-
+                channel = "phone number";
+            }
             JSONObject formMessage = new JSONObject();
 
             try {
                 formMessage.put("id", "vc_question_1");
                 formMessage.put("name", "Volume Form 1");
-                formMessage.put("prompt", String.format("Great, what's the best %s to reach you at?", previousChannel));
+                formMessage.put("prompt", String.format("Great, what's the best %s to reach you at?", channel));
                 formMessage.put("type", "response");
                 formMessage.put("property", property);
             } catch (JSONException ignore) {
