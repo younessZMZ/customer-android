@@ -1170,7 +1170,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         // Temporary set locked at to reflect changes in UI
                         KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
                         session.setLockedAt(new Date());
-                        fetchLatest();
+                        notifyAnnouncersOnContentChange();
                     }
                 });
     }
