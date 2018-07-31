@@ -1127,7 +1127,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         // Automatically end chat
         if (chatSettings.isMarkDoneAfterTimeout()) {
 
-            long timeOutDelay = chatSettings.getTimeOut();
+            long timeOutDelay = chatSettings.getTimeOut() + chatSettings.getPromptDelay();
             Handler timeOutHandler = new Handler(Looper.getMainLooper());
             Runnable timeOutRunnable = new Runnable() {
                 @Override
