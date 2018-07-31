@@ -18,10 +18,11 @@ public class KUSText {
 
     //region Properties
     private static final String EMAIL_REGEX = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,5}";
+    private static final String PHONE_REGEX = "(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}";
     //endregion
 
     //region Public Methods
-    public static void setMarkDownText(TextView textView, String text){
+    public static void setMarkDownText(TextView textView, String text) {
 
         String msg = formatText(text);
         SpannableTheme theme = SpannableTheme.builderWithDefaults(textView.getContext())
@@ -32,8 +33,8 @@ public class KUSText {
                 .theme(theme)
                 .build();
 
-        text = text.replaceAll("\n","\n\n");
-        Markwon.setMarkdown(textView,spannableConfiguration,msg);
+        text = text.replaceAll("\n", "\n\n");
+        Markwon.setMarkdown(textView, spannableConfiguration, msg);
     }
 
     private static String formatText(String text) {
@@ -80,10 +81,16 @@ public class KUSText {
         return (updatedString + text).replace("<br /><br />", "\n\n");
     }
 
-    public static boolean isValidEmail(String email){
-        if(email.length() == 0)
+    public static boolean isValidEmail(String email) {
+        if (email.length() == 0)
             return false;
         return Pattern.compile(EMAIL_REGEX).matcher(email).matches();
+    }
+
+    public static boolean isValidPhone(String phoneNo) {
+        if (phoneNo.length() == 0)
+            return false;
+        return Pattern.compile(PHONE_REGEX).matcher(phoneNo).matches();
     }
     //endregion
 

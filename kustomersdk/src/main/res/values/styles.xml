@@ -34,6 +34,9 @@
     <style name="KUSToolbarNameTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSToolbarGreetingTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSToolbarUnreadTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="KUSChatHasEndedTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="KUSStartANewConversationTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="KUSClosedTextAppearance" parent="@style/TextAppearance.AppCompat"/>
 
     <style name="KUSNewSessionButtonAppearance" parent="@style/TextAppearance.AppCompat.Button"/>
 

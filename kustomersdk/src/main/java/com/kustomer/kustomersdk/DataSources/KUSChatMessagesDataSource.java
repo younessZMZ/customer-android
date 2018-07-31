@@ -78,6 +78,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private boolean vcTrackingDelayCompleted;
     private boolean vcFormActive;
     private boolean vcFormEnd;
+    private boolean vcChatClosed;
     private ArrayList<KUSModel> temporaryVCMessagesResponses;
 
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
@@ -91,6 +92,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         questionIndex = -1;
         vcFormQuestionIndex = 0;
         vcFormActive = false;
+        vcChatClosed = false;
         temporaryVCMessagesResponses = new ArrayList<>();
         delayedChatMessageIds = new HashSet<>();
         messageRetryHashMap = new HashMap<>();
@@ -464,7 +466,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
 
         // Check that response of previous asked question is already entered ? if not return
-        if (vcFormActive && !KUSChatMessageSentByUser(lastMessage)) {
+        if (vcFormActive && !KUSChatMessageSentByUser(lastMessage) && getOtherUserIds().size() == 0) {
             return true;
         }
 
@@ -481,7 +483,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         return formQuestion;
     }
 
-    public ArrayList<String> vcFormOptions() {
+    public KUSFormQuestion volumeControlCurrentQuestion() {
+        if (!vcFormActive) {
+            return null;
+        }
+
         if (sessionId != null) {
             return null;
         }
@@ -495,22 +501,32 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         }
 
-        if (vcFormQuestionIndex == 1) {
-            ArrayList<String> options = new ArrayList<>();
-            for (String option : chatSettings.getFollowUpChannels()) {
-                options.add(option.substring(0, 1).toUpperCase() + option.substring(1));
-            }
+        if (getOtherUserIds().size() == 0)
+            return null;
+        return formQuestion;
+    }
 
-            if (!chatSettings.isHideWaitOption()) {
-                options.add("I'll wait");
-
-            }
-            return options;
-
+    public boolean isChatClosed() {
+        if (vcFormActive) {
+            return false;
+        }
+        if (sessionId == null) {
+            return false;
         }
 
-        return null;
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        if (!chatSettings.isVolumeControlEnabled()) {
+            return false;
+        }
 
+        if (getOtherUserIds().size() == 0)
+            return false;
+
+        if (vcChatClosed) {
+            return true;
+        }
+
+        return false;
     }
 
     //endregion
@@ -728,29 +744,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         formQuestion = form.getQuestions().get(questionIndex);
     }
 
-    private JSONObject createMessageJson(String messageId, String messageBody, Date createdAt)
-            throws KUSInvalidJsonException {
-
-        JSONObject attributes = new JSONObject();
-        try {
-            attributes.put("body", messageBody);
-            attributes.put("direction", "out");
-            attributes.put("createdAt", KUSDate.stringFromDate(createdAt));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject messageJSON = new JSONObject();
-        try {
-            messageJSON.put("type", "chat_message");
-            messageJSON.put("id", messageId);
-            messageJSON.put("attributes", attributes);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return messageJSON;
-    }
-
     // Volume control form message sending
     private void insertVolumeControlFormMessageIfNecessary() {
         // If any pre-condition not fulfilled
@@ -783,47 +776,48 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (!vcFormActive) {
             createdAt = new Date((new Date()).getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
         }
-        
-        String questionId = String.format("vc_question_%s", vcFormQuestionIndex);
+
         vcFormActive = true;
-        if (vcFormQuestionIndex == 0) {
 
-            try {
-                KUSChatMessage formMessage = new KUSChatMessage(createMessageJson(questionId,
-                        "Sorry, it looks like no one has become available in the time we expected. Please select an alternate contact method for us to followup with you…",
-                        createdAt));
-                insertDelayedMessage(formMessage);
 
-            } catch (KUSInvalidJsonException e) {
-                e.printStackTrace();
-            }
-        } else if (vcFormQuestionIndex == 1) {
-            String previousChannel = lastMessage.getBody().toLowerCase();
+        String previousChannel = lastMessage.getBody().toLowerCase();
+        KUSFormQuestion vcFormQuestion = getNextVCFormQuestion(vcFormQuestionIndex, previousChannel);
 
-            try {
-                KUSChatMessage formMessage = new KUSChatMessage(createMessageJson(questionId,
-                        String.format("Great, what's the best %s to reach you at?", previousChannel),
-                        createdAt));
-                insertDelayedMessage(formMessage);
+        JSONObject attributes = new JSONObject();
+        try {
+            attributes.put("body", vcFormQuestion.getPrompt());
+            attributes.put("direction", "out");
+            attributes.put("createdAt", KUSDate.stringFromDate(createdAt));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            } catch (KUSInvalidJsonException e) {
-                e.printStackTrace();
-            }
+        JSONObject messageJSON = new JSONObject();
+        try {
+            messageJSON.put("type", "chat_message");
+            messageJSON.put("id", vcFormQuestion.getId());
+            messageJSON.put("attributes", attributes);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        } else if (vcFormQuestionIndex == 2) {
-            try {
-                KUSChatMessage formMessage = new KUSChatMessage(createMessageJson(questionId,
-                        "Thank you. We'll get back to you shortly.",
-                        createdAt));
-                insertDelayedMessage(formMessage);
+        try {
+            KUSChatMessage formMessage = new KUSChatMessage(messageJSON);
+            insertDelayedMessage(formMessage);
 
-            } catch (KUSInvalidJsonException e) {
-                e.printStackTrace();
-            }
+        } catch (KUSInvalidJsonException e) {
+            e.printStackTrace();
+        }
+        formQuestion = vcFormQuestion;
+
+        // If first options response input, update view by remove options component
+        if (vcFormQuestionIndex == 1) {
+            notifyAnnouncersOnContentChange();
         }
 
         vcFormQuestionIndex++;
     }
+
 
     private void submitVCFormResponses() {
         if (this.getSize() <= 5) {
@@ -859,14 +853,18 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             if (i == 0) {
                 formMessage.put("property", "conversation_replyChannel");
             } else if (i == 1) {
-                formMessage.put("property", String.format("customer_%s", property.toLowerCase()));
+
+                if (property.toLowerCase().equals("email"))
+                    formMessage.put("property", "customer_email");
+                else if (property.toLowerCase().equals("voice"))
+                    formMessage.put("property", "customer_phone");
+
             }
             messagesJSON.add(formMessage);
         }
 
         submittingForm = true;
 
-        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
         getUserSession().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_POST,
                 KUSConstants.URL.VOLUME_CONTROL_ENDPOINT,
@@ -878,11 +876,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
-                        KUSChatMessagesDataSource strongReference = weakReference.get();
-                        if (strongReference == null) {
-                            return;
-                        }
-
                         if (error != null) {
                             return;
                         }
@@ -918,7 +911,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                             upsertNewMessages(chatMessages);
 
                         }
-                        strongReference.lockMessaging();
+                        vcChatClosed = true;
                         submittingForm = false;
                     }
                 });
@@ -948,7 +941,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
             KUSChatMessage questionMessage = (KUSChatMessage) get(currentMessageIndex);
             currentMessageIndex--;
-
 
             JSONObject formMessage = new JSONObject();
 
@@ -1175,9 +1167,87 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         if (error != null) {
                             return;
                         }
-                        //todo Update UIs with respect to locking
+                        // Temporary set locked at to reflect changes in UI
+                        KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
+                        session.setLockedAt(new Date());
+                        fetchLatest();
                     }
                 });
+    }
+
+    private KUSFormQuestion getNextVCFormQuestion(int index, String previousChannel) {
+
+        if (index == 0) {
+            KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+            ArrayList<String> options = new ArrayList<>();
+            for (String option : chatSettings.getFollowUpChannels()) {
+                options.add(option.substring(0, 1).toUpperCase() + option.substring(1).toLowerCase());
+            }
+
+            if (!chatSettings.isHideWaitOption()) {
+                options.add("I'll wait");
+
+            }
+            JSONObject formMessage = new JSONObject();
+            try {
+                formMessage.put("id", "vc_question_0");
+                formMessage.put("name", "Volume Form 0");
+                formMessage.put("prompt", "Sorry, it looks like no one has become available in the time we expected. Please select an alternate contact method for us to followup with you…");
+                formMessage.put("type", "property");
+                formMessage.put("property", "followup_channel");
+                formMessage.put("values", options);
+            } catch (JSONException ignore) {
+            }
+
+            try {
+                return new KUSFormQuestion(formMessage);
+            } catch (KUSInvalidJsonException e) {
+                e.printStackTrace();
+            }
+
+        } else if (index == 1) {
+            String property = "";
+            if (previousChannel.toLowerCase().equals("email"))
+                property = "customer_email";
+            else if (previousChannel.toLowerCase().equals("voice"))
+                property = "customer_phone";
+
+            JSONObject formMessage = new JSONObject();
+
+            try {
+                formMessage.put("id", "vc_question_1");
+                formMessage.put("name", "Volume Form 1");
+                formMessage.put("prompt", String.format("Great, what's the best %s to reach you at?", previousChannel));
+                formMessage.put("type", "response");
+                formMessage.put("property", property);
+            } catch (JSONException ignore) {
+            }
+
+            try {
+                return new KUSFormQuestion(formMessage);
+            } catch (KUSInvalidJsonException e) {
+                e.printStackTrace();
+            }
+
+        } else if (index == 2) {
+            JSONObject formMessage = new JSONObject();
+
+            try {
+                formMessage.put("id", "vc_question_2");
+                formMessage.put("name", "Volume Form 2");
+                formMessage.put("prompt", "Thank you. We'll get back to you shortly.");
+                formMessage.put("type", "message");
+            } catch (JSONException ignore) {
+            }
+
+            try {
+                return new KUSFormQuestion(formMessage);
+            } catch (KUSInvalidJsonException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
     @Override

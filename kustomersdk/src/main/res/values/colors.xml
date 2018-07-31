@@ -50,6 +50,12 @@
     <color name="kusWebToolbarBackTintColor">#000000</color>
 
     <color name="kusClosedViewColor">#E0E0E0</color>
+    <color name="kusChatHasEndedColor">#000000</color>
+    <color name="kusChatHasEndedBackGroundColor">#E0E0E0</color>
+    <color name="kusStartANewConversationColor">#2962FF</color>
+    <color name="kusStartANewConversationBackgroundColor">#FFFFFF</color>
+    <color name="kusClosedChatColor">#2962FF</color>
+    <color name="kusClosedBackgroundColor">#FFFFFF</color>
 
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>

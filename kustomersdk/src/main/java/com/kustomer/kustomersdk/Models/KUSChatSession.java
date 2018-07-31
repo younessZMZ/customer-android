@@ -189,6 +189,10 @@ public class KUSChatSession extends KUSModel implements Serializable {
         this.lastMessageAt = lastMessageAt;
     }
 
+    public void setLockedAt(Date lockedAt) {
+        this.lockedAt = lockedAt;
+    }
+
     public Date getLockedAt() {
         return lockedAt;
     }
