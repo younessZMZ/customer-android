@@ -856,7 +856,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
                 if (property.toLowerCase().equals("email"))
                     formMessage.put("property", "customer_email");
-                else if (property.toLowerCase().equals("voice"))
+                else
                     formMessage.put("property", "customer_phone");
 
             }
@@ -1206,12 +1206,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             }
 
         } else if (index == 1) {
-            String property = "";
-            String channel = previousChannel;
+            String property;
+            String channel;
             if (previousChannel.toLowerCase().equals("email")) {
                 property = "customer_email";
                 channel = "email";
-            } else if (previousChannel.toLowerCase().equals("voice")) {
+            } else {
                 property = "customer_phone";
                 channel = "phone number";
             }
