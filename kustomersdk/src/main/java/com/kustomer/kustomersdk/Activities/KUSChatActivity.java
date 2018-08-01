@@ -297,7 +297,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
             emailInputView.setVisibility(View.GONE);
         } else {
-            boolean shouldShowEmailInput = userSession.isShouldCaptureEmail() && chatSessionId != null;
+            KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+            boolean isChatCloseable = settings != null && settings.getClosableChat();
+
+            boolean shouldShowEmailInput = userSession.isShouldCaptureEmail()
+                    && chatSessionId != null && !isChatCloseable;
+
             appBarLayout.setLayoutTransition(new LayoutTransition());
 
             if (shouldShowEmailInput) {
