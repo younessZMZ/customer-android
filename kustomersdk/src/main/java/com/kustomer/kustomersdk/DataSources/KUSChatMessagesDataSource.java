@@ -376,12 +376,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
     }
 
-    public void endChat(final OnEndChatListener onEndChatListener) {
+    public void endChat(final String reason, final OnEndChatListener onEndChatListener) {
         getUserSession().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_PUT,
                 String.format(KUSConstants.URL.SESSION_LOCK_ENDPOINT, sessionId),
                 new HashMap<String, Object>() {{
                     put("locked", true);
+                    put("reason", reason);
                 }},
                 true,
                 new KUSRequestCompletionListener() {
@@ -1172,7 +1173,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                     // End Control Tracking and Automatically marked it Closed, if form not end
                     if (!strongReference.vcFormEnd) {
                         strongReference.endVolumeControlTracking();
-                        strongReference.endChat(null);
+                        strongReference.endChat("timed_out",null);
                     }
                 }
             };

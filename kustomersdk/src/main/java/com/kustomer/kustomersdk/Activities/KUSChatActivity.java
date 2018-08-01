@@ -496,7 +496,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     @OnClick(R2.id.btnEndChat)
     void endChatClicked() {
         showProgressBar();
-        chatMessagesDataSource.endChat(new KUSChatMessagesDataSource.OnEndChatListener() {
+        chatMessagesDataSource.endChat("customer_ended",new KUSChatMessagesDataSource.OnEndChatListener() {
             @Override
             public void onComplete(boolean success) {
                 hideProgressBar();
