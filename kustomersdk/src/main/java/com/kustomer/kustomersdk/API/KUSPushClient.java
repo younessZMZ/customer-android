@@ -494,7 +494,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
                                 || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
 
-                        boolean chatSessionSetToLock = !chatSession.getLockedAt().equals(previousChatSession.getLockedAt());
+                        boolean chatSessionSetToLock = chatSession.getLockedAt() != null
+                                && !chatSession.getLockedAt().equals(previousChatSession.getLockedAt());
 
                         // Check that new message arrived or not
                         if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
