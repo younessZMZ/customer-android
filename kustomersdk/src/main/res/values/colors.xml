@@ -56,6 +56,9 @@
     <color name="kusStartANewConversationBackgroundColor">#FFFFFF</color>
     <color name="kusClosedChatColor">#2962FF</color>
     <color name="kusClosedBackgroundColor">#FFFFFF</color>
+    <color name="kusEndChatButtonTextColor">#000000</color>
+    <color name="kusEndChatButtonBorderColor">#000000</color>
+    <color name="kusEndChatButtonBackGroundColor">#FFFFFF</color>
 
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>

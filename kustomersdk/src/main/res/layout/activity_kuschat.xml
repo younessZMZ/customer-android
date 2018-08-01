@@ -16,7 +16,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/kusChatListBackground"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btnEndChat"
+                    style="@style/KUSEndChatButtonAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/end_button_background"
+                    android:padding="8dp"
+                    android:text="@string/com_kustomer_end_chat"
+                    android:textColor="@color/kusEndChatButtonTextColor"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvMessages"

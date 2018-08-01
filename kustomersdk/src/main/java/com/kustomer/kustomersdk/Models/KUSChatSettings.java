@@ -33,6 +33,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private Boolean useDynamicWaitMessage;
     private Boolean markDoneAfterTimeout;
     private Boolean volumeControlEnabled;
+    private Boolean closableChat;
     //endregion
 
     //region Initializer
@@ -47,6 +48,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         pusherAccessKey = JsonHelper.stringFromKeyPath(json, "attributes.pusherAccessKey");
         enabled = JsonHelper.boolFromKeyPath(json, "attributes.enabled");
 
+        closableChat = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.closableChat");
         waitMessage = JsonHelper.stringFromKeyPath(json, "attributes.waitMessage");
         customWaitMessage = JsonHelper.stringFromKeyPath(json, "attributes.volumeControl.customWaitMessage");
         timeOut = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.timeout");
@@ -153,6 +155,10 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public Boolean getVolumeControlEnabled() {
         return volumeControlEnabled;
+    }
+
+    public Boolean getClosableChat() {
+        return closableChat;
     }
 
     //endregion

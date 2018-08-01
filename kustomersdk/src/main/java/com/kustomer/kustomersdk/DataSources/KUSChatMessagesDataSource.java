@@ -376,6 +376,32 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
     }
 
+    public void endChat(final OnEndChatListener onEndChatListener) {
+        getUserSession().getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_PUT,
+                String.format(KUSConstants.URL.SESSION_LOCK_ENDPOINT, sessionId),
+                new HashMap<String, Object>() {{
+                    put("locked", true);
+                }},
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+                        if (error != null) {
+                            if (onEndChatListener != null)
+                                onEndChatListener.onComplete(false);
+                            return;
+                        }
+                        // Temporary set locked at to reflect changes in UI
+                        KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
+                        session.setLockedAt(new Date());
+                        notifyAnnouncersOnContentChange();
+                        if (onEndChatListener != null)
+                            onEndChatListener.onComplete(true);
+                    }
+                });
+    }
+
     public int unreadCountAfterDate(Date date) {
         int count = 0;
 
@@ -752,6 +778,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
         // If any message sent by Server apart from auto response or form message.
         if (getOtherUserIds().size() > 0) {
+            endVolumeControlTracking();
+            return;
+        }
+
+        KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
+        if (session.getLockedAt() != null) {
             endVolumeControlTracking();
             return;
         }
@@ -1140,7 +1172,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                     // End Control Tracking and Automatically marked it Closed, if form not end
                     if (!strongReference.vcFormEnd) {
                         strongReference.endVolumeControlTracking();
-                        strongReference.lockMessaging();
+                        strongReference.endChat(null);
                     }
                 }
             };
@@ -1151,28 +1183,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private void endVolumeControlTracking() {
         vcFormEnd = true;
         vcFormActive = false;
-    }
-
-    private void lockMessaging() {
-        getUserSession().getRequestManager().performRequestType(
-                KUSRequestType.KUS_REQUEST_TYPE_PUT,
-                String.format(KUSConstants.URL.SESSION_LOCK_ENDPOINT, sessionId),
-                new HashMap<String, Object>() {{
-                    put("locked", true);
-                }},
-                true,
-                new KUSRequestCompletionListener() {
-                    @Override
-                    public void onCompletion(Error error, JSONObject response) {
-                        if (error != null) {
-                            return;
-                        }
-                        // Temporary set locked at to reflect changes in UI
-                        KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
-                        session.setLockedAt(new Date());
-                        notifyAnnouncersOnContentChange();
-                    }
-                });
     }
 
     private KUSFormQuestion getNextVCFormQuestion(int index, String previousChannel) {
@@ -1311,6 +1321,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     //region Accessors
 
+    public boolean isAnyMessageByCurrentUser() {
+        for (KUSModel message : getList()) {
+            KUSChatMessage chatMessage = (KUSChatMessage) message;
+            if (KUSChatMessageSentByUser(chatMessage))
+                return true;
+        }
+        return false;
+    }
+
     public String getFirstOtherUserId() {
         for (KUSModel message : getList()) {
             KUSChatMessage chatMessage = (KUSChatMessage) message;
@@ -1399,11 +1418,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         insertVolumeControlFormMessageIfNecessary();
     }
 
-//endregion
+    //endregion
 
     //region Interface
     public interface onCreateSessionListener {
         void onComplete(boolean success, Error error);
     }
-//endregion
+
+    public interface OnEndChatListener {
+        void onComplete(boolean success);
+    }
+    //endregion
 }

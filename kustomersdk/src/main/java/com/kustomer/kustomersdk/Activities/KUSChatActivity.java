@@ -20,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSOptionPickerViewListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
+import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSFormQuestion;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTeam;
@@ -90,6 +92,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     TextView tvStartANewConversation;
     @BindView(R2.id.tvClosedChat)
     TextView tvClosedChat;
+    @BindView(R2.id.btnEndChat)
+    Button btnEndChat;
 
     KUSChatSession kusChatSession;
     KUSUserSession userSession;
@@ -173,6 +177,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         checkShouldShowEmailInput();
         checkShouldShowInputView();
+        checkShouldShowCloseChatButtonView();
     }
 
     @Override
@@ -260,6 +265,28 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusToolbar.setShowDismissButton(true);
 
         checkShouldShowEmailInput();
+    }
+
+    private void checkShouldShowCloseChatButtonView() {
+        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        if (settings != null && settings.getClosableChat() && chatSessionId != null) {
+            KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
+
+            if (session.getLockedAt() == null && chatMessagesDataSource.isAnyMessageByCurrentUser()) {
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        btnEndChat.setVisibility(View.VISIBLE);
+                    }
+                };
+                handler.postDelayed(runnable, 500);
+
+                return;
+            }
+        }
+        btnEndChat.setVisibility(View.GONE);
     }
 
     private void checkShouldShowEmailInput() {
@@ -466,6 +493,18 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     //endregion
 
     //region Listeners
+    @OnClick(R2.id.btnEndChat)
+    void endChatClicked() {
+        showProgressBar();
+        chatMessagesDataSource.endChat(new KUSChatMessagesDataSource.OnEndChatListener() {
+            @Override
+            public void onComplete(boolean success) {
+                hideProgressBar();
+            }
+        });
+
+    }
+
     @OnClick(R2.id.tvStartANewConversation)
     void startNewConversationClicked() {
         chatMessagesDataSource.removeListener(this);
@@ -516,7 +555,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    //checkShouldShowOptionPicker();
                     checkShouldShowInputView();
                 }
             };
@@ -532,13 +570,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             public void run() {
                 if (dataSource == chatMessagesDataSource) {
                     checkShouldShowInputView();
+                    checkShouldShowCloseChatButtonView();
 
                     if (dataSource.getSize() > 1)
                         setupToolbar();
 
                     adapter.notifyDataSetChanged();
                 } else if (dataSource == teamOptionsDatasource) {
-                    //checkShouldShowOptionPicker();
                     checkShouldShowInputView();
                     updateOptionsPickerOptions();
                 }
