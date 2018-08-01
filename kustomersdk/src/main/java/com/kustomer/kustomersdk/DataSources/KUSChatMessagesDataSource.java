@@ -780,12 +780,18 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         // If any message sent by Server apart from auto response or form message.
         if (getOtherUserIds().size() > 0) {
             endVolumeControlTracking();
+
+            // Update Listeners that chat ended
+            notifyAnnouncersOnContentChange();
             return;
         }
 
         KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
         if (session.getLockedAt() != null) {
             endVolumeControlTracking();
+
+            // Update Listeners that chat ended
+            notifyAnnouncersOnContentChange();
             return;
         }
 
@@ -793,6 +799,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         String previousMessage = lastMessage.getBody();
         if (vcFormQuestionIndex == 1 && previousMessage.equals("I'll wait")) {
             endVolumeControlTracking();
+
+            // Update Listeners that chat ended
+            notifyAnnouncersOnContentChange();
             return;
         }
 
@@ -1173,7 +1182,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                     // End Control Tracking and Automatically marked it Closed, if form not end
                     if (!strongReference.vcFormEnd) {
                         strongReference.endVolumeControlTracking();
-                        strongReference.endChat("timed_out",null);
+                        strongReference.endChat("timed_out", null);
                     }
                 }
             };

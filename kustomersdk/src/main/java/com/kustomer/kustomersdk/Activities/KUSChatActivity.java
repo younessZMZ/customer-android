@@ -496,7 +496,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     @OnClick(R2.id.btnEndChat)
     void endChatClicked() {
         showProgressBar();
-        chatMessagesDataSource.endChat("customer_ended",new KUSChatMessagesDataSource.OnEndChatListener() {
+        chatMessagesDataSource.endChat("customer_ended", new KUSChatMessagesDataSource.OnEndChatListener() {
             @Override
             public void onComplete(boolean success) {
                 hideProgressBar();
@@ -525,12 +525,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
-    public void onLoad(KUSPaginatedDataSource dataSource) {
+    public void onLoad(final KUSPaginatedDataSource dataSource) {
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 progressDialog.hide();
+                if (dataSource == chatMessagesDataSource) {
+                    checkShouldShowCloseChatButtonView();
+                }
             }
         };
         handler.post(runnable);

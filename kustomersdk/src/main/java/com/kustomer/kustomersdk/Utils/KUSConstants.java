@@ -50,6 +50,7 @@ public class KUSConstants {
 
     public interface PusherEventNames {
         String SEND_MESSAGE_EVENT = "kustomer.app.chat.message.send";
+        String END_SESSION_EVENT = "kustomer.app.chat.session.end";
     }
 
     public interface BundleName {
