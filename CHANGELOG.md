@@ -1,5 +1,10 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.3
+
+* Added 46 more localization languages.
+* Downgraded minSdkVersion to 19 (KitKat 4.4)
+
 ## 0.1.2
 
 * Added Localization features to support devices of different languages.

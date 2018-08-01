@@ -11,7 +11,7 @@
 ## Requirements
 
 - A [Kustomer.com](https://www.kustomer.com/) API Key
-- Android Min SDK Version 21 i.e.., Android 5.0 Lollipop
+- Android Min SDK Version 19 i.e.., Android 4.4 Kitkat
 
 #### API Key
 
@@ -25,7 +25,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-compile 'com.kustomer.kustomersdk:kustomersdk:0.1.2'
+compile 'com.kustomer.kustomersdk:kustomersdk:0.1.3'
 ```
 
 #### Or through Maven
@@ -34,7 +34,7 @@ compile 'com.kustomer.kustomersdk:kustomersdk:0.1.2'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <type>pom</type>
 </dependency>
 ```
