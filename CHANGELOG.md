@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.4
+
+* Fixed a crash due to dialog.
+
 ## 0.1.3
 
 * Added 46 more localization languages.
