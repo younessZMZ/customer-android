@@ -410,7 +410,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                progressDialog.hide();
+                progressDialog.dismiss();
             }
         };
         handler.post(runnable);

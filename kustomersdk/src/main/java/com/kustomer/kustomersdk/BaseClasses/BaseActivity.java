@@ -60,6 +60,15 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         libraryActivities.remove(this);
         super.onBackPressed();
@@ -98,14 +107,14 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void hideProgressBar(){
-        progressDialog.hide();
+        progressDialog.dismiss();
 
         if(retryView != null)
             retryView.setVisibility(View.GONE);
     }
 
     protected void showErrorWithText(String text){
-        progressDialog.hide();
+        progressDialog.dismiss();
 
         if(retryView != null && retryView.getVisibility() == View.GONE)
             retryView.setVisibility(View.VISIBLE);
