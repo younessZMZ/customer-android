@@ -34,12 +34,8 @@
     <style name="KUSToolbarNameTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSToolbarGreetingTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSToolbarUnreadTextAppearance" parent="@style/TextAppearance.AppCompat"/>
-    <style name="KUSChatHasEndedTextAppearance" parent="@style/TextAppearance.AppCompat"/>
-    <style name="KUSStartANewConversationTextAppearance" parent="@style/TextAppearance.AppCompat"/>
-    <style name="KUSClosedTextAppearance" parent="@style/TextAppearance.AppCompat"/>
 
     <style name="KUSNewSessionButtonAppearance" parent="@style/TextAppearance.AppCompat.Button"/>
-    <style name="KUSEndChatButtonAppearance" parent="@style/TextAppearance.AppCompat.Button"/>
 
     <style name="KUSEmailInputPromptTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSEmailInputTextAppearance" parent="@style/TextAppearance.AppCompat"/>
@@ -47,5 +43,10 @@
     <style name="KUSInputBarTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSOptionPickerTextAppearance" parent="@style/TextAppearance.AppCompat"/>
 
+    <style name="KUSChatHasEndedTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="KUSStartANewConversationTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="KUSClosedTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="KUSEndChatButtonAppearance" parent="@style/TextAppearance.AppCompat.Button"/>
+    <style name="KUSClosedSessionTextAppearance" parent="@style/TextAppearance.AppCompat"/>
 
 </resources>

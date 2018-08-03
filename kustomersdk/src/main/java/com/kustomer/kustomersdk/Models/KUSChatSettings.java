@@ -48,7 +48,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         pusherAccessKey = JsonHelper.stringFromKeyPath(json, "attributes.pusherAccessKey");
         enabled = JsonHelper.boolFromKeyPath(json, "attributes.enabled");
 
-        closableChat = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.closableChat");
+        closableChat = JsonHelper.boolFromKeyPath(json, "attributes.closableChat");
         waitMessage = JsonHelper.stringFromKeyPath(json, "attributes.waitMessage");
         customWaitMessage = JsonHelper.stringFromKeyPath(json, "attributes.volumeControl.customWaitMessage");
         timeOut = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.timeout");

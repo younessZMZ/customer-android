@@ -32,8 +32,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_margin="16dp"
+                    android:layout_margin="8dp"
                     android:background="@drawable/end_button_background"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:padding="8dp"
                     android:text="@string/com_kustomer_end_chat"
                     android:textColor="@color/kusEndChatButtonTextColor"
@@ -66,9 +68,9 @@
                 android:layout_height="wrap_content"
                 android:background="@color/kusStartANewConversationBackgroundColor"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="16dp"
                 android:text="@string/com_kustomer_start_a_new_conversation"
-                android:textColor="@color/kusStartANewConversationColor"
+                android:textColor="@color/kusStartANewConversationTextColor"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
@@ -82,7 +84,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:text="@string/com_kustomer_thank_you_we_ll_follow_up_on_your_request"
-                android:textColor="@color/kusClosedChatColor"
+                android:textColor="@color/kusClosedChatTextColor"
                 android:textSize="14sp"
                 android:visibility="gone" />
 

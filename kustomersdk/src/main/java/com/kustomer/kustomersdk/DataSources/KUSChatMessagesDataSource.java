@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.google.gson.Gson;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
@@ -382,7 +383,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 String.format(KUSConstants.URL.SESSION_LOCK_ENDPOINT, sessionId),
                 new HashMap<String, Object>() {{
                     put("locked", true);
-                    put("reason", reason);
+                    put("lockReason", reason);
                 }},
                 true,
                 new KUSRequestCompletionListener() {
@@ -466,25 +467,23 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public KUSFormQuestion volumeControlCurrentQuestion() {
-        if (!vcFormActive) {
+        if (!vcFormActive)
             return null;
-        }
 
-        if (sessionId != null) {
+        if (sessionId == null)
             return null;
-        }
+
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
         if (!chatSettings.isVolumeControlEnabled()) {
             return null;
         }
 
-        if (vcFormEnd) {
+        if (vcFormEnd)
             return null;
 
-        }
-
-        if (getOtherUserIds().size() == 0)
+        if (getOtherUserIds().size() > 0)
             return null;
+
         return formQuestion;
     }
 
@@ -497,11 +496,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
 
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if (!chatSettings.isVolumeControlEnabled()) {
+        if (chatSettings != null && !chatSettings.isVolumeControlEnabled()) {
             return false;
         }
 
-        if (getOtherUserIds().size() == 0)
+        if (getOtherUserIds().size() > 0)
             return false;
 
         if (vcChatClosed) {
@@ -727,12 +726,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     private boolean shouldPreventVCFormQuestionMessage() {
-        if (sessionId != null) {
+        if (sessionId == null) {
             return true;
         }
 
         // If we haven't loaded the chat settings data source, prevent input
-        if (this.getUserSession().getChatSettingsDataSource().isFetched()) {
+        if (!getUserSession().getChatSettingsDataSource().isFetched()) {
             return true;
         }
 
@@ -955,6 +954,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         }
                         vcChatClosed = true;
                         submittingForm = false;
+                        notifyAnnouncersOnContentChange();
                     }
                 });
     }
@@ -1150,7 +1150,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         vcTrackingStarted = true;
         final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
 
-        long delay = chatSettings.getPromptDelay();
+        long delay = chatSettings.getPromptDelay() * 1000;
 
         Handler delayHandler = new Handler(Looper.getMainLooper());
         Runnable delayRunnable = new Runnable() {
@@ -1169,7 +1169,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         // Automatically end chat
         if (chatSettings.isMarkDoneAfterTimeout()) {
 
-            long timeOutDelay = chatSettings.getTimeOut() + chatSettings.getPromptDelay();
+            long timeOutDelay = (chatSettings.getTimeOut() + chatSettings.getPromptDelay()) * 1000;
             Handler timeOutHandler = new Handler(Looper.getMainLooper());
             Runnable timeOutRunnable = new Runnable() {
                 @Override
@@ -1199,7 +1199,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         if (index == 0) {
             KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-            ArrayList<String> options = new ArrayList<>();
+            List<String> options = new ArrayList<>();
             for (String option : chatSettings.getFollowUpChannels()) {
                 options.add(option.substring(0, 1).toUpperCase() + option.substring(1).toLowerCase());
             }
@@ -1215,7 +1215,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 formMessage.put("prompt", "Sorry, it looks like no one has become available in the time we expected. Please select an alternate contact method for us to followup with you…");
                 formMessage.put("type", "property");
                 formMessage.put("property", "followup_channel");
-                formMessage.put("values", options);
+                formMessage.put("values", new JSONArray(options));
             } catch (JSONException ignore) {
             }
 

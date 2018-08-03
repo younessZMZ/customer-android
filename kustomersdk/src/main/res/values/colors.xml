@@ -49,12 +49,13 @@
     <color name="kusWebToolbarTitleColor">#000000</color>
     <color name="kusWebToolbarBackTintColor">#000000</color>
 
-    <color name="kusClosedViewColor">#E0E0E0</color>
-    <color name="kusChatHasEndedColor">#000000</color>
+    <color name="kusSessionClosedViewBackgroundColor">#E0E0E0</color>
+    <color name="kusSessionClosedViewTextColor">#000000</color>
+    <color name="kusChatHasEndedTextColor">#000000</color>
     <color name="kusChatHasEndedBackGroundColor">#E0E0E0</color>
-    <color name="kusStartANewConversationColor">#2962FF</color>
+    <color name="kusStartANewConversationTextColor">#2962FF</color>
     <color name="kusStartANewConversationBackgroundColor">#FFFFFF</color>
-    <color name="kusClosedChatColor">#2962FF</color>
+    <color name="kusClosedChatTextColor">#2962FF</color>
     <color name="kusClosedBackgroundColor">#FFFFFF</color>
     <color name="kusEndChatButtonTextColor">#000000</color>
     <color name="kusEndChatButtonBorderColor">#000000</color>

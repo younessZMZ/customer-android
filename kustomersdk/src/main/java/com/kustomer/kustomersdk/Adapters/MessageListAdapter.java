@@ -8,6 +8,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
+import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.ViewHolders.AgentMessageViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
@@ -60,6 +61,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         if (holder.getItemViewType() == END_VIEW)
             return;
 
+        if (getItemCount() > mPaginatedDataSource.getSize())
+            position--;
+
         KUSChatMessage chatMessage = messageForPosition(position);
         KUSChatMessage previousChatMessage = previousMessage(position);
         KUSChatMessage nextChatMessage = nextMessage(position);
@@ -82,11 +86,15 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
+        if (getItemCount() > mPaginatedDataSource.getSize()) {
+            if (position == 0)
+                return END_VIEW;
+            else position--;
+
+        }
         KUSChatMessage chatMessage = messageForPosition(position);
 
         boolean currentUser = KUSChatMessage.KUSChatMessageSentByUser(chatMessage);
-        if (position >= mPaginatedDataSource.getSize())
-            return END_VIEW;
         if (currentUser)
             return USER_VIEW;
         else
@@ -95,7 +103,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        if (mChatMessagesDataSource.isChatClosed())
+        KUSChatSession session = (KUSChatSession) mUserSession.getChatSessionsDataSource().findById(mChatMessagesDataSource.getSessionId());
+        if (session != null && session.getLockedAt() != null)
             return mPaginatedDataSource.getSize() + 1;
         return mPaginatedDataSource.getSize();
     }

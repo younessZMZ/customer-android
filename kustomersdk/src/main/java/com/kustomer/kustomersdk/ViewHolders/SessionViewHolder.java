@@ -190,13 +190,13 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
 
     private void updateClosedChatView() {
         if (mChatSession.getLockedAt() != null) {
-            tvSessionDate.setText(itemView.getContext().getString(R.string.com_kustomer_closed));
+            tvSessionDate.setVisibility(View.GONE);
             closedView.setVisibility(View.VISIBLE);
             tvSessionTitle.setAlpha(0.5f);
             tvSessionSubtitle.setAlpha(0.5f);
             imageLayout.setAlpha(0.5f);
         } else {
-            tvSessionDate.setText(KUSDate.humanReadableTextFromDate(sessionDate));
+            tvSessionDate.setVisibility(View.VISIBLE);
             closedView.setVisibility(View.GONE);
             tvSessionTitle.setAlpha(1f);
             tvSessionSubtitle.setAlpha(1f);

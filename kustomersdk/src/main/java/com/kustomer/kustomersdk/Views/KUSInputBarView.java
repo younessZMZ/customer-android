@@ -46,9 +46,12 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     //region Properties
     private static final int MAX_BITMAP_PIXELS = 1000000;
 
-    @BindView(R2.id.etTypeMessage) EditText etTypeMessage;
-    @BindView(R2.id.btnSendMessage) View btnSendMessage;
-    @BindView(R2.id.ivAttachment) ImageView ivAttachment;
+    @BindView(R2.id.etTypeMessage)
+    EditText etTypeMessage;
+    @BindView(R2.id.btnSendMessage)
+    View btnSendMessage;
+    @BindView(R2.id.ivAttachment)
+    ImageView ivAttachment;
     @BindView(R2.id.rvImageAttachment)
     RecyclerView rvImageAttachment;
 
@@ -86,21 +89,21 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     //endregion
 
     //region Initializer
-    private void initViews(){
+    private void initViews() {
         updateSendButton();
 
         etTypeMessage.setImeOptions(EditorInfo.IME_ACTION_SEND);
         etTypeMessage.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-        KUSUtils.showKeyboard(etTypeMessage,800);
+        KUSUtils.showKeyboard(etTypeMessage, 800);
     }
 
-    private void setListeners(){
+    private void setListeners() {
         etTypeMessage.addTextChangedListener(this);
         etTypeMessage.setOnEditorActionListener(this);
     }
 
-    private void setupAdapter(){
+    private void setupAdapter() {
         adapter = new ImageAttachmentListAdapter(this);
         rvImageAttachment.setAdapter(adapter);
 
@@ -112,22 +115,22 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     //endregion
 
     //region Public Methods
-    public void setListener(KUSInputBarViewListener listener){
+    public void setListener(KUSInputBarViewListener listener) {
         this.listener = listener;
     }
 
-    public void setText(String text){
+    public void setText(String text) {
         etTypeMessage.setText(text.trim());
     }
 
-    public String getText(){
+    public String getText() {
         return etTypeMessage.getText().toString().trim();
     }
 
-    public void setAllowsAttachment(boolean allowAttachment){
-        if(!allowAttachment)
+    public void setAllowsAttachment(boolean allowAttachment) {
+        if (!allowAttachment)
             ivAttachment.setVisibility(GONE);
-        else{
+        else {
             boolean shouldBeHidden = !KUSPermission.isCameraPermissionDeclared(getContext())
                     && !KUSPermission.isReadPermissionDeclared(getContext());
 
@@ -135,23 +138,23 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         }
     }
 
-    public void removeAllAttachments(){
+    public void removeAllAttachments() {
         adapter.removeAll();
     }
 
-    public void attachImage(String imageUri){
+    public void attachImage(String imageUri) {
         adapter.attachImage(imageUri);
 
-        if(adapter.getItemCount() == 1)
+        if (adapter.getItemCount() == 1)
             rvImageAttachment.setVisibility(VISIBLE);
 
-        rvImageAttachment.scrollToPosition(adapter.getItemCount()-1);
+        rvImageAttachment.scrollToPosition(adapter.getItemCount() - 1);
     }
 
-    public List<Bitmap> getAllImages(){
+    public List<Bitmap> getAllImages() {
 
         List<String> imageURIs = new ArrayList<>(adapter.getImageURIs());
-        if(imageURIs.size() != 0) {
+        if (imageURIs.size() != 0) {
             List<Bitmap> images = new ArrayList<>();
 
             for (String uri : imageURIs) {
@@ -159,7 +162,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
                     Bitmap bitmap = BitmapFactory.decodeFile(Uri.parse(uri).getPath());
 
                     try {
-                        bitmap = KUSImage.rotateBitmapIfNeeded(bitmap,getContext().getContentResolver().openInputStream(Uri.parse(uri)));
+                        bitmap = KUSImage.rotateBitmapIfNeeded(bitmap, getContext().getContentResolver().openInputStream(Uri.parse(uri)));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -173,7 +176,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(uri));
 
                         try {
-                            bitmap = KUSImage.rotateBitmapIfNeeded(bitmap,getContext().getContentResolver().openInputStream(Uri.parse(uri)));
+                            bitmap = KUSImage.rotateBitmapIfNeeded(bitmap, getContext().getContentResolver().openInputStream(Uri.parse(uri)));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -188,15 +191,15 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
                 }
             }
             return images;
-        }else
+        } else
             return null;
     }
 
-    public void requestInputFocus(){
+    public void requestInputFocus() {
         etTypeMessage.requestFocus();
     }
 
-    public void clearInputFocus(){
+    public void clearInputFocus() {
         etTypeMessage.clearFocus();
         KUSUtils.hideKeyboard(this);
     }
@@ -204,26 +207,26 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     //region Interface element methods
     @OnClick(R2.id.ivAttachment)
-    void attachmentClicked(){
-        if(listener != null)
+    void attachmentClicked() {
+        if (listener != null)
             listener.inputBarAttachmentClicked();
     }
 
     @OnClick(R2.id.btnSendMessage)
-    void sendPressed(){
+    void sendPressed() {
         String text = getText();
-        if(text.length() == 0)
+        if (text.length() == 0)
             return;
 
-        if(listener != null)
+        if (listener != null)
             listener.inputBarSendClicked();
     }
 
-    private void updateSendButton(){
+    private void updateSendButton() {
         String text = getText();
         boolean shouldEnableSend = text.length() > 0;
 
-        if(listener != null)
+        if (listener != null)
             shouldEnableSend = listener.inputBarShouldEnableSend();
 
         btnSendMessage.setEnabled(shouldEnableSend);
@@ -249,20 +252,22 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     @Override
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        if(i == EditorInfo.IME_ACTION_SEND){
-            sendPressed();
+        if (i == EditorInfo.IME_ACTION_SEND) {
+            if (listener != null && listener.inputBarShouldEnableSend())
+                sendPressed();
+            else return true;
         }
         return false;
     }
 
     @Override
     public void onAttachmentImageClicked(int position, List<String> imageURIs) {
-        new KUSLargeImageViewer(getContext()).showImages(imageURIs,position);
+        new KUSLargeImageViewer(getContext()).showImages(imageURIs, position);
     }
 
     @Override
     public void onAttachmentImageRemoved() {
-        if(adapter.getItemCount() == 0)
+        if (adapter.getItemCount() == 0)
             rvImageAttachment.setVisibility(GONE);
     }
     //endregion

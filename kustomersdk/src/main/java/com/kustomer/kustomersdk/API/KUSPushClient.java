@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
@@ -251,13 +252,16 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     public void onEvent(String channelName, String eventName, String data) {
                         JSONObject jsonObject = JsonHelper.stringToJson(data);
 
-                        List<KUSModel> chatSessions = JsonHelper.kusChatModelsFromJSON(
-                                Kustomer.getContext(), JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+                        List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
+                                .objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+
                         userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
 
-                        KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
-                        KUSChatMessagesDataSource messagesDataSource = userSession.get().chatMessageDataSourceForSessionId(chatSession.getId());
-                        messagesDataSource.fetchLatest();
+                        if (chatSessions.size() > 0) {
+                            KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
+                            KUSChatMessagesDataSource messagesDataSource = userSession.get().chatMessageDataSourceForSessionId(chatSession.getId());
+                            messagesDataSource.fetchLatest();
+                        }
                     }
                 });
             } catch (IllegalArgumentException ignore) {

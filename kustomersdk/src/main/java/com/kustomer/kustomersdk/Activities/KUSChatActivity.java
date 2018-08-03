@@ -8,10 +8,10 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -21,7 +21,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +55,6 @@ import com.kustomer.kustomersdk.Views.KUSInputBarView;
 import com.kustomer.kustomersdk.Views.KUSLargeImageViewer;
 import com.kustomer.kustomersdk.Views.KUSOptionsPickerView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -123,13 +121,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     @Override
     protected void onResume() {
         super.onResume();
+        KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
 
-        kusInputBarView.requestInputFocus();
+        if ((session == null || session.getLockedAt() == null) && tvClosedChat.getVisibility() == View.GONE
+                && kusOptionPickerView.getVisibility() == View.GONE)
+            kusInputBarView.requestInputFocus();
 
         if (userSession != null && chatSessionId != null)
             userSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId, null);
     }
-
 
     @Override
     protected void onPause() {
@@ -252,6 +252,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusInputBarView.setAllowsAttachment(chatSessionId != null);
         kusOptionPickerView.setListener(this);
         setupToolbar();
+        checkShouldShowInputView();
     }
 
     private void setupToolbar() {
@@ -316,7 +317,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     private void checkShouldShowOptionPicker() {
         KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
-        if (session.getLockedAt() != null) {
+        if (session != null && session.getLockedAt() != null) {
             return;
         }
 
@@ -331,9 +332,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         if (wantsOptionPicker) {
             kusInputBarView.setVisibility(View.GONE);
             kusInputBarView.clearInputFocus();
+            kusInputBarView.setText("");
 
-            if (vcCurrentQuestion.getValues().size() > 0)
+            if (vcCurrentQuestion.getValues() != null && vcCurrentQuestion.getValues().size() > 0) {
                 kusOptionPickerView.setVisibility(View.VISIBLE);
+                updateOptionsPickerOptions();
+            }
             return;
         }
 
@@ -347,6 +351,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         if (wantsOptionPicker && !teamOptionsDidFail) {
             kusInputBarView.setVisibility(View.GONE);
             kusInputBarView.clearInputFocus();
+            kusInputBarView.setText("");
 
             List<String> teamIds = currentQuestion.getValues();
             if (teamOptionsDatasource == null || !teamOptionsDatasource.getTeamIds().equals(teamIds)) {
@@ -363,15 +368,17 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusInputBarView.setVisibility(View.VISIBLE);
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
+            tvStartANewConversation.setVisibility(View.GONE);
         }
     }
 
     private void checkShouldShowInputView() {
         KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
 
-        if (session.getLockedAt() != null) {
+        if (session != null && session.getLockedAt() != null) {
             kusInputBarView.setVisibility(View.GONE);
             kusInputBarView.clearInputFocus();
+            kusInputBarView.setText("");
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
             tvStartANewConversation.setVisibility(View.VISIBLE);
@@ -401,13 +408,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             return;
         }
 
-        List<String> options = new ArrayList<>();
-        for (KUSModel model : teamOptionsDatasource.getList()) {
-            KUSTeam team = (KUSTeam) model;
-            options.add(team.fullDisplay());
-        }
+        if (teamOptionsDatasource != null) {
+            List<String> options = new ArrayList<>();
+            for (KUSModel model : teamOptionsDatasource.getList()) {
+                KUSTeam team = (KUSTeam) model;
+                options.add(team.fullDisplay());
+            }
 
-        kusOptionPickerView.setOptions(options);
+            kusOptionPickerView.setOptions(options);
+        }
     }
 
     private void setupAdapter() {
@@ -504,7 +513,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         chatMessagesDataSource.endChat("customer_ended", new KUSChatMessagesDataSource.OnEndChatListener() {
             @Override
             public void onComplete(boolean success) {
-                hideProgressBar();
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgressBar();
+                    }
+                };
+                handler.post(runnable);
+
             }
         });
 
@@ -512,21 +529,20 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @OnClick(R2.id.tvStartANewConversation)
     void startNewConversationClicked() {
-        chatMessagesDataSource.removeListener(this);
-        kusChatSession = null;
-        userSession = null;
-        chatMessagesDataSource = null;
-        teamOptionsDatasource = null;
         chatSessionId = null;
-        adapter = null;
-        kusToolbar = null;
-        shouldShowBackButton = true;
-        backPressed = false;
+        chatMessagesDataSource.removeListener(this);
+        chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+        chatMessagesDataSource.addListener(this);
 
-        initData();
         initViews();
+        btnEndChat.setVisibility(View.GONE);
+        kusOptionPickerView.setVisibility(View.GONE);
+        tvStartANewConversation.setVisibility(View.GONE);
+        tvClosedChat.setVisibility(View.GONE);
+        kusInputBarView.setVisibility(View.VISIBLE);
+        kusInputBarView.setText("");
+        adapter = null;
         setupAdapter();
-
     }
 
     @Override

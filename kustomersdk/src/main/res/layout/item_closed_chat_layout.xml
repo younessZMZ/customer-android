@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:background="@color/kusChatHasEndedBackGroundColor"
         android:gravity="center"
-        android:padding="8dp"
+        android:padding="16dp"
         android:text="@string/com_kustomer_chat_has_ended"
-        android:textColor="@color/kusChatHasEndedColor"
+        android:textColor="@color/kusChatHasEndedTextColor"
         android:textSize="14sp" />
 
 </LinearLayout>

@@ -11,15 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="74dp">
 
-        <View
+        <FrameLayout
             android:id="@+id/closedView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:background="@color/kusClosedViewColor"
-            >
+            android:background="@drawable/closed_session_background"
+            android:padding="8dp">
 
-        </View>
+            <TextView
+                style="@style/KUSClosedSessionTextAppearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/com_kustomer_closed"
+                android:textColor="@color/kusSessionClosedViewTextColor"
+                android:textSize="12sp" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

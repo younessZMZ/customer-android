@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setLayout(R.layout.activity_main,R.id.toolbar_main,getResources().getString(R.string.com_kustomer_app_name),false);
+        setLayout(R.layout.activity_main, R.id.toolbar_main, getResources().getString(R.string.com_kustomer_app_name), false);
         super.onCreate(savedInstanceState);
 
         initViews();
@@ -72,21 +72,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        });
 
 //        Kustomer.presentCustomWebPage(this,"https://www.example.com");
+//        Kustomer.setFormId("");
 
     }
 
     //endregion
 
     //region Initializer
-    private void initViews(){
+    private void initViews() {
         btnStartChat = findViewById(R.id.btnPresent);
         btnKnowledgeBase = findViewById(R.id.btnKnowledgeBase);
         ivSupport = findViewById(R.id.ivSupport);
         btnResetTrackingToken = findViewById(R.id.btnResetToken);
-        btnOnlineStatus =findViewById(R.id.btnOnlineStatus);
+        btnOnlineStatus = findViewById(R.id.btnOnlineStatus);
     }
 
-    private void setListeners(){
+    private void setListeners() {
         btnStartChat.setOnClickListener(this);
         btnResetTrackingToken.setOnClickListener(this);
         ivSupport.setOnClickListener(this);
@@ -98,7 +99,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //region Click Listener
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.ivSupport:
             case R.id.btnPresent:
                 Kustomer.showSupport(this);
@@ -125,27 +126,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Kustomer.isChatAvailable(new KUSChatAvailableListener() {
             @Override
             public void onSuccess(boolean enabled) {
-                String  testString = enabled ? "Yes, chat's turned on!" :
+                String testString = enabled ? "Yes, chat's turned on!" :
                         "Sorry, chat is not available at the moment, please contact support@acme.com";
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Chat On/Off Status").setMessage(testString)
-                        .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                }).show();
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
             }
 
             @Override
             public void onFailure() {
-                String  testString = "Sorry, chat is not available at the moment, please contact support@acme.com";
+                String testString = "Sorry, chat is not available at the moment, please contact support@acme.com";
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Chat On/Off Status").setMessage(testString)
-                        .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                }).show();
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
             }
         });
 

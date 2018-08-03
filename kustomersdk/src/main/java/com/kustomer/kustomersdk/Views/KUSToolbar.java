@@ -49,6 +49,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     KUSUserDataSource userDataSource;
 
     TextView tvName;
+    TextView tvGreetingMessageVC;
     TextView tvGreetingMessage;
     TextView tvToolbarUnreadCount;
     KUSMultipleAvatarsView kusMultipleAvatarsView;
@@ -114,6 +115,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     //region Private Methods
     private void initViews() {
         tvName = findViewById(R.id.tvName);
+        tvGreetingMessageVC = findViewById(R.id.tvGreetingMessageVC);
         tvGreetingMessage = findViewById(R.id.tvGreetingMessage);
         kusMultipleAvatarsView = findViewById(R.id.multipleAvatarViews);
         ivBack = findViewById(R.id.ivBack);
@@ -163,6 +165,8 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             tvGreetingMessage.setLayoutParams(vlp);
             toolbarInnerLayout.setLayoutParams(lp);
 
+            tvGreetingMessage.setVisibility(VISIBLE);
+
         } else {
             tvName.setTextSize(13f);
             tvGreetingMessage.setTextSize(11f);
@@ -180,6 +184,13 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             tvName.setLayoutParams(vlp);
             tvGreetingMessage.setLayoutParams(vlp);
             toolbarInnerLayout.setLayoutParams(lp);
+            if (userSession != null) {
+                KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+                if (chatSettings != null && chatSettings.isVolumeControlEnabled())
+                    tvGreetingMessage.setVisibility(GONE);
+                else
+                    tvGreetingMessageVC.setVisibility(GONE);
+            }
         }
 
     }
@@ -233,12 +244,12 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
             if (chatSettings.isVolumeControlEnabled()) {
                 if (chatSettings.isUseDynamicWaitMessage())
-                    tvGreetingMessage.setText(chatSettings.getWaitMessage());
+                    tvGreetingMessageVC.setText(chatSettings.getWaitMessage());
                 else
-                    tvGreetingMessage.setText(chatSettings.getCustomWaitMessage());
-            } else {
-                tvGreetingMessage.setText(chatSettings.getGreeting());
-            }
+                    tvGreetingMessageVC.setText(chatSettings.getCustomWaitMessage());
+            } else
+                tvGreetingMessageVC.setText("");
+            tvGreetingMessage.setText(chatSettings.getGreeting());
         }
         tvName.setText(responderName);
     }

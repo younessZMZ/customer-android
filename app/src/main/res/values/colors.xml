@@ -50,6 +50,16 @@
     <!--<color name="kusOptionPickerButtonTextColor">#2962FF</color>-->
     <!--<color name="kusOptionPickerButtonBackground">#F5F5F5</color>-->
 
-
+    <!--<color name="kusSessionClosedViewBackgroundColor">#E0E0E0</color>-->
+    <!--<color name="kusSessionClosedViewTextColor">#000000</color>-->
+    <!--<color name="kusChatHasEndedTextColor">#000000</color>-->
+    <!--<color name="kusChatHasEndedBackGroundColor">#E0E0E0</color>-->
+    <!--<color name="kusStartANewConversationTextColor">#2962FF</color>-->
+    <!--<color name="kusStartANewConversationBackgroundColor">#FFFFFF</color>-->
+    <!--<color name="kusClosedChatTextColor">#2962FF</color>-->
+    <!--<color name="kusClosedBackgroundColor">#FFFFFF</color>-->
+    <!--<color name="kusEndChatButtonTextColor">#000000</color>-->
+    <!--<color name="kusEndChatButtonBorderColor">#000000</color>-->
+    <!--<color name="kusEndChatButtonBackGroundColor">#FFFFFF</color>-->
 
 </resources>
