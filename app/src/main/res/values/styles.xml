@@ -82,23 +82,23 @@
     <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
-    <style name="KUSChatHasEndedTextAppearance" parent="@style/TextAppearance.AppCompat">
-        <item name="android:fontFamily">@font/montserrat</item>
-    </style>
+    <!--<style name="KUSChatHasEndedTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
 
-    <style name="KUSStartANewConversationTextAppearance" parent="@style/TextAppearance.AppCompat">
-        <item name="android:fontFamily">@font/montserrat</item>
-    </style>
+    <!--<style name="KUSStartANewConversationTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
 
-    <style name="KUSClosedTextAppearance" parent="@style/TextAppearance.AppCompat">
-        <item name="android:fontFamily">@font/montserrat</item>
-    </style>
+    <!--<style name="KUSClosedTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
 
-    <style name="KUSEndChatButtonAppearance" parent="@style/TextAppearance.AppCompat.Button">
-        <item name="android:fontFamily">@font/montserrat</item>
-    </style>
+    <!--<style name="KUSEndChatButtonAppearance" parent="@style/TextAppearance.AppCompat.Button">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
 
-    <style name="KUSClosedSessionTextAppearance" parent="@style/TextAppearance.AppCompat">
-        <item name="android:fontFamily">@font/montserrat</item>
-    </style>
+    <!--<style name="KUSClosedSessionTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
 </resources>

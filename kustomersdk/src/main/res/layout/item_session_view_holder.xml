@@ -15,7 +15,7 @@
             android:id="@+id/closedView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_margin="6dp"
             android:background="@drawable/closed_session_background"
             android:padding="8dp">
 
