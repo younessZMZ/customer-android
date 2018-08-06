@@ -16,8 +16,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
@@ -98,6 +102,7 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
             params1.setMargins(1,1,1,1);
 
         staticImageView.setLayoutParams(params1);
+        staticImageView.setVisibility(INVISIBLE);
         addView(staticImageView);
 
         remoteImageView = new ImageView(getContext());
@@ -194,20 +199,38 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
         if(chatSettings != null) {
             URL iconURL = user != null && user.getAvatarURL() != null ? user.getAvatarURL() : chatSettings.getTeamIconURL();
 
-            if(iconURL != null)
-            try {
-                Glide.with(getContext())
-                        .load(iconURL.toString())
-                        .apply(RequestOptions.circleCropTransform())
-                        .apply(RequestOptions.noAnimation())
-                        .into(new SimpleTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                remoteImageView.setImageDrawable(resource);
-                            }
-                        });
+            if(iconURL != null) {
+                try {
+                    Glide.with(getContext())
+                            .load(iconURL.toString())
+                            .apply(RequestOptions.circleCropTransform())
+                            .apply(RequestOptions.noAnimation())
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    staticImageView.setVisibility(VISIBLE);
+                                    return false;
+                                }
 
-            }catch (IllegalArgumentException ignore){}
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    return false;
+                                }
+                            })
+                            .into(new SimpleTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    remoteImageView.setImageDrawable(resource);
+                                }
+                            });
+
+                } catch (IllegalArgumentException ignore) {
+                    staticImageView.setVisibility(VISIBLE);
+                }
+            }
+            else{
+                staticImageView.setVisibility(VISIBLE);
+            }
 
         }
     }
