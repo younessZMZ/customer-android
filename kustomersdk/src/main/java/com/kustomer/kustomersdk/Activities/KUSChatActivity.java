@@ -596,7 +596,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                     checkShouldShowInputView();
                     checkShouldShowCloseChatButtonView();
 
-                    if (dataSource.getSize() > 1)
+                    if (dataSource.getSize() >= 1)
                         setupToolbar();
 
                     adapter.notifyDataSetChanged();
