@@ -19,12 +19,13 @@ public class KUSSharedPreferences {
     private static final String PREFERENCE_FILE_KEY = "kustomer_app_preferences";
     private static final String TRACKING_TOKEN_PREFERENCE = "tracking_token_pref";
     private static final String DID_CAPTURE_EMAIL_PREFERENCE = "email_capture_pref";
+    private static final String FORM_ID_PREFERENCE = "form_id_pref";
     private SharedPreferences sharedPref = null;
     //endregion
 
     //region Initializer
-    public KUSSharedPreferences(Context context, KUSUserSession userSession){
-        String suiteName = userSession.getOrgName()+ "_" + PREFERENCE_FILE_KEY;
+    public KUSSharedPreferences(Context context, KUSUserSession userSession) {
+        String suiteName = userSession.getOrgName() + "_" + PREFERENCE_FILE_KEY;
         sharedPref = context.getSharedPreferences(
                 suiteName, MODE_PRIVATE);
     }
@@ -54,20 +55,28 @@ public class KUSSharedPreferences {
     //endregion
 
     //region Public Methods
-    public void setDidCaptureEmail(boolean didCaptureEmail){
-        saveBoolean(DID_CAPTURE_EMAIL_PREFERENCE,didCaptureEmail);
+    public void setDidCaptureEmail(boolean didCaptureEmail) {
+        saveBoolean(DID_CAPTURE_EMAIL_PREFERENCE, didCaptureEmail);
     }
 
-    public boolean getDidCaptureEmail(){
+    public boolean getDidCaptureEmail() {
         return getBoolean(DID_CAPTURE_EMAIL_PREFERENCE);
     }
 
     public void setTrackingToken(String trackingToken) {
-        saveString(TRACKING_TOKEN_PREFERENCE,trackingToken);
+        saveString(TRACKING_TOKEN_PREFERENCE, trackingToken);
     }
 
     public String getTrackingToken() {
         return getString(TRACKING_TOKEN_PREFERENCE);
+    }
+
+    public void setFormId(String formId) {
+        saveString(FORM_ID_PREFERENCE, formId);
+    }
+
+    public String getFormId() {
+        return getString(FORM_ID_PREFERENCE);
     }
 
     public void reset() {

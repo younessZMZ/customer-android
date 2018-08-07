@@ -34,10 +34,12 @@ public class KUSChatSession extends KUSModel implements Serializable {
     private Date createdAt;
     private Date lastSeenAt;
     private Date lastMessageAt;
+    private Date lockedAt;
     //endregion
 
     //region Initializer
-    public KUSChatSession(){}
+    public KUSChatSession() {
+    }
 
     public KUSChatSession(JSONObject json) throws KUSInvalidJsonException {
         super(json);
@@ -48,6 +50,7 @@ public class KUSChatSession extends KUSModel implements Serializable {
         createdAt = dateFromKeyPath(json, "attributes.createdAt");
         lastSeenAt = dateFromKeyPath(json, "attributes.lastSeenAt");
         lastMessageAt = dateFromKeyPath(json, "attributes.lastMessageAt");
+        lockedAt = dateFromKeyPath(json, "attributes.lockedAt");
     }
     //endregion
 
@@ -56,12 +59,12 @@ public class KUSChatSession extends KUSModel implements Serializable {
 
         JSONObject attributes = new JSONObject();
         try {
-            attributes.put("preview",message.getBody() != null ? message.getBody() : "");
-            attributes.put("createdAt",message.getCreatedAt() != null ? message.getCreatedAt()
+            attributes.put("preview", message.getBody() != null ? message.getBody() : "");
+            attributes.put("createdAt", message.getCreatedAt() != null ? message.getCreatedAt()
                     : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
-            attributes.put("lastSeenAt",message.getCreatedAt() != null ? message.getCreatedAt()
+            attributes.put("lastSeenAt", message.getCreatedAt() != null ? message.getCreatedAt()
                     : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
-            attributes.put("lastMessageAt",message.getCreatedAt() != null ? message.getCreatedAt()
+            attributes.put("lastMessageAt", message.getCreatedAt() != null ? message.getCreatedAt()
                     : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -69,64 +72,63 @@ public class KUSChatSession extends KUSModel implements Serializable {
 
         JSONObject messageJSON = new JSONObject();
         try {
-            messageJSON.put("type","chat_session");
-            messageJSON.put("id",message.getSessionId() != null ? message.getSessionId() : "");
-            messageJSON.put("attributes",attributes);
+            messageJSON.put("type", "chat_session");
+            messageJSON.put("id", message.getSessionId() != null ? message.getSessionId() : "");
+            messageJSON.put("attributes", attributes);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return new KUSChatSession(messageJSON);
     }
+
     @Override
     public String toString() {
         //Missing %p (this)
-        return String.format("<%s : oid: %s; preview: %s>",this.getClass(),this.getId(),this.preview);
+        return String.format("<%s : oid: %s; preview: %s>", this.getClass(), this.getId(), this.preview);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(!obj.getClass().equals(KUSChatSession.class))
+        if (!obj.getClass().equals(KUSChatSession.class))
             return false;
 
-        KUSChatSession chatSession = (KUSChatSession)obj;
+        KUSChatSession chatSession = (KUSChatSession) obj;
 
-        if(!chatSession.getId().equals(this.getId()))
+        if (!chatSession.getId().equals(this.getId()))
             return false;
         if (this.preview != null && chatSession.preview != null && !chatSession.preview.equals(this.preview))
             return false;
         if (this.preview != null || chatSession.preview != null)
             return false;
-        if(chatSession.lastSeenAt!=null && !chatSession.lastSeenAt.equals(this.lastSeenAt))
+        if (chatSession.lastSeenAt != null && !chatSession.lastSeenAt.equals(this.lastSeenAt))
             return false;
-        if(chatSession.lastMessageAt!=null && !chatSession.lastMessageAt.equals(this.lastMessageAt))
+        if (chatSession.lastMessageAt != null && !chatSession.lastMessageAt.equals(this.lastMessageAt))
             return false;
-        if(chatSession.createdAt!=null && !chatSession.createdAt.equals(this.createdAt))
+        if (chatSession.createdAt != null && !chatSession.createdAt.equals(this.createdAt))
             return false;
-
 
 
         return true;
     }
 
-    private Date sortDate(){
+    private Date sortDate() {
         KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
         KUSChatMessagesDataSource messagesDataSource = userSession.chatMessageDataSourceForSessionId(getId());
         KUSChatMessage chatMessage = null;
 
-        if(messagesDataSource != null && messagesDataSource.getSize()>0)
+        if (messagesDataSource != null && messagesDataSource.getSize() > 0)
             chatMessage = (KUSChatMessage) messagesDataSource.get(0);
 
         Date laterLastMessageAt = null;
 
-        if(chatMessage != null && chatMessage.getCreatedAt() != null) {
-            if(lastMessageAt != null)
+        if (chatMessage != null && chatMessage.getCreatedAt() != null) {
+            if (lastMessageAt != null)
                 laterLastMessageAt = chatMessage.getCreatedAt().after(lastMessageAt) ?
                         chatMessage.getCreatedAt() : lastMessageAt;
             else
                 lastMessageAt = null;
-        }
-        else
+        } else
             laterLastMessageAt = lastMessageAt;
 
         return laterLastMessageAt != null ? laterLastMessageAt : createdAt;
@@ -185,6 +187,14 @@ public class KUSChatSession extends KUSModel implements Serializable {
 
     public void setLastMessageAt(Date lastMessageAt) {
         this.lastMessageAt = lastMessageAt;
+    }
+
+    public void setLockedAt(Date lockedAt) {
+        this.lockedAt = lockedAt;
+    }
+
+    public Date getLockedAt() {
+        return lockedAt;
     }
     //endregion
 }

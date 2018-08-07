@@ -4,15 +4,11 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.transition.Scene;
-import android.support.transition.TransitionManager;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,7 +20,6 @@ import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
-import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
@@ -49,6 +44,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     KUSUserDataSource userDataSource;
 
     TextView tvName;
+    TextView tvGreetingMessageVC;
     TextView tvGreetingMessage;
     TextView tvToolbarUnreadCount;
     KUSMultipleAvatarsView kusMultipleAvatarsView;
@@ -114,6 +110,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     //region Private Methods
     private void initViews() {
         tvName = findViewById(R.id.tvName);
+        tvGreetingMessageVC = findViewById(R.id.tvGreetingMessageVC);
         tvGreetingMessage = findViewById(R.id.tvGreetingMessage);
         kusMultipleAvatarsView = findViewById(R.id.multipleAvatarViews);
         ivBack = findViewById(R.id.ivBack);
@@ -124,9 +121,11 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         if (showLabel) {
             tvName.setVisibility(VISIBLE);
             tvGreetingMessage.setVisibility(VISIBLE);
+            tvGreetingMessageVC.setVisibility(VISIBLE);
         } else {
             tvName.setVisibility(GONE);
             tvGreetingMessage.setVisibility(GONE);
+            tvGreetingMessageVC.setVisibility(GONE);
         }
 
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
@@ -147,39 +146,63 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         if (extraLargeSize) {
             tvName.setTextSize(15f);
             tvGreetingMessage.setTextSize(13f);
+            tvGreetingMessageVC.setTextSize(13f);
 
-            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),40),
-                    0, (int) KUSUtils.dipToPixels(getContext(),40));
+            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 40),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 40));
 
-            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),4),
-                    0,(int) KUSUtils.dipToPixels(getContext(),4));
+            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 4),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 4));
 
-            vlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),4),
-                    0,(int) KUSUtils.dipToPixels(getContext(),4));
-
+            vlp.setMargins((int) KUSUtils.dipToPixels(getContext(), 4),
+                    (int) KUSUtils.dipToPixels(getContext(), 4),
+                    (int) KUSUtils.dipToPixels(getContext(), 4),
+                    (int) KUSUtils.dipToPixels(getContext(), 4));
 
             kusMultipleAvatarsView.setLayoutParams(avatarlp);
             tvName.setLayoutParams(vlp);
             tvGreetingMessage.setLayoutParams(vlp);
+            tvGreetingMessageVC.setLayoutParams(vlp);
             toolbarInnerLayout.setLayoutParams(lp);
+
+            tvGreetingMessage.setVisibility(VISIBLE);
+
+            if (userSession != null) {
+                KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+                int isVCGreetingVisible = chatSettings != null && chatSettings.isVolumeControlEnabled() ? VISIBLE : GONE;
+                tvGreetingMessageVC.setVisibility(isVCGreetingVisible);
+            }
 
         } else {
             tvName.setTextSize(13f);
             tvGreetingMessage.setTextSize(11f);
+            tvGreetingMessageVC.setTextSize(11f);
 
-            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),10),
-                    0, (int) KUSUtils.dipToPixels(getContext(),5));
+            lp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 10),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 5));
 
-            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(),2),
-                    0,(int) KUSUtils.dipToPixels(getContext(),2));
+            avatarlp.setMargins(0, (int) KUSUtils.dipToPixels(getContext(), 2),
+                    0, (int) KUSUtils.dipToPixels(getContext(), 2));
 
-            vlp.setMargins(0, 0,
-                    0,0);
+            vlp.setMargins((int) KUSUtils.dipToPixels(getContext(), 4), 0,
+                    (int) KUSUtils.dipToPixels(getContext(), 4), 0);
 
             kusMultipleAvatarsView.setLayoutParams(avatarlp);
             tvName.setLayoutParams(vlp);
             tvGreetingMessage.setLayoutParams(vlp);
+            tvGreetingMessageVC.setLayoutParams(vlp);
             toolbarInnerLayout.setLayoutParams(lp);
+            if (userSession != null) {
+                KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+
+                if (chatSettings != null && chatSettings.isVolumeControlEnabled()) {
+                    tvGreetingMessage.setVisibility(GONE);
+                    tvGreetingMessageVC.setVisibility(VISIBLE);
+                } else {
+                    tvGreetingMessage.setVisibility(VISIBLE);
+                    tvGreetingMessageVC.setVisibility(GONE);
+                }
+            }
         }
 
     }
@@ -231,10 +254,13 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
                     responderName = userSession.getOrganizationName();
             }
 
+            String vcGreetingMessage = chatSettings.isUseDynamicWaitMessage()
+                    ? chatSettings.getWaitMessage() : chatSettings.getCustomWaitMessage();
+
+            tvGreetingMessageVC.setText(vcGreetingMessage);
             tvGreetingMessage.setText(chatSettings.getGreeting());
         }
         tvName.setText(responderName);
-
     }
 
     private void updateBackButtonBadge() {
@@ -374,7 +400,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if(sessionId.equals(mSessionId))
+                if (sessionId.equals(mSessionId))
                     return;
 
                 sessionId = mSessionId;
@@ -389,8 +415,6 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             }
         };
         handler.post(runnable);
-
-
 
 
     }

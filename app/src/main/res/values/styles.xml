@@ -34,52 +34,71 @@
 
 
     <!--<style name="KUSChatMessageTimeStampTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
     <!--<style name="KUSChatMessageTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
     <!--<style name="KUSChatSessionTitleTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
     <!--<style name="KUSChatSessionSubtitleTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
     <!--<style name="KUSChatSessionDateTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
     <!--<style name="KUSChatSessionUnreadTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
     <!--<style name="KUSToolbarNameTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
     <!--<style name="KUSToolbarGreetingTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
     <!--<style name="KUSToolbarUnreadTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
     <!--<style name="KUSNewSessionButtonAppearance" parent="@style/TextAppearance.AppCompat.Button">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
     <!--<style name="KUSEmailInputPromptTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
     <!--<style name="KUSEmailInputTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
     <!--<style name="KUSInputBarTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
     <!--<style name="KUSOptionPickerTextAppearance" parent="@style/TextAppearance.AppCompat">-->
-        <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
     <!--</style>-->
 
+    <!--<style name="KUSChatHasEndedTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
+
+    <!--<style name="KUSStartANewConversationTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
+
+    <!--<style name="KUSClosedTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
+
+    <!--<style name="KUSEndChatButtonAppearance" parent="@style/TextAppearance.AppCompat.Button">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
+
+    <!--<style name="KUSClosedSessionTextAppearance" parent="@style/TextAppearance.AppCompat">-->
+    <!--<item name="android:fontFamily">@font/montserrat</item>-->
+    <!--</style>-->
 </resources>

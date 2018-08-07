@@ -324,7 +324,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
                 KUSChatSession chatSession = (KUSChatSession) model;
                 //Fetch any messages that might contribute to unread count
                 KUSChatMessagesDataSource messagesDataSource = chatMessageDataSourceForSessionId(chatSession.getId());
-                boolean hasUnseen = chatSession.getLastSeenAt() == null || chatSession.getLastMessageAt().after(chatSession.getLastMessageAt());
+                boolean hasUnseen = chatSession.getLastSeenAt() == null || (chatSession.getLastMessageAt() != null && chatSession.getLastMessageAt().after(chatSession.getLastSeenAt()));
                 if(hasUnseen && !messagesDataSource.isFetched())
                     messagesDataSource.fetchLatest();
             }

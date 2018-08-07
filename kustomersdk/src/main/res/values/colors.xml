@@ -15,7 +15,7 @@
     <color name="kusSessionPlaceholderLineColor">#EEEEEE</color>
     <color name="kusNewSessionButtonColor">#2962FF</color>
     <color name="kusNewSessionTextColor">#FFFFFF</color>
-    
+
     <color name="kusToolbarNameColor">#000000</color>
     <color name="kusToolbarGreetingColor">#000000</color>
     <color name="kusToolbarSeparatorColor">#BDBDBD</color>
@@ -48,6 +48,18 @@
     <color name="kusWebRefreshTintColor">#000000</color>
     <color name="kusWebToolbarTitleColor">#000000</color>
     <color name="kusWebToolbarBackTintColor">#000000</color>
+
+    <color name="kusSessionClosedViewBackgroundColor">#F1F1F1</color>
+    <color name="kusSessionClosedViewTextColor">#000000</color>
+    <color name="kusChatHasEndedTextColor">#000000</color>
+    <color name="kusChatHasEndedBackGroundColor">#E0E0E0</color>
+    <color name="kusStartANewConversationTextColor">#2962FF</color>
+    <color name="kusStartANewConversationBackgroundColor">#FFFFFF</color>
+    <color name="kusClosedChatTextColor">#545454</color>
+    <color name="kusClosedBackgroundColor">#E0E0E0</color>
+    <color name="kusEndChatButtonTextColor">#000000</color>
+    <color name="kusEndChatButtonBorderColor">#000000</color>
+    <color name="kusEndChatButtonBackGroundColor">#FFFFFF</color>
 
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>
