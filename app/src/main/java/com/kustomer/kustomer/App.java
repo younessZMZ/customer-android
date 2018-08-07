@@ -5,8 +5,6 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 import com.kustomer.kustomersdk.Kustomer;
 
-import java.util.Locale;
-
 import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {

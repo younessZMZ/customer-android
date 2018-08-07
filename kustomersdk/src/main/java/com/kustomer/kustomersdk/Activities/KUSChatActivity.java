@@ -529,20 +529,21 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @OnClick(R2.id.tvStartANewConversation)
     void startNewConversationClicked() {
-        chatSessionId = null;
         chatMessagesDataSource.removeListener(this);
         chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
         chatMessagesDataSource.addListener(this);
 
-        initViews();
-        btnEndChat.setVisibility(View.GONE);
-        kusOptionPickerView.setVisibility(View.GONE);
-        tvStartANewConversation.setVisibility(View.GONE);
-        tvClosedChat.setVisibility(View.GONE);
-        kusInputBarView.setVisibility(View.VISIBLE);
-        kusInputBarView.setText("");
+        chatSessionId = null;
         adapter = null;
         setupAdapter();
+        kusInputBarView.setVisibility(View.VISIBLE);
+        kusInputBarView.setText("");
+        tvStartANewConversation.setVisibility(View.GONE);
+        kusInputBarView.setAllowsAttachment(false);
+        kusToolbar.setSessionId(chatSessionId);
+        checkShouldShowEmailInput();
+
+        kusToolbar.setExtraLargeSize(chatMessagesDataSource.getSize() == 0);
     }
 
     @Override
