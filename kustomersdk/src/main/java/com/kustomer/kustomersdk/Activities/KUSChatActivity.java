@@ -552,7 +552,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                progressDialog.dismiss();
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+
                 if (dataSource == chatMessagesDataSource) {
                     checkShouldShowCloseChatButtonView();
                 }
