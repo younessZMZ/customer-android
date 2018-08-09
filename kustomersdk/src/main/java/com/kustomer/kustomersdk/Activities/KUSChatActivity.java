@@ -382,6 +382,17 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
             tvStartANewConversation.setVisibility(View.VISIBLE);
+
+            int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
+            KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+            boolean isBackToChatButton = settings != null && settings.getSingleSessionChat() && openChats >= 1;
+
+            if (isBackToChatButton) {
+                tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);
+            } else {
+                tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
+            }
+
             return;
         }
 
@@ -529,21 +540,32 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @OnClick(R2.id.tvStartANewConversation)
     void startNewConversationClicked() {
-        chatMessagesDataSource.removeListener(this);
-        chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
-        chatMessagesDataSource.addListener(this);
+        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
+        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        boolean isBackToChatButton = settings != null && settings.getSingleSessionChat() && openChats >= 1;
+        if (isBackToChatButton) {
+            KUSChatSession chatSession = (KUSChatSession) userSession.getChatSessionsDataSource().get(0);
+            Intent intent = new Intent(this, KUSChatActivity.class);
+            intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY, chatSession);
+            startActivity(intent);
+            
+        } else {
+            chatMessagesDataSource.removeListener(this);
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+            chatMessagesDataSource.addListener(this);
 
-        chatSessionId = null;
-        adapter = null;
-        setupAdapter();
-        kusInputBarView.setVisibility(View.VISIBLE);
-        kusInputBarView.setText("");
-        tvStartANewConversation.setVisibility(View.GONE);
-        kusInputBarView.setAllowsAttachment(false);
-        kusToolbar.setSessionId(chatSessionId);
-        checkShouldShowEmailInput();
+            chatSessionId = null;
+            adapter = null;
+            setupAdapter();
+            kusInputBarView.setVisibility(View.VISIBLE);
+            kusInputBarView.setText("");
+            tvStartANewConversation.setVisibility(View.GONE);
+            kusInputBarView.setAllowsAttachment(false);
+            kusToolbar.setSessionId(chatSessionId);
+            checkShouldShowEmailInput();
 
-        kusToolbar.setExtraLargeSize(chatMessagesDataSource.getSize() == 0);
+            kusToolbar.setExtraLargeSize(chatMessagesDataSource.getSize() == 0);
+        }
     }
 
     @Override

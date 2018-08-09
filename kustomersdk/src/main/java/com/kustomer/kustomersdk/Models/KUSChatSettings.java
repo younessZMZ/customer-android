@@ -34,6 +34,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private Boolean markDoneAfterTimeout;
     private Boolean volumeControlEnabled;
     private Boolean closableChat;
+    private Boolean singleSessionChat;
     //endregion
 
     //region Initializer
@@ -50,6 +51,8 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
         closableChat = JsonHelper.boolFromKeyPath(json, "attributes.closableChat");
         waitMessage = JsonHelper.stringFromKeyPath(json, "attributes.waitMessage");
+        singleSessionChat = JsonHelper.boolFromKeyPath(json, "attributes.singleSessionChat");
+
         customWaitMessage = JsonHelper.stringFromKeyPath(json, "attributes.volumeControl.customWaitMessage");
         timeOut = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.timeout");
         promptDelay = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.promptDelay");
@@ -159,6 +162,10 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public Boolean getClosableChat() {
         return closableChat;
+    }
+
+    public Boolean getSingleSessionChat() {
+        return singleSessionChat;
     }
 
     //endregion
