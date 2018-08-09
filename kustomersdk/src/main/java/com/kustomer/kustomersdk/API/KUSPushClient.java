@@ -258,9 +258,20 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
 
                         if (chatSessions.size() > 0) {
-                            KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
-                            KUSChatMessagesDataSource messagesDataSource = userSession.get().chatMessageDataSourceForSessionId(chatSession.getId());
-                            messagesDataSource.fetchLatest();
+                            KUSChatSettings settings = (KUSChatSettings) userSession.get().getChatSettingsDataSource().getObject();
+                            if (settings != null && settings.getSingleSessionChat()) {
+
+                                for (KUSModel model : userSession.get().getChatSessionsDataSource().getList()) {
+                                    KUSChatSession session = (KUSChatSession) model;
+                                    KUSChatMessagesDataSource messagesDataSource = userSession.get().chatMessageDataSourceForSessionId(session.getId());
+                                    messagesDataSource.fetchLatest();
+                                }
+                            } else {
+
+                                KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
+                                KUSChatMessagesDataSource messagesDataSource = userSession.get().chatMessageDataSourceForSessionId(chatSession.getId());
+                                messagesDataSource.fetchLatest();
+                            }
                         }
                     }
                 });

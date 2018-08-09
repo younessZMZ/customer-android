@@ -90,7 +90,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
         if (chatSessionsDataSource != null)
             chatSessionsDataSource.fetchLatest();
-        addCreateSessionBackToChatButton();
+        setCreateSessionBackToChatButton();
     }
 
     @Override
@@ -131,13 +131,8 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Private Methods
-    private void addCreateSessionBackToChatButton() {
-        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
-
-        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        boolean isBackToChatButton = settings != null && settings.getSingleSessionChat() && openChats >= 1;
-
-        if (isBackToChatButton) {
+    private void setCreateSessionBackToChatButton() {
+        if (isBackToChatButton()) {
             btnNewConversation.setText(R.string.com_kustomer_back_to_chat);
             btnNewConversation.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         } else {
@@ -154,6 +149,12 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             else
                 btnNewConversation.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
         }
+    }
+
+    private boolean isBackToChatButton() {
+        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
+        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        return (settings != null && settings.getSingleSessionChat() && openChats >= 1);
     }
 
     private void handleFirstLoadIfNecessary() {
@@ -202,11 +203,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     void newConversationClicked() {
         Intent intent = new Intent(this, KUSChatActivity.class);
 
-        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
-        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        boolean isBackToChatButton = settings != null && settings.getSingleSessionChat() && openChats >= 1;
-
-        if (isBackToChatButton) {
+        if (isBackToChatButton()) {
             KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.get(0);
             intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY, chatSession);
         }
@@ -257,7 +254,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             public void run() {
                 adapter.setData((KUSChatSessionsDataSource) dataSource);
                 adapter.notifyDataSetChanged();
-                addCreateSessionBackToChatButton();
+                setCreateSessionBackToChatButton();
             }
         };
         handler.post(runnable);

@@ -41,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -510,6 +511,27 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         return false;
     }
 
+    public void closeProactiveCampaignIfNecessary() {
+        KUSChatSettings settings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+
+        if (settings.getSingleSessionChat()) {
+
+            HashMap<String, KUSChatMessagesDataSource> chatSessionsHashMap = getUserSession().getChatMessagesDataSources();
+            ArrayList<KUSChatMessagesDataSource> chatSessions = new ArrayList<>(chatSessionsHashMap.values());
+
+            for (KUSChatMessagesDataSource chatMessagesDataSource : chatSessions) {
+
+                if (!chatMessagesDataSource.isAnyMessageByCurrentUser()) {
+
+                    getUserSession().getChatSessionsDataSource()
+                            .updateLastSeenAtForSessionId(chatMessagesDataSource.sessionId, null);
+
+                    chatMessagesDataSource.endChat("customer_ended", null);
+                }
+            }
+        }
+    }
+
     //endregion
 
     //region Private Methods
@@ -910,7 +932,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 KUSRequestType.KUS_REQUEST_TYPE_POST,
                 KUSConstants.URL.VOLUME_CONTROL_ENDPOINT,
                 new HashMap<String, Object>() {{
-                    put("messages",new JSONArray(messagesJSON));
+                    put("messages", new JSONArray(messagesJSON));
                     put("session", getSessionId());
                 }},
                 true,
@@ -1312,6 +1334,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             KUSChatMessage temporaryMessage = (KUSChatMessage) model;
             messageRetryHashMap.remove(temporaryMessage.getId());
         }
+        
+        closeProactiveCampaignIfNecessary();
     }
 
     private JSONArray getAttachmentIds(List<KUSChatAttachment> attachments) {
