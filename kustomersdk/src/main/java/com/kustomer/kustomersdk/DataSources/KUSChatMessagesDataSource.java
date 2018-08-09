@@ -910,7 +910,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 KUSRequestType.KUS_REQUEST_TYPE_POST,
                 KUSConstants.URL.VOLUME_CONTROL_ENDPOINT,
                 new HashMap<String, Object>() {{
-                    put("messages", messagesJSON);
+                    put("messages",new JSONArray(messagesJSON));
                     put("session", getSessionId());
                 }},
                 true,
