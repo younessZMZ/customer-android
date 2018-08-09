@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.google.gson.Gson;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
@@ -41,7 +40,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -81,6 +79,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private boolean vcFormActive;
     private boolean vcFormEnd;
     private boolean vcChatClosed;
+    private boolean isProactiveCampaign;
     private ArrayList<KUSModel> temporaryVCMessagesResponses;
 
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
@@ -159,6 +158,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public void sendMessageWithText(String text, List<Bitmap> attachments, String value) {
+        isProactiveCampaign = !isAnyMessageByCurrentUser();
+
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
         if (sessionId == null && chatSettings.getActiveFormId() != null) {
 
@@ -1334,8 +1335,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             KUSChatMessage temporaryMessage = (KUSChatMessage) model;
             messageRetryHashMap.remove(temporaryMessage.getId());
         }
-        
-        closeProactiveCampaignIfNecessary();
+
+        if (isProactiveCampaign)
+            closeProactiveCampaignIfNecessary();
     }
 
     private JSONArray getAttachmentIds(List<KUSChatAttachment> attachments) {
@@ -1434,6 +1436,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
         insertAutoReplyIfNecessary();
         startVolumeControlTracking();
+        closeProactiveCampaignIfNecessary();
     }
 
     @Override
