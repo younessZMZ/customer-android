@@ -1,6 +1,8 @@
 package com.kustomer.kustomersdk.Activities;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +22,7 @@ import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
+import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -48,7 +51,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //region LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setLayout(R.layout.activity_kussessions,R.id.toolbar_main,null,false);
+        setLayout(R.layout.activity_kussessions, R.id.toolbar_main, null, false);
         super.onCreate(savedInstanceState);
 
         userSession = Kustomer.getSharedInstance().getUserSession();
@@ -63,7 +66,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         setupAdapter();
         setupToolbar();
 
-        if(!getResources().getBoolean(R.bool.kusNewSessionButtonHasShadow)) {
+        if (!getResources().getBoolean(R.bool.kusNewSessionButtonHasShadow)) {
             ViewCompat.setElevation(btnNewConversation, 0);
 
             //This StateList is null, so no need to create a compat call for <21
@@ -72,9 +75,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             }
         }
 
-        if(chatSessionsDataSource.isFetched()){
+        if (chatSessionsDataSource.isFetched()) {
             handleFirstLoadIfNecessary();
-        }else{
+        } else {
             rvSessions.setVisibility(View.INVISIBLE);
             btnNewConversation.setVisibility(View.INVISIBLE);
             showProgressBar();
@@ -85,13 +88,14 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     protected void onResume() {
         super.onResume();
 
-        if(chatSessionsDataSource != null)
+        if (chatSessionsDataSource != null)
             chatSessionsDataSource.fetchLatest();
+        setCreateSessionBackToChatButton();
     }
 
     @Override
     protected void onDestroy() {
-        if(chatSessionsDataSource != null)
+        if (chatSessionsDataSource != null)
             chatSessionsDataSource.removeListener(this);
 
         userSession.getPushClient().setSupportScreenShown(false);
@@ -106,20 +110,20 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Initializer
-    private void setupToolbar(){
-        KUSToolbar kusToolbar = (KUSToolbar)toolbar;
+    private void setupToolbar() {
+        KUSToolbar kusToolbar = (KUSToolbar) toolbar;
         kusToolbar.initWithUserSession(userSession);
         kusToolbar.setShowLabel(false);
         kusToolbar.setListener(this);
         kusToolbar.setShowDismissButton(true);
     }
 
-    private void setupAdapter(){
+    private void setupAdapter() {
         adapter = new SessionListAdapter(rvSessions, chatSessionsDataSource, userSession, this);
         rvSessions.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL,false);
+                LinearLayoutManager.VERTICAL, false);
         rvSessions.setLayoutManager(layoutManager);
 
         adapter.notifyDataSetChanged();
@@ -127,30 +131,58 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Private Methods
-    private void handleFirstLoadIfNecessary(){
-        if(didHandleFirstLoad)
+    private void setCreateSessionBackToChatButton() {
+        if (isBackToChatButton()) {
+            btnNewConversation.setText(R.string.com_kustomer_back_to_chat);
+            btnNewConversation.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        } else {
+            btnNewConversation.setText(R.string.com_kustomer_new_conversation);
+
+            TypedArray a = getTheme().obtainStyledAttributes(R.style.KUSAppTheme,
+                    new int[]{R.attr.kus_new_session_button_image});
+            int attributeResourceId = a.getResourceId(0, 0);
+            a.recycle();
+
+            Drawable drawable = getResources().getDrawable(attributeResourceId);
+            if (KUSLocalization.getSharedInstance().isLTR())
+                btnNewConversation.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            else
+                btnNewConversation.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+        }
+    }
+
+    private boolean isBackToChatButton() {
+        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
+        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        return (settings != null && settings.getSingleSessionChat() && openChats >= 1);
+    }
+
+    private void handleFirstLoadIfNecessary() {
+        if (didHandleFirstLoad)
             return;
 
         didHandleFirstLoad = true;
 
-        if(chatSessionsDataSource != null && chatSessionsDataSource.getSize() == 0){
+        if (chatSessionsDataSource != null &&
+                (chatSessionsDataSource.getSize() == 0 || chatSessionsDataSource.openChatSessionsCount() == 0)) {
+
             Intent intent = new Intent(this, KUSChatActivity.class);
-            intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY,false);
+            intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, false);
             startActivity(intent);
 
-            if(shouldAnimateChatScreen)
+            if (shouldAnimateChatScreen)
                 overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
             else
                 overridePendingTransition(0, 0);
-        }else if (chatSessionsDataSource != null){
+        } else if (chatSessionsDataSource != null) {
             // Go directly to the most recent chat session
             KUSChatSession chatSession = chatSessionsDataSource.getMostRecentSession();
 
             Intent intent = new Intent(this, KUSChatActivity.class);
-            intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY,chatSession);
+            intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY, chatSession);
             startActivity(intent);
 
-            if(shouldAnimateChatScreen)
+            if (shouldAnimateChatScreen)
                 overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
             else
                 overridePendingTransition(0, 0);
@@ -160,17 +192,24 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Listeners
-    @Optional @OnClick(R2.id.btnRetry)
-    void userTappedRetry(){
+    @Optional
+    @OnClick(R2.id.btnRetry)
+    void userTappedRetry() {
         chatSessionsDataSource.fetchLatest();
         showProgressBar();
     }
 
     @OnClick(R2.id.btnNewConversation)
-    void newConversationClicked(){
+    void newConversationClicked() {
         Intent intent = new Intent(this, KUSChatActivity.class);
+
+        if (isBackToChatButton()) {
+            KUSChatSession chatSession = (KUSChatSession) chatSessionsDataSource.get(0);
+            intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY, chatSession);
+        }
+
         startActivity(intent);
-        if(KUSLocalization.getSharedInstance().isLTR())
+        if (KUSLocalization.getSharedInstance().isLTR())
             overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
         else
             overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);
@@ -215,6 +254,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             public void run() {
                 adapter.setData((KUSChatSessionsDataSource) dataSource);
                 adapter.notifyDataSetChanged();
+                setCreateSessionBackToChatButton();
             }
         };
         handler.post(runnable);
@@ -223,10 +263,10 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     @Override
     public void onSessionItemClicked(KUSChatSession chatSession) {
         Intent intent = new Intent(this, KUSChatActivity.class);
-        intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY,chatSession);
+        intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY, chatSession);
         startActivity(intent);
 
-        if(KUSLocalization.getSharedInstance().isLTR())
+        if (KUSLocalization.getSharedInstance().isLTR())
             overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
         else
             overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);

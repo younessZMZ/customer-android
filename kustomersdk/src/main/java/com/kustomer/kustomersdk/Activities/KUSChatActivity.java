@@ -382,6 +382,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
             tvStartANewConversation.setVisibility(View.VISIBLE);
+
+            if (isBackToChatButton()) {
+                tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);
+            } else {
+                tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
+            }
+
             return;
         }
 
@@ -504,6 +511,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_INTENT);
     }
+
+    private boolean isBackToChatButton() {
+        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
+        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        return (settings != null && settings.getSingleSessionChat() && openChats >= 1);
+    }
     //endregion
 
     //region Listeners
@@ -530,16 +543,25 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     @OnClick(R2.id.tvStartANewConversation)
     void startNewConversationClicked() {
         chatMessagesDataSource.removeListener(this);
-        chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+
+        if (isBackToChatButton()) {
+            KUSChatSession chatSession = (KUSChatSession) userSession.getChatSessionsDataSource().get(0);
+            chatSessionId = chatSession.getId();
+            chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
+
+        } else {
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+            chatSessionId = null;
+            kusInputBarView.setAllowsAttachment(false);
+        }
+
         chatMessagesDataSource.addListener(this);
 
-        chatSessionId = null;
         adapter = null;
         setupAdapter();
         kusInputBarView.setVisibility(View.VISIBLE);
         kusInputBarView.setText("");
         tvStartANewConversation.setVisibility(View.GONE);
-        kusInputBarView.setAllowsAttachment(false);
         kusToolbar.setSessionId(chatSessionId);
         checkShouldShowEmailInput();
 
@@ -557,6 +579,11 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
                 if (dataSource == chatMessagesDataSource) {
                     checkShouldShowCloseChatButtonView();
+                    if (isBackToChatButton()) {
+                        tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);
+                    } else {
+                        tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
+                    }
                 }
             }
         };

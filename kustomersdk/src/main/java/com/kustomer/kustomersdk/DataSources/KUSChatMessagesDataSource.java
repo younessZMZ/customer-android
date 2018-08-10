@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.google.gson.Gson;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
@@ -80,6 +79,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private boolean vcFormActive;
     private boolean vcFormEnd;
     private boolean vcChatClosed;
+    private boolean isProactiveCampaign;
     private ArrayList<KUSModel> temporaryVCMessagesResponses;
 
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
@@ -158,6 +158,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public void sendMessageWithText(String text, List<Bitmap> attachments, String value) {
+        isProactiveCampaign = !isAnyMessageByCurrentUser();
+
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
         if (sessionId == null && chatSettings.getActiveFormId() != null) {
 
@@ -508,6 +510,27 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }
 
         return false;
+    }
+
+    public void closeProactiveCampaignIfNecessary() {
+        KUSChatSettings settings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+
+        if (settings.getSingleSessionChat()) {
+
+            HashMap<String, KUSChatMessagesDataSource> chatSessionsHashMap = getUserSession().getChatMessagesDataSources();
+            ArrayList<KUSChatMessagesDataSource> chatSessions = new ArrayList<>(chatSessionsHashMap.values());
+
+            for (KUSChatMessagesDataSource chatMessagesDataSource : chatSessions) {
+
+                if (!chatMessagesDataSource.isAnyMessageByCurrentUser()) {
+
+                    getUserSession().getChatSessionsDataSource()
+                            .updateLastSeenAtForSessionId(chatMessagesDataSource.sessionId, null);
+
+                    chatMessagesDataSource.endChat("customer_ended", null);
+                }
+            }
+        }
     }
 
     //endregion
@@ -910,7 +933,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 KUSRequestType.KUS_REQUEST_TYPE_POST,
                 KUSConstants.URL.VOLUME_CONTROL_ENDPOINT,
                 new HashMap<String, Object>() {{
-                    put("messages", messagesJSON);
+                    put("messages", new JSONArray(messagesJSON));
                     put("session", getSessionId());
                 }},
                 true,
@@ -1312,6 +1335,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             KUSChatMessage temporaryMessage = (KUSChatMessage) model;
             messageRetryHashMap.remove(temporaryMessage.getId());
         }
+
+        if (isProactiveCampaign)
+            closeProactiveCampaignIfNecessary();
     }
 
     private JSONArray getAttachmentIds(List<KUSChatAttachment> attachments) {
@@ -1410,6 +1436,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
         insertAutoReplyIfNecessary();
         startVolumeControlTracking();
+        closeProactiveCampaignIfNecessary();
     }
 
     @Override

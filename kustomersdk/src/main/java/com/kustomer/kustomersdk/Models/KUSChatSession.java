@@ -137,7 +137,17 @@ public class KUSChatSession extends KUSModel implements Serializable {
     @Override
     public int compareTo(@NonNull KUSModel kusModel) {
         KUSChatSession chatSession = (KUSChatSession) kusModel;
-        int date = chatSession.sortDate().compareTo(this.sortDate());
+        //int date = chatSession.sortDate().compareTo(this.sortDate());
+        int date;
+        if (chatSession.lockedAt != null && this.lockedAt != null)
+            date = chatSession.lockedAt.compareTo(this.lockedAt);
+        else if (chatSession.lockedAt != null)
+            return -1;
+        else if (this.lockedAt != null)
+            return 1;
+        else
+            date = chatSession.createdAt.compareTo(this.createdAt);
+
         int parent = super.compareTo(kusModel);
         return date == 0 ? parent : date;
     }

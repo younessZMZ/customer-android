@@ -45,5 +45,6 @@
     <string name="com_kustomer_thank_you_we_ll_follow_up_on_your_request">Thank You! We\'ll follow up on your request.</string>
     <string name="com_kustomer_chat_has_ended">CHAT HAS ENDED</string>
     <string name="com_kustomer_end_chat">END CHAT</string>
+    <string name="com_kustomer_back_to_chat">Back to Chat</string>
 
 </resources>

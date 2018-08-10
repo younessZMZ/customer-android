@@ -281,6 +281,17 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             fetchLatest();
         }
     }
+
+    public int openChatSessionsCount() {
+        int count = 0;
+        for (KUSModel model : getList()) {
+            KUSChatSession chatSession = (KUSChatSession) model;
+            if (chatSession.getLockedAt() == null) {
+                count++;
+            }
+        }
+        return count;
+    }
     //endregion
 
     //region Private Methods
