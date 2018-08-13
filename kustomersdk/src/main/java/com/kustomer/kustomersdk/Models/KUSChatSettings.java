@@ -19,7 +19,6 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private String teamName;
     private URL teamIconURL;
     private String greeting;
-    private String autoReply;
     private String activeFormId;
     private String pusherAccessKey;
     private Boolean enabled;
@@ -44,7 +43,6 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         teamName = JsonHelper.stringFromKeyPath(json, "attributes.teamName");
         teamIconURL = JsonHelper.urlFromKeyPath(json, "attributes.teamIconUrl");
         greeting = JsonHelper.stringFromKeyPath(json, "attributes.greeting");
-        autoReply = stringSanitizedReply(JsonHelper.stringFromKeyPath(json, "attributes.autoreply"));
         activeFormId = JsonHelper.stringFromKeyPath(json, "attributes.activeForm");
         pusherAccessKey = JsonHelper.stringFromKeyPath(json, "attributes.pusherAccessKey");
         enabled = JsonHelper.boolFromKeyPath(json, "attributes.enabled");
@@ -90,10 +88,6 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public String getGreeting() {
         return greeting;
-    }
-
-    public String getAutoReply() {
-        return autoReply;
     }
 
     public String getActiveFormId() {
