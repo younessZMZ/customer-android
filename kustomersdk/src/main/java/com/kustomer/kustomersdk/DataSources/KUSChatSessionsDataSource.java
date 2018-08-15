@@ -281,13 +281,30 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             fetchLatest();
         }
     }
+    //endregion
+
+    //region internal methods
 
     public int openChatSessionsCount() {
         int count = 0;
+        KUSChatSession chatSession;
         for (KUSModel model : getList()) {
-            KUSChatSession chatSession = (KUSChatSession) model;
+            chatSession = (KUSChatSession) model;
             if (chatSession.getLockedAt() == null) {
                 count++;
+            }
+        }
+        return count;
+    }
+
+    public int openProactiveCampaignsCount() {
+        int count = 0;
+        KUSChatSession chatSession;
+        for (KUSModel model : getList()) {
+            chatSession = (KUSChatSession) model;
+            KUSChatMessagesDataSource chatDataSource = getUserSession().chatMessageDataSourceForSessionId(chatSession.getId());
+            if (chatSession.getLockedAt() == null && !chatDataSource.isAnyMessageByCurrentUser()) {
+                count += 1;
             }
         }
         return count;
@@ -334,6 +351,27 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             }
         }
 
+        return mostRecentSession != null ? mostRecentSession : (KUSChatSession) getFirst();
+    }
+
+    public KUSChatSession mostRecentNonProactiveCampaignSession() {
+        Date mostRecentMessageAt = null;
+        KUSChatSession mostRecentSession = null;
+
+        for (KUSModel model : getList()) {
+            KUSChatSession chatSession = (KUSChatSession) model;
+            KUSChatMessagesDataSource chatDataSource = getUserSession().chatMessageDataSourceForSessionId(chatSession.getId());
+            if (chatDataSource.isAnyMessageByCurrentUser()) {
+
+                if (mostRecentMessageAt == null) {
+                    mostRecentMessageAt = chatSession.getLastMessageAt();
+                    mostRecentSession = chatSession;
+                } else if (mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
+                    mostRecentMessageAt = chatSession.getLastMessageAt();
+                    mostRecentSession = chatSession;
+                }
+            }
+        }
         return mostRecentSession != null ? mostRecentSession : (KUSChatSession) getFirst();
     }
 

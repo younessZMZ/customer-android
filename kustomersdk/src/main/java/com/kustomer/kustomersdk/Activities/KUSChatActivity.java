@@ -513,9 +513,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private boolean isBackToChatButton() {
-        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        return (settings != null && settings.getSingleSessionChat() && openChats >= 1);
+        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
+        int proactiveChats = userSession.getChatSessionsDataSource().openProactiveCampaignsCount();
+        return (settings != null && settings.getSingleSessionChat() && (openChats-proactiveChats) >= 1);
     }
     //endregion
 
@@ -545,7 +546,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         chatMessagesDataSource.removeListener(this);
 
         if (isBackToChatButton()) {
-            KUSChatSession chatSession = (KUSChatSession) userSession.getChatSessionsDataSource().get(0);
+            KUSChatSession chatSession = userSession.getChatSessionsDataSource().mostRecentNonProactiveCampaignSession();
             chatSessionId = chatSession.getId();
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
 
@@ -563,7 +564,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusInputBarView.setText("");
         tvStartANewConversation.setVisibility(View.GONE);
         kusToolbar.setSessionId(chatSessionId);
+
         checkShouldShowEmailInput();
+        checkShouldShowCloseChatButtonView();
+        checkShouldShowInputView();
 
         kusToolbar.setExtraLargeSize(chatMessagesDataSource.getSize() == 0);
     }
