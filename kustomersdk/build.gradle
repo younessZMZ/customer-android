@@ -59,7 +59,7 @@ ext {
     libraryDescription = 'A set of methods used to manipulate time object'
     siteUrl = 'https://github.com/kustomer/customer-android'
     gitUrl = 'https://github.com/kustomer/customer-android.git'
-    libraryVersion = '0.1.4'
+    libraryVersion = '0.1.5'
     developerId = 'junaid'
     developerName = 'Junaid'
     developerEmail = 'junaid.ahmed@brainxtech.com'
