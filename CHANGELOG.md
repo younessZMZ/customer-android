@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.6
+
+* Changed dependencies back from api to compile in gradle file
+
 ## 0.1.5
 
 * Added Volume Control Form Feature
