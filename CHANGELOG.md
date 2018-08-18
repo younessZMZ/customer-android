@@ -1,5 +1,18 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.6
+
+* Changed dependencies back from api to compile in gradle file
+
+## 0.1.5
+
+* Added Volume Control Form Feature
+* Added End Chat Feature
+* Added Custom Form Selection Feature
+* Added Single Chat Session Feature
+* Fixed default avatar issue
+* Fixed Apostrophe issue in strings file
+
 ## 0.1.4
 
 * Fixed a crash due to dialog.

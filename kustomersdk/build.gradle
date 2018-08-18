@@ -59,7 +59,7 @@ ext {
     libraryDescription = 'A set of methods used to manipulate time object'
     siteUrl = 'https://github.com/kustomer/customer-android'
     gitUrl = 'https://github.com/kustomer/customer-android.git'
-    libraryVersion = '0.1.4'
+    libraryVersion = '0.1.6'
     developerId = 'junaid'
     developerName = 'Junaid'
     developerEmail = 'junaid.ahmed@brainxtech.com'
@@ -69,7 +69,7 @@ ext {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -83,7 +83,6 @@ dependencies {
 
     compile "com.android.support:support-emoji-appcompat:27.1.1"
     compile "com.android.support:support-emoji-bundled:27.1.1"
-
 
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
