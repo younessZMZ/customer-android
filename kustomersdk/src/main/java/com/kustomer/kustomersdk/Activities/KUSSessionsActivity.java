@@ -205,7 +205,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         Intent intent = new Intent(this, KUSChatActivity.class);
 
         if (isBackToChatButton()) {
-            KUSChatSession chatSession = userSession.getChatSessionsDataSource().mostRecentNonProactiveCampaignSession();
+            KUSChatSession chatSession = userSession.getChatSessionsDataSource().mostRecentNonProactiveCampaignOpenSession();
             intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY, chatSession);
         }
 
