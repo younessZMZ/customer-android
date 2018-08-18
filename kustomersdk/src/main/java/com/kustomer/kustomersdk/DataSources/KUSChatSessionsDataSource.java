@@ -399,9 +399,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
             }
         }
 
-        if (mostRecentMessageAt ==null) {
-            KUSChatSession firstSession =(KUSChatSession) getFirst();
-            if(firstSession !=null)
+        if (mostRecentMessageAt == null) {
+            KUSChatSession firstSession = (KUSChatSession) getFirst();
+            if (firstSession != null)
                 return firstSession.getLastMessageAt();
         }
         return mostRecentMessageAt;
@@ -409,7 +409,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
     public Date lastSeenAtForSessionId(String sessionId) {
         KUSChatSession chatSession = (KUSChatSession) findById(sessionId);
-        Date chatSessionDate = chatSession.getLastSeenAt();
+        Date chatSessionDate = null;
+        if (chatSession != null)
+            chatSessionDate = chatSession.getLastSeenAt();
         Date localDate = localLastSeenAtBySessionId.get(sessionId);
 
         if (chatSessionDate != null) {

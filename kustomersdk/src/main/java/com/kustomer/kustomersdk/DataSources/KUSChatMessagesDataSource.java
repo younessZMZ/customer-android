@@ -398,7 +398,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         }
                         // Temporary set locked at to reflect changes in UI
                         KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
-                        session.setLockedAt(new Date());
+                        if (session != null)
+                            session.setLockedAt(new Date());
                         notifyAnnouncersOnContentChange();
                         if (onEndChatListener != null)
                             onEndChatListener.onComplete(true);
@@ -1345,7 +1346,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         if (form == null && dataSource.getClass().equals(KUSFormDataSource.class))
             form = (KUSForm) dataSource.getObject();
-        
+
         insertFormMessageIfNecessary();
     }
 
