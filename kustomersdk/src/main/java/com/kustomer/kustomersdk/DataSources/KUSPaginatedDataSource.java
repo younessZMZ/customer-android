@@ -370,14 +370,14 @@ public class KUSPaginatedDataSource {
     //endregion
 
     // region Notifier
-    public void notifyAnnouncersOnContentChange() {
+    void notifyAnnouncersOnContentChange() {
         for (KUSPaginatedDataSourceListener listener : new ArrayList<>(listeners)) {
             if(listener != null)
                 listener.onContentChange(this);
         }
     }
 
-    private void notifyAnnouncersOnError(Error error) {
+    void notifyAnnouncersOnError(Error error) {
         for (KUSPaginatedDataSourceListener listener :  new ArrayList<>(listeners)) {
             if(listener != null)
                 listener.onError(this, error);

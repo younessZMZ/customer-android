@@ -233,6 +233,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY);
         shouldShowBackButton = getIntent().getBooleanExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, true);
 
+        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        if(settings.getNoHistory())
+            shouldShowBackButton = false;
+
         if (kusChatSession != null) {
             chatSessionId = kusChatSession.getId();
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
@@ -546,7 +550,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         chatMessagesDataSource.removeListener(this);
 
         if (isBackToChatButton()) {
-            KUSChatSession chatSession = userSession.getChatSessionsDataSource().mostRecentNonProactiveCampaignSession();
+            KUSChatSession chatSession = userSession.getChatSessionsDataSource().mostRecentNonProactiveCampaignOpenSession();
             chatSessionId = chatSession.getId();
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
 
@@ -653,7 +657,11 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 kusInputBarView.setAllowsAttachment(true);
                 kusToolbar.setSessionId(chatSessionId);
                 shouldShowBackButton = true;
-                kusToolbar.setShowBackButton(true);
+
+                KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+                shouldShowBackButton = !settings.getNoHistory();
+
+                kusToolbar.setShowBackButton(shouldShowBackButton);
                 setupToolbar();
                 checkShouldShowEmailInput();
             }

@@ -11,6 +11,7 @@ import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSChatSessionCompletionListener;
 import com.kustomer.kustomersdk.Interfaces.KUSFormCompletionListener;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -36,7 +37,7 @@ import java.util.List;
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener {
+public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener, KUSObjectDataSourceListener {
 
     //region Properties
     private JSONObject pendingCustomChatSessionAttributes;
@@ -49,6 +50,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
         localLastSeenAtBySessionId = new HashMap<>();
         addListener(this);
+        getUserSession().getChatSettingsDataSource().addListener(this);
     }
 
     @Override
@@ -73,6 +75,14 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     //endregion
 
     //region KUSPaginatedDataSource methods
+    public void fetchLatest() {
+        if (!getUserSession().getChatSettingsDataSource().isFetched()) {
+            getUserSession().getChatSettingsDataSource().fetch();
+            return;
+        }
+        super.fetchLatest();
+    }
+
     public URL getFirstUrl() {
         return getUserSession().getRequestManager().urlForEndpoint(KUSConstants.URL.CHAT_SESSIONS_ENDPOINT);
     }
@@ -342,26 +352,29 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
         for (KUSModel model : getList()) {
             KUSChatSession chatSession = (KUSChatSession) model;
-            if (mostRecentMessageAt == null) {
-                mostRecentMessageAt = chatSession.getLastMessageAt();
-                mostRecentSession = chatSession;
-            } else if (mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
-                mostRecentMessageAt = chatSession.getLastMessageAt();
-                mostRecentSession = chatSession;
+
+            if (chatSession.getLockedAt() == null) {
+                if (mostRecentMessageAt == null) {
+                    mostRecentMessageAt = chatSession.getLastMessageAt();
+                    mostRecentSession = chatSession;
+                } else if (mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
+                    mostRecentMessageAt = chatSession.getLastMessageAt();
+                    mostRecentSession = chatSession;
+                }
             }
         }
 
         return mostRecentSession != null ? mostRecentSession : (KUSChatSession) getFirst();
     }
 
-    public KUSChatSession mostRecentNonProactiveCampaignSession() {
+    public KUSChatSession mostRecentNonProactiveCampaignOpenSession() {
         Date mostRecentMessageAt = null;
         KUSChatSession mostRecentSession = null;
 
         for (KUSModel model : getList()) {
             KUSChatSession chatSession = (KUSChatSession) model;
             KUSChatMessagesDataSource chatDataSource = getUserSession().chatMessageDataSourceForSessionId(chatSession.getId());
-            if (chatDataSource.isAnyMessageByCurrentUser()) {
+            if (chatSession.getLockedAt() == null && chatDataSource.isAnyMessageByCurrentUser()) {
 
                 if (mostRecentMessageAt == null) {
                     mostRecentMessageAt = chatSession.getLastMessageAt();
@@ -376,14 +389,29 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public Date getLastMessageAt() {
-        if (getMostRecentSession() != null)
-            return getMostRecentSession().getLastMessageAt();
-        return null;
+        Date mostRecentMessageAt = null;
+        for (KUSModel model : getList()) {
+            KUSChatSession chatSession = (KUSChatSession) model;
+            if (mostRecentMessageAt == null) {
+                mostRecentMessageAt = chatSession.getLastMessageAt();
+            } else if (mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
+                mostRecentMessageAt = chatSession.getLastMessageAt();
+            }
+        }
+
+        if (mostRecentMessageAt == null) {
+            KUSChatSession firstSession = (KUSChatSession) getFirst();
+            if (firstSession != null)
+                return firstSession.getLastMessageAt();
+        }
+        return mostRecentMessageAt;
     }
 
     public Date lastSeenAtForSessionId(String sessionId) {
         KUSChatSession chatSession = (KUSChatSession) findById(sessionId);
-        Date chatSessionDate = chatSession.getLastSeenAt();
+        Date chatSessionDate = null;
+        if (chatSession != null)
+            chatSessionDate = chatSession.getLastSeenAt();
         Date localDate = localLastSeenAtBySessionId.get(sessionId);
 
         if (chatSessionDate != null) {
@@ -454,6 +482,18 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
 
+    }
+
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        fetchLatest();
+    }
+
+    @Override
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+        if (!dataSource.isFetched()) {
+            notifyAnnouncersOnError(error);
+        }
     }
     //endregion
 

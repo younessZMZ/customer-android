@@ -46,7 +46,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0-SNAPSHOT'
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.4'
     }
 }
 
@@ -81,6 +81,8 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.1.0'
     compile 'com.android.support:design:27.1.1'
 
+    compile "com.android.support:support-emoji-appcompat:27.1.1"
+    compile "com.android.support:support-emoji-bundled:27.1.1"
 
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

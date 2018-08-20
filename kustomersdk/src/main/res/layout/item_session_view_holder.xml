@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
 
-                    <TextView
+                    <android.support.text.emoji.widget.EmojiAppCompatTextView
                         android:id="@+id/tvSessionSubtitle"
                         style="@style/KUSChatSessionSubtitleTextAppearance"
                         android:layout_width="0dp"

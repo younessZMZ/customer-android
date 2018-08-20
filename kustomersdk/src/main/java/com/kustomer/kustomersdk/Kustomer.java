@@ -3,6 +3,8 @@ package com.kustomer.kustomersdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.text.emoji.EmojiCompat;
+import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
 import android.util.Base64;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -69,6 +71,9 @@ public class Kustomer {
     //region Class Methods
     public static void init(Context context, String apiKey) throws AssertionError {
         mContext = context.getApplicationContext();
+
+        EmojiCompat.Config emojiConfig = new BundledEmojiCompatConfig(mContext);
+        EmojiCompat.init(emojiConfig);
 
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
 
