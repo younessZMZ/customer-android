@@ -18,8 +18,8 @@
     <string name="com_kustomer_new_conversation">Ny samtale</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ikke gå glipp av et svar! Få beskjed via e-post:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Skriv inn en melding ...</string>
-    <string name="com_kustomer_Loading...">Laster ...</string>
+    <string name="com_kustomer_type_a_message">Skriv inn en melding …</string>
+    <string name="com_kustomer_Loading...">Laster …</string>
     <string name="com_kustomer_ago">siden</string>
     <string name="com_kustomer_chat_with">Snakke med</string>
     <string name="com_kustomer_processing">Behandling…</string>

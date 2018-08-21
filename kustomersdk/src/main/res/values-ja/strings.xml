@@ -18,8 +18,8 @@
     <string name="com_kustomer_new_conversation">新しい会話</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">レスポンスをお見逃しなく！メールで通知する：</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">メッセージを入力してください...</string>
-    <string name="com_kustomer_Loading...">読み込んでいます...</string>
+    <string name="com_kustomer_type_a_message">メッセージを入力してください…</string>
+    <string name="com_kustomer_Loading...">読み込んでいます…</string>
     <string name="com_kustomer_ago">前</string>
     <string name="com_kustomer_chat_with">とチャットする</string>
     <string name="com_kustomer_processing">処理…</string>

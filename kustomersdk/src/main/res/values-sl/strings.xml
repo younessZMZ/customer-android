@@ -18,8 +18,8 @@
     <string name="com_kustomer_new_conversation">Novi pogovor</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ne zamudite odgovora! Pridobite obvestilo po e-pošti:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Vnesite sporočilo ...</string>
-    <string name="com_kustomer_Loading...">Nalaganje...</string>
+    <string name="com_kustomer_type_a_message">Vnesite sporočilo …</string>
+    <string name="com_kustomer_Loading...">Nalaganje…</string>
     <string name="com_kustomer_ago">nazaj</string>
     <string name="com_kustomer_chat_with">Klepetati z</string>
     <string name="com_kustomer_processing">Obravnavati…</string>

@@ -18,11 +18,11 @@
     <string name="com_kustomer_new_conversation">Uus vestlus</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ära jäta vastust! Saate teatada e-posti teel:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Sisestage sõnum ...</string>
-    <string name="com_kustomer_Loading...">Laadimine ...</string>
+    <string name="com_kustomer_type_a_message">Sisestage sõnum …</string>
+    <string name="com_kustomer_Loading...">Laadimine …</string>
     <string name="com_kustomer_ago">tagasi</string>
     <string name="com_kustomer_chat_with">Vestlema koos</string>
-    <string name="com_kustomer_processing">Töötlemine ...</string>
+    <string name="com_kustomer_processing">Töötlemine …</string>
     <string name="com_kustomer_no_internet_connection">Interneti-ühendus puudub</string>
     <string name="com_kustomer_chat_screen">Vestluskuva</string>
     <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Oleme siin, andke meile teada, kas me saame aidata.</string>

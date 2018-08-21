@@ -18,13 +18,13 @@
     <string name="com_kustomer_new_conversation">שיחה חדשה</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">אל תחמיצו תגובה! קבל הודעה בדוא\"ל:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">הקלד הודעה...</string>
-    <string name="com_kustomer_Loading...">טוען...</string>
+    <string name="com_kustomer_type_a_message">הקלד הודעה…</string>
+    <string name="com_kustomer_Loading...">טוען…</string>
     <string name="com_kustomer_ago">לִפנֵי</string>
     <string name="com_kustomer_chat_with">לשוחח עם</string>
     <string name="com_kustomer_processing">מעבד…</string>
     <string name="com_kustomer_no_internet_connection">אין חיבור אינטרנט</string>
-    <string name="com_kustomer_chat_screen">מסך צ'אט</string>
+    <string name="com_kustomer_chat_screen">מסך צ\'אט</string>
     <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">אנחנו כאן, יידע אותנו אם נוכל לעזור.</string>
     <string name="com_kustomer_example">דוגמא</string>
     <string name="com_kustomer_please_provide_a_message_body">ספק גוף הודעה</string>

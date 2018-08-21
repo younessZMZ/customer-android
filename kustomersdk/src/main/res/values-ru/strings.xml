@@ -18,11 +18,11 @@
     <string name="com_kustomer_new_conversation">Новый диалог</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Не пропустите ответ! Получить уведомление по электронной почте:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Введите сообщение ...</string>
-    <string name="com_kustomer_Loading...">Loading ...</string>
+    <string name="com_kustomer_type_a_message">Введите сообщение …</string>
+    <string name="com_kustomer_Loading...">Loading …</string>
     <string name="com_kustomer_ago">тому назад</string>
     <string name="com_kustomer_chat_with">Чат с</string>
-    <string name="com_kustomer_processing">Обработка ...</string>
+    <string name="com_kustomer_processing">Обработка …</string>
     <string name="com_kustomer_no_internet_connection">Нет соединения с интернетом</string>
     <string name="com_kustomer_chat_screen">Экран чата</string>
     <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Мы здесь, дайте нам знать, если мы сможем помочь.</string>
