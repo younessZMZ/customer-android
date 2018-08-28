@@ -1,5 +1,12 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.8
+
+* Emoji issue fixed
+* Removed auto reply
+* Implemented no history feature
+
+
 ## 0.1.7
 
 * Fixed all warnings and errors from string files.
