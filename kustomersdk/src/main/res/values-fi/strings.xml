@@ -18,11 +18,11 @@
     <string name="com_kustomer_new_conversation">Uusi keskustelu</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Älä missaa vastausta! Saat ilmoituksen sähköpostilla:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Kirjoita viesti ...</string>
-    <string name="com_kustomer_Loading...">Ladataan...</string>
+    <string name="com_kustomer_type_a_message">Kirjoita viesti …</string>
+    <string name="com_kustomer_Loading...">Ladataan…</string>
     <string name="com_kustomer_ago">sitten</string>
     <string name="com_kustomer_chat_with">Jutella</string>
-    <string name="com_kustomer_processing">Processing ...</string>
+    <string name="com_kustomer_processing">Processing …</string>
     <string name="com_kustomer_no_internet_connection">Ei Internet-yhteyttä</string>
     <string name="com_kustomer_chat_screen">Chat-näyttö</string>
     <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">Olemme täällä, kerro meille, voimmeko auttaa.</string>

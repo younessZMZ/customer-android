@@ -18,11 +18,11 @@
     <string name="com_kustomer_new_conversation">새 대화</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">응답을 놓치지 마세요! 이메일로 알림 받기 :</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">메시지를 입력하십시오 ...</string>
-    <string name="com_kustomer_Loading...">로드 중 ...</string>
-    <string name="com_kustomer_ago">...전에</string>
+    <string name="com_kustomer_type_a_message">메시지를 입력하십시오 …</string>
+    <string name="com_kustomer_Loading...">로드 중 …</string>
+    <string name="com_kustomer_ago">…전에</string>
     <string name="com_kustomer_chat_with">채팅하기</string>
-    <string name="com_kustomer_processing">처리 중 ...</string>
+    <string name="com_kustomer_processing">처리 중 …</string>
     <string name="com_kustomer_no_internet_connection">인터넷에 연결되지 않음</string>
     <string name="com_kustomer_chat_screen">채팅 화면</string>
     <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">우리가 여기 있습니다, 우리가 도울 수 있다면 알려주세요.</string>
