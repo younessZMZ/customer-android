@@ -398,7 +398,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         }
                         // Temporary set locked at to reflect changes in UI
                         KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
-                        session.setLockedAt(new Date());
+                        if (session != null)
+                            session.setLockedAt(new Date());
                         notifyAnnouncersOnContentChange();
                         if (onEndChatListener != null)
                             onEndChatListener.onComplete(true);
@@ -601,75 +602,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         });
             }
         });
-    }
-
-    private boolean shouldShowAutoReply() {
-
-        KUSChatMessage firstMessage = null;
-        if (getSize() > 0)
-            firstMessage = (KUSChatMessage) getList().get(getSize() - 1);
-
-        KUSChatMessage secondMessage = getSize() >= 2 ? (KUSChatMessage) get(getSize() - 2) : null;
-        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-
-        if (firstMessage != null && chatSettings != null)
-            return (
-                    ((chatSettings.getActiveFormId() == null || chatSettings.getActiveFormId().length() == 0)
-                            || (firstMessage.getImportedAt() == null && secondMessage != null && secondMessage.getImportedAt() == null))
-                            && chatSettings.getAutoReply().length() > 0
-                            && getSize() > 0
-                            && isFetchedAll()
-                            && (sessionId != null && sessionId.length() > 0)
-                            && firstMessage.getState() == KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT
-                            && KUSChatMessageSentByUser(firstMessage)
-            );
-        else
-            return false;
-    }
-
-    private void insertAutoReplyIfNecessary() {
-        if (shouldShowAutoReply()) {
-            String autoreplyId = String.format("autoreply_%s", sessionId);
-            // Early escape if we already have an autoreply
-            if (findById(autoreplyId) != null)
-                return;
-
-            KUSChatMessage firstMessage = null;
-            if (getSize() > 0)
-                firstMessage = (KUSChatMessage) getList().get(getSize() - 1);
-
-            KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-
-            if (firstMessage != null && chatSettings != null) {
-                Date createdAt = new Date(firstMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
-
-                JSONObject attributes = new JSONObject();
-                try {
-                    attributes.put("body", chatSettings.getAutoReply());
-                    attributes.put("direction", "out");
-                    attributes.put("createdAt", KUSDate.stringFromDate(createdAt));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                JSONObject messageJSON = new JSONObject();
-                try {
-                    messageJSON.put("type", "chat_message");
-                    messageJSON.put("id", autoreplyId);
-                    messageJSON.put("attributes", attributes);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    KUSChatMessage autoReplyMessage = new KUSChatMessage(messageJSON);
-                    insertDelayedMessage(autoReplyMessage);
-                } catch (KUSInvalidJsonException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
     }
 
     private void insertFormMessageIfNecessary() {
@@ -1415,7 +1347,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (form == null && dataSource.getClass().equals(KUSFormDataSource.class))
             form = (KUSForm) dataSource.getObject();
 
-        insertAutoReplyIfNecessary();
         insertFormMessageIfNecessary();
     }
 
@@ -1434,7 +1365,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
-        insertAutoReplyIfNecessary();
         startVolumeControlTracking();
         closeProactiveCampaignIfNecessary();
     }
@@ -1450,7 +1380,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
-        insertAutoReplyIfNecessary();
         insertFormMessageIfNecessary();
         insertVolumeControlFormMessageIfNecessary();
     }

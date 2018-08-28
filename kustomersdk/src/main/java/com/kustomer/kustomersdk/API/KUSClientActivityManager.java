@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.kustomer.kustomersdk.DataSources.KUSClientActivityDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.Models.KUSChatSettings;
 
 import java.lang.ref.WeakReference;
 import java.sql.Time;
@@ -125,8 +126,23 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
         if(this.currentPageName == null)
             return;
 
-        currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis()/1000;
-        requestClientActivityWithCurrentPageSeconds(0.0);
+        // Check that settings is fetched and no history is not enabled
+        if(userSession.get() != null &&
+                userSession.get().getChatSettingsDataSource()!= null &&
+                userSession.get().getChatSettingsDataSource().isFetched()){
+            KUSChatSettings settings = (KUSChatSettings) userSession.get()
+                    .getChatSettingsDataSource()
+                    .getObject();
+
+            if(settings == null || settings.getNoHistory() == null || !settings.getNoHistory()){
+                currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis()/1000;
+                requestClientActivityWithCurrentPageSeconds(0.0);
+                return;
+            }
+        }else{
+            userSession.get().getChatSettingsDataSource().addListener(this);
+            userSession.get().getChatSettingsDataSource().fetch();
+        }
     }
 
     public String getCurrentPageName() {
@@ -144,6 +160,18 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
             @Override
             public void run() {
 
+                    if(dataSource == userSession.get().getChatSettingsDataSource()){
+                        userSession.get().getChatSettingsDataSource().removeListener(KUSClientActivityManager.this);
+
+                        KUSChatSettings settings = (KUSChatSettings) userSession.get()
+                                .getChatSettingsDataSource()
+                                .getObject();
+                        if(settings == null || settings.getNoHistory() == null || !settings.getNoHistory()){
+                            currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis()/1000;
+                            requestClientActivityWithCurrentPageSeconds(0.0);
+                        }
+                        return;
+                    }
                     if(dataSource == activityDataSource){
                         if(activityDataSource.getCurrentPageSeconds() > 0){
                             // Tell the push client to perform a sessions list pull to check for automated messages

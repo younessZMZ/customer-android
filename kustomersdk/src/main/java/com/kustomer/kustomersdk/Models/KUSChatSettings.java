@@ -19,7 +19,6 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private String teamName;
     private URL teamIconURL;
     private String greeting;
-    private String autoReply;
     private String activeFormId;
     private String pusherAccessKey;
     private Boolean enabled;
@@ -35,6 +34,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private Boolean volumeControlEnabled;
     private Boolean closableChat;
     private Boolean singleSessionChat;
+    private Boolean noHistory;
     //endregion
 
     //region Initializer
@@ -44,7 +44,6 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         teamName = JsonHelper.stringFromKeyPath(json, "attributes.teamName");
         teamIconURL = JsonHelper.urlFromKeyPath(json, "attributes.teamIconUrl");
         greeting = JsonHelper.stringFromKeyPath(json, "attributes.greeting");
-        autoReply = stringSanitizedReply(JsonHelper.stringFromKeyPath(json, "attributes.autoreply"));
         activeFormId = JsonHelper.stringFromKeyPath(json, "attributes.activeForm");
         pusherAccessKey = JsonHelper.stringFromKeyPath(json, "attributes.pusherAccessKey");
         enabled = JsonHelper.boolFromKeyPath(json, "attributes.enabled");
@@ -52,6 +51,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         closableChat = JsonHelper.boolFromKeyPath(json, "attributes.closableChat");
         waitMessage = JsonHelper.stringFromKeyPath(json, "attributes.waitMessage");
         singleSessionChat = JsonHelper.boolFromKeyPath(json, "attributes.singleSessionChat");
+        noHistory = JsonHelper.boolFromKeyPath(json, "attributes.noHistory");
 
         customWaitMessage = JsonHelper.stringFromKeyPath(json, "attributes.volumeControl.customWaitMessage");
         timeOut = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.timeout");
@@ -90,10 +90,6 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public String getGreeting() {
         return greeting;
-    }
-
-    public String getAutoReply() {
-        return autoReply;
     }
 
     public String getActiveFormId() {
@@ -166,6 +162,10 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public Boolean getSingleSessionChat() {
         return singleSessionChat;
+    }
+
+    public Boolean getNoHistory() {
+        return noHistory;
     }
 
     //endregion
