@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -128,7 +127,7 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
                     .build());
 
             Glide.with(itemView)
-                    .setDefaultRequestOptions(RequestOptions.errorOf(R.drawable.ic_error_outline_red_33dp))
+                    .setDefaultRequestOptions(RequestOptions.errorOf(R.drawable.kustomer_ic_error_outline_red_33dp))
                     .load(glideUrl)
                     .listener(new RequestListener<Drawable>() {
                         @Override

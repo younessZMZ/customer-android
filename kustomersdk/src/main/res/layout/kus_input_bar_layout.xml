@@ -29,7 +29,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_attachment_black_24dp"
+            android:src="@drawable/kustomer_ic_attachment_black_24dp"
             android:tint="@color/kusInputBarAttachmentIconColor"
             android:visibility="gone"
             tools:ignore="ContentDescription" />
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp"
-                android:src="@drawable/ic_arrow_upward_white_24dp"
+                android:src="@drawable/kustomer_ic_arrow_upward_white_24dp"
                 tools:ignore="ContentDescription" />
         </FrameLayout>
 

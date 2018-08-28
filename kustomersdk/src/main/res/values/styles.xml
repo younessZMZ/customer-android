@@ -12,9 +12,9 @@
         <item name="colorPrimary">@color/kusToolbarBackgroundColor</item>
         <item name="colorPrimaryDark">@color/kusStatusBarColor</item>
         <item name="colorAccent">@color/kusColorAccent</item>
-        <item name="kus_back_image">@drawable/ic_arrow_back_black_24dp</item>
-        <item name="kus_dismiss_image">@drawable/ic_close_black_24dp</item>
-        <item name="kus_new_session_button_image">@drawable/ic_edit_white_20dp</item>
+        <item name="kus_back_image">@drawable/kustomer_ic_arrow_back_black_24dp</item>
+        <item name="kus_dismiss_image">@drawable/kustomer_ic_close_black_24dp</item>
+        <item name="kus_new_session_button_image">@drawable/kustomer_ic_edit_white_20dp</item>
     </style>
 
     <style name="KUSAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light">
