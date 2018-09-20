@@ -41,6 +41,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.kustomer.kustomersdk.Utils.KUSUtils.removeNonASCIIChars;
+
 /**
  * Created by Junaid on 1/20/2018.
  */
@@ -65,8 +67,8 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
         genericHTTPHeaderValues = new HashMap<String, String>() {
             {
                 put(KUSConstants.HeaderKeys.K_KUSTOMER_X_KUSTOMER_KEY, "kustomer");
-                put(KUSConstants.HeaderKeys.K_KUSTOMER_ACCEPT_LANGUAGE_KEY, KUSAcceptLanguageHeaderValue());
-                put(KUSConstants.HeaderKeys.K_KUSTOMER_USER_AGENT_KEY, KUSUserAgentHeaderValue());
+                put(KUSConstants.HeaderKeys.K_KUSTOMER_ACCEPT_LANGUAGE_KEY, removeNonASCIIChars(KUSAcceptLanguageHeaderValue()));
+                put(KUSConstants.HeaderKeys.K_KUSTOMER_USER_AGENT_KEY, removeNonASCIIChars(KUSUserAgentHeaderValue()));
                 put(KUSConstants.HeaderKeys.K_KUSTOMER_X_CLIENT_KEY, "customer-android");
                 put(KUSConstants.HeaderKeys.K_KUSTOMER_X_VERSION_KEY, String.format("release-v%s", Kustomer.sdkVersion()));
             }
