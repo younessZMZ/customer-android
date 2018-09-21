@@ -357,7 +357,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                 if (mostRecentMessageAt == null) {
                     mostRecentMessageAt = chatSession.getLastMessageAt();
                     mostRecentSession = chatSession;
-                } else if (mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
+                } else if (chatSession.getLastMessageAt() != null && mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
                     mostRecentMessageAt = chatSession.getLastMessageAt();
                     mostRecentSession = chatSession;
                 }
