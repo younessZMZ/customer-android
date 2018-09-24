@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.10
+
+* NPE issue for most recent session fixed
+
 ## 0.1.9
 
 * Non-Ascii character in HTTP header issue fixed
