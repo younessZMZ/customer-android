@@ -3,7 +3,6 @@ package com.kustomer.kustomersdk.ViewHolders;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -12,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -26,7 +24,6 @@ import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
-import com.kustomer.kustomersdk.Utils.KUSUtils;
 import com.kustomer.kustomersdk.Views.KUSAvatarImageView;
 import com.kustomer.kustomersdk.Views.KUSSquareFrameLayout;
 
@@ -114,7 +111,7 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
         progressBarImage.setVisibility(View.VISIBLE);
 
         Glide.with(itemView)
-                .setDefaultRequestOptions(RequestOptions.errorOf(R.drawable.ic_error_outline_red_33dp))
+                .setDefaultRequestOptions(RequestOptions.errorOf(R.drawable.kus_ic_error_outline_red_33dp))
                 .load(chatMessage.getImageUrl().toString())
                 .listener(new RequestListener<Drawable>() {
                     @Override

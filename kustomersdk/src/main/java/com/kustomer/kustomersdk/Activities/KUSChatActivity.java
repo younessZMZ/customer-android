@@ -109,7 +109,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     //region LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setLayout(R.layout.activity_kuschat, R.id.toolbar_main, null, false);
+        setLayout(R.layout.kus_activity_kuschat, R.id.toolbar_main, null, false);
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -164,11 +164,11 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         if (backPressed) {
             if (KUSLocalization.getSharedInstance().isLTR())
-                overridePendingTransition(R.anim.stay, R.anim.kus_slide_right);
+                overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_right);
             else
-                overridePendingTransition(R.anim.stay, R.anim.kus_slide_right_rtl);
+                overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_right_rtl);
         } else
-            overridePendingTransition(R.anim.stay, R.anim.kus_slide_down);
+            overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_down);
     }
 
     @Override

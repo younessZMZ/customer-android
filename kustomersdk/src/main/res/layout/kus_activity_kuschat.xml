@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="8dp"
-                    android:background="@drawable/end_button_background"
+                    android:background="@drawable/kus_end_button_background"
                     android:minHeight="0dp"
                     android:minWidth="0dp"
                     android:padding="8dp"
@@ -91,13 +91,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
-                android:background="@color/colorLightGrey"
+                android:background="@color/kusColorLightGrey"
                 android:orientation="vertical">
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorLightGrey" />
+                    android:background="@color/kusColorLightGrey" />
 
                 <TextView
                     android:id="@+id/tvFooter"

@@ -15,7 +15,6 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
-import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
@@ -128,7 +127,7 @@ public class Kustomer {
         if (activity != null) {
             Intent intent = new Intent(activity, KUSSessionsActivity.class);
             activity.startActivity(intent);
-            activity.overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
+            activity.overridePendingTransition(R.anim.kus_slide_up, R.anim.kus_stay);
         }
     }
 
@@ -137,9 +136,9 @@ public class Kustomer {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
         if (KUSLocalization.getSharedInstance().isLTR())
-            activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+            activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.kus_stay);
         else
-            activity.overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);
+            activity.overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.kus_stay);
     }
 
     public static void presentCustomWebPage(Activity activity, String url) {
@@ -148,7 +147,7 @@ public class Kustomer {
         intent.putExtra(KUSConstants.Keys.K_KUSTOMER_URL_KEY, url);
 
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+        activity.overridePendingTransition(R.anim.kus_slide_left, R.anim.kus_stay);
     }
 
     public static void setLocale(Locale locale) {

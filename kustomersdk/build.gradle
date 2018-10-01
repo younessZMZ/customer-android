@@ -34,7 +34,7 @@ android {
         }
     }
 
-
+    resourcePrefix 'kus_'
 }
 
 buildscript {

@@ -4,16 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
-import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.Utils.KUSUtils;
-import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.ImageAttachmentViewHolder;
-import com.kustomer.kustomersdk.ViewHolders.SessionViewHolder;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +30,7 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ImageAttachmentViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_image_attachment_view_holder, parent, false));
+                .inflate(R.layout.kus_item_image_attachment_view_holder, parent, false));
     }
 
     @Override

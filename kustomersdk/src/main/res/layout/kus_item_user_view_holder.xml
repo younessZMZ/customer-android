@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/ic_error_outline_red_33dp"
+            android:src="@drawable/kus_ic_error_outline_red_33dp"
             android:layout_gravity="center_vertical"
             tools:ignore="ContentDescription"
             android:visibility="invisible"/>
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:autoLink="web|email"
-                android:background="@drawable/shape_user_message_background"
+                android:background="@drawable/kus_shape_user_message_background"
                 android:padding="10dp"
                 android:textColor="@color/kusUserTextColor"
                 android:textColorLink="@color/kusUserTextColor" />
@@ -47,7 +47,7 @@
                 android:id="@+id/attachmentLayout"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_user_message_background"
+                android:background="@drawable/kus_shape_user_message_background"
                 android:padding="10dp"
                 android:visibility="gone">
 

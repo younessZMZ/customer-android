@@ -51,7 +51,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //region LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setLayout(R.layout.activity_kussessions, R.id.toolbar_main, null, false);
+        setLayout(R.layout.kus_activity_kussessions, R.id.toolbar_main, null, false);
         super.onCreate(savedInstanceState);
 
         userSession = Kustomer.getSharedInstance().getUserSession();
@@ -105,7 +105,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.stay, R.anim.kus_slide_down);
+        overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_down);
     }
     //endregion
 
@@ -172,7 +172,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             startActivity(intent);
 
             if (shouldAnimateChatScreen)
-                overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
+                overridePendingTransition(R.anim.kus_slide_up, R.anim.kus_stay);
             else
                 overridePendingTransition(0, 0);
         } else if (chatSessionsDataSource != null) {
@@ -184,7 +184,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             startActivity(intent);
 
             if (shouldAnimateChatScreen)
-                overridePendingTransition(R.anim.kus_slide_up, R.anim.stay);
+                overridePendingTransition(R.anim.kus_slide_up, R.anim.kus_stay);
             else
                 overridePendingTransition(0, 0);
         }
@@ -211,9 +211,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
         startActivity(intent);
         if (KUSLocalization.getSharedInstance().isLTR())
-            overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+            overridePendingTransition(R.anim.kus_slide_left, R.anim.kus_stay);
         else
-            overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);
+            overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.kus_stay);
     }
 
     @Override
@@ -268,9 +268,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         startActivity(intent);
 
         if (KUSLocalization.getSharedInstance().isLTR())
-            overridePendingTransition(R.anim.kus_slide_left, R.anim.stay);
+            overridePendingTransition(R.anim.kus_slide_left, R.anim.kus_stay);
         else
-            overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.stay);
+            overridePendingTransition(R.anim.kus_slide_left_rtl, R.anim.kus_stay);
     }
 
     @Override

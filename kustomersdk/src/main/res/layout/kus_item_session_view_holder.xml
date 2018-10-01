@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="75dp"
-    android:background="@drawable/session_item_background"
+    android:background="@drawable/kus_session_item_background"
     android:orientation="vertical">
 
     <FrameLayout
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="6dp"
-            android:background="@drawable/closed_session_background"
+            android:background="@drawable/kus_closed_session_background"
             android:padding="8dp">
 
             <TextView
@@ -102,7 +102,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:background="@drawable/shape_unread_count_background"
+                            android:background="@drawable/kus_shape_unread_count_background"
                             android:gravity="center"
                             android:paddingEnd="4dp"
                             android:paddingStart="4dp"
@@ -122,6 +122,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorLightGrey" />
+        android:background="@color/kusColorLightGrey" />
 
 </LinearLayout>

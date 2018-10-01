@@ -265,7 +265,7 @@ public class KUSNotificationWindow {
         PendingIntent dummyIntent = PendingIntent.getActivity(mContext, 0,new Intent(), 0);
         //Create Sound Uri
         Uri soundUri = Uri.parse(String.format(Locale.getDefault(),
-                "android.resource://%s/%d",mContext.getPackageName(),R.raw.message_received));
+                "android.resource://%s/%d",mContext.getPackageName(),R.raw.kus_message_received));
 
         RemoteViews view = createNotificationView(
                 bitmap,
@@ -322,9 +322,9 @@ public class KUSNotificationWindow {
     private RemoteViews createNotificationView(Bitmap image, String title, String subtitle, Date date, int unreadCount){
         RemoteViews contentView;
         if(KUSLocalization.getSharedInstance().isLTR())
-            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_ltr);
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.kus_item_notification_ltr);
         else
-            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_rtl);
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.kus_item_notification_rtl);
 
         if(unreadCount < 1)
             unreadCount = 1;
@@ -344,9 +344,9 @@ public class KUSNotificationWindow {
         RemoteViews contentView;
 
         if(KUSLocalization.getSharedInstance().isLTR())
-            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_expanded_ltr);
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.kus_item_notification_expanded_ltr);
         else
-            contentView = new RemoteViews(mContext.getPackageName(), R.layout.item_notification_expanded_rtl);
+            contentView = new RemoteViews(mContext.getPackageName(), R.layout.kus_item_notification_expanded_rtl);
 
         if(unreadCount < 1)
             unreadCount = 1;

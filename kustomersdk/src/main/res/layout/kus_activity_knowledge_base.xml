@@ -42,7 +42,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_back_black_24dp"
+                android:src="@drawable/kus_ic_arrow_back_black_24dp"
                 android:layout_gravity="center"
                 tools:ignore="ContentDescription"
                 android:tint="@color/kusWebBackTintColor" />
@@ -59,7 +59,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_refresh_black_24dp"
+                android:src="@drawable/kus_ic_refresh_black_24dp"
                 android:layout_gravity="center"
                 tools:ignore="ContentDescription"
                 android:tint="@color/kusWebRefreshTintColor"/>
@@ -76,7 +76,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_forward_black_24dp"
+                android:src="@drawable/kus_ic_arrow_forward_black_24dp"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 tools:ignore="ContentDescription"

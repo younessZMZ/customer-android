@@ -5,17 +5,12 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
-import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
-import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
-import com.kustomer.kustomersdk.ViewHolders.AgentMessageViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.SessionViewHolder;
-import com.kustomer.kustomersdk.ViewHolders.UserMessageViewHolder;
 
 import java.lang.ref.WeakReference;
 
@@ -51,10 +46,10 @@ public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if(viewType == SESSION_VIEW_TYPE)
             return new SessionViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_session_view_holder,parent,false));
+                    .inflate(R.layout.kus_item_session_view_holder,parent,false));
         else
             return new DummyViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_session_dummy_view_holder,parent,false));
+                    .inflate(R.layout.kus_item_session_dummy_view_holder,parent,false));
     }
 
     @Override

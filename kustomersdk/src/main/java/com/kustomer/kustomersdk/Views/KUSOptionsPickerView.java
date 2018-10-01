@@ -106,7 +106,7 @@ public class KUSOptionsPickerView extends LinearLayout implements View.OnClickLi
                 TextViewCompat.setTextAppearance(textView,R.style.KUSOptionPickerTextAppearance);
                 textView.setLayoutParams(vlp);
                 textView.setText(option);
-                textView.setBackgroundResource(R.drawable.shape_option_view_background);
+                textView.setBackgroundResource(R.drawable.kus_shape_option_view_background);
                 textView.setTextColor(ContextCompat.getColor(getContext(),R.color.kusOptionPickerButtonTextColor));
                 textView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
                 textView.setSingleLine(true);

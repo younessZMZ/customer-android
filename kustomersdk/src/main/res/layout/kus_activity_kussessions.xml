@@ -55,7 +55,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_error_outline_red_33dp"
+                android:src="@drawable/kus_ic_error_outline_red_33dp"
                 android:padding="5dp"/>
 
             <TextView
@@ -82,11 +82,11 @@
         android:layout_width="match_parent"
         android:layout_height="16dp"
         android:orientation="vertical"
-        android:background="@color/colorLightGrey">
+        android:background="@color/kusColorLightGrey">
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLightGrey"/>
+            android:background="@color/kusColorLightGrey"/>
 
         <TextView
             android:id="@+id/tvFooter"

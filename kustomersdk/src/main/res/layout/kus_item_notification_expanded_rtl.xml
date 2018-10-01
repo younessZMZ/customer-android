@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/session_item_background"
+    android:background="@drawable/kus_session_item_background"
     android:layoutDirection="rtl">
 
     <LinearLayout
@@ -86,7 +86,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textSize="10sp"
-                        android:background="@drawable/shape_unread_count_background" />
+                        android:background="@drawable/kus_shape_unread_count_background" />
                 </FrameLayout>
 
             </LinearLayout>
@@ -100,6 +100,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/kusSessionTitleColor"
         android:text="@string/com_kustomer_dismiss"
-        android:background="@drawable/session_item_background"/>
+        android:background="@drawable/kus_session_item_background"/>
 
 </LinearLayout>

@@ -43,7 +43,7 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
     //region LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setLayout(R.layout.activity_knowledge_base, R.id.toolbar_main, null, true);
+        setLayout(R.layout.kus_activity_knowledge_base, R.id.toolbar_main, null, true);
         super.onCreate(savedInstanceState);
 
         enableMixedContentModeCompat(wvKnowledge.getSettings());
@@ -82,9 +82,9 @@ public class KUSKnowledgeBaseActivity extends BaseActivity {
         super.finish();
 
         if (KUSLocalization.getSharedInstance().isLTR())
-            overridePendingTransition(R.anim.stay, R.anim.kus_slide_right);
+            overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_right);
         else
-            overridePendingTransition(R.anim.stay, R.anim.kus_slide_right_rtl);
+            overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_right_rtl);
     }
     //endregion
 

@@ -65,7 +65,7 @@
             android:layout_height="50dp"
             android:layout_margin="20dp"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/kusty"
+            android:src="@drawable/kus_kusty"
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>

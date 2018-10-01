@@ -49,11 +49,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == USER_VIEW)
-            return new UserMessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_view_holder, parent, false));
+            return new UserMessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.kus_item_user_view_holder, parent, false));
         else if (viewType == AGENT_VIEW)
-            return new AgentMessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_agent_view_holder, parent, false));
+            return new AgentMessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.kus_item_agent_view_holder, parent, false));
         else
-            return new DummyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_closed_chat_layout, parent, false));
+            return new DummyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.kus_item_closed_chat_layout, parent, false));
     }
 
     @Override

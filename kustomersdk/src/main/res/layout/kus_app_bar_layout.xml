@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/shape_unread_count_background"
+                    android:background="@drawable/kus_shape_unread_count_background"
                     android:gravity="center"
                     android:maxLength="2"
                     android:paddingLeft="4dp"
@@ -165,7 +165,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:background="@drawable/shape_email_view_background" />
+                android:background="@drawable/kus_shape_email_view_background" />
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/etEmail"
@@ -180,8 +180,8 @@
                 android:hint="@string/com_kustomer_email_example"
                 android:inputType="textEmailAddress"
                 android:padding="5dp"
-                android:textColorHint="@color/colorLightGrey"
-                android:textCursorDrawable="@drawable/email_bar_cursor"
+                android:textColorHint="@color/kusColorLightGrey"
+                android:textCursorDrawable="@drawable/kus_email_bar_cursor"
                 android:textSize="14sp" />
 
             <FrameLayout
@@ -194,7 +194,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/shape_circle_white"
+                    android:src="@drawable/kus_shape_circle_white"
                     android:tint="@color/kusEmailInputBorderColor"
                     tools:ignore="ContentDescription" />
 
@@ -202,7 +202,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="3dp"
-                    android:src="@drawable/ic_done_white_24dp"
+                    android:src="@drawable/kus_ic_done_white_24dp"
                     tools:ignore="ContentDescription" />
             </FrameLayout>
 

@@ -9,7 +9,7 @@
         android:id="@+id/ivClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_close_black_24dp"
+        android:src="@drawable/kus_ic_close_black_24dp"
         android:tint="@android:color/white"
         android:layout_alignParentStart="true"/>
 
@@ -25,7 +25,7 @@
         android:id="@+id/ivShare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_share_black_24dp"
+        android:src="@drawable/kus_ic_share_black_24dp"
         android:tint="@android:color/white"
         android:layout_alignParentEnd="true"/>
 

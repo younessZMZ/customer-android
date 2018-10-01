@@ -3,10 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/session_item_background"
+    android:background="@drawable/kus_session_item_background"
     android:layoutDirection="ltr">
 
     <LinearLayout
@@ -69,7 +69,6 @@
                     android:textColor="@color/kusSessionSubtitleColor"
                     android:textColorLink="@color/kusSessionSubtitleColor"
                     android:layout_weight="1"
-                    android:lines="1"
                     android:textSize="12sp"
                     android:textAlignment="viewStart"/>
                 <FrameLayout
@@ -87,7 +86,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textSize="10sp"
-                        android:background="@drawable/shape_unread_count_background" />
+                        android:background="@drawable/kus_shape_unread_count_background" />
                 </FrameLayout>
 
             </LinearLayout>
@@ -95,5 +94,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/kusSessionTitleColor"
+        android:text="@string/com_kustomer_dismiss"
+        android:background="@drawable/kus_session_item_background"/>
 
 </LinearLayout>

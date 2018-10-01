@@ -169,12 +169,12 @@ public class KUSImage {
     private static List<Integer> getDefaultNameColors(){
         if(defaultNameColors == null) {
             defaultNameColors = new ArrayList<>();
-            defaultNameColors.add(R.color.defaultNameColor1);
-            defaultNameColors.add(R.color.defaultNameColor2);
-            defaultNameColors.add(R.color.defaultNameColor3);
-            defaultNameColors.add(R.color.defaultNameColor4);
-            defaultNameColors.add(R.color.defaultNameColor5);
-            defaultNameColors.add(R.color.defaultNameColor6);
+            defaultNameColors.add(R.color.kusDefaultNameColor1);
+            defaultNameColors.add(R.color.kusDefaultNameColor2);
+            defaultNameColors.add(R.color.kusDefaultNameColor3);
+            defaultNameColors.add(R.color.kusDefaultNameColor4);
+            defaultNameColors.add(R.color.kusDefaultNameColor5);
+            defaultNameColors.add(R.color.kusDefaultNameColor6);
         }
 
         return defaultNameColors;

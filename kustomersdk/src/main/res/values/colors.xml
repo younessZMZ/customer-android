@@ -63,15 +63,15 @@
 
     <color name="kusColorAccent">#FF4081</color>
     <color name="kusColorRedSemi">#aacc0000</color>
-    <color name="colorOffWhite">#F5F5F5</color>
-    <color name="colorBlueMessage">#2962FF</color>
-    <color name="colorLightGrey">#E0E0E0</color>
+    <color name="kusColorOffWhite">#F5F5F5</color>
+    <color name="kusColorBlueMessage">#2962FF</color>
+    <color name="kusColorLightGrey">#E0E0E0</color>
 
 
-    <color name="defaultNameColor1">#d73d32</color>
-    <color name="defaultNameColor2">#7e3794</color>
-    <color name="defaultNameColor3">#4285f4</color>
-    <color name="defaultNameColor4">#67ae3f</color>
-    <color name="defaultNameColor5">#d61a7f</color>
-    <color name="defaultNameColor6">#ff4080</color>
+    <color name="kusDefaultNameColor1">#d73d32</color>
+    <color name="kusDefaultNameColor2">#7e3794</color>
+    <color name="kusDefaultNameColor3">#4285f4</color>
+    <color name="kusDefaultNameColor4">#67ae3f</color>
+    <color name="kusDefaultNameColor5">#d61a7f</color>
+    <color name="kusDefaultNameColor6">#ff4080</color>
 </resources>

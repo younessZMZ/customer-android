@@ -1,14 +1,10 @@
 package com.kustomer.kustomersdk.Helpers;
 
-import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
 
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +36,7 @@ public class KUSAudio implements MediaPlayer.OnCompletionListener {
 
     //region Private Methods
     private void playMsgReceivedSound(){
-        MediaPlayer mPlayer = MediaPlayer.create(Kustomer.getContext(), R.raw.message_received);
+        MediaPlayer mPlayer = MediaPlayer.create(Kustomer.getContext(), R.raw.kus_message_received);
 
         if(mPlayer != null) {
             playingMediaPlayers.add(mPlayer);

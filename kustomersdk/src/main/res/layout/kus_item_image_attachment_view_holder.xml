@@ -19,7 +19,7 @@
         android:id="@+id/ivRemoveImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/cross"
+        android:src="@drawable/kus_cross"
         android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
