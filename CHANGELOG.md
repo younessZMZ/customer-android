@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.11
+
+* Added prefix to resources for compatibility
+
 ## 0.1.10
 
 * NPE issue for most recent session fixed
