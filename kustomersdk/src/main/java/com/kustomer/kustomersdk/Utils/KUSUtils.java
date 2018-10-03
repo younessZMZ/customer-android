@@ -47,6 +47,14 @@ public class KUSUtils {
         return updatedString;
     }
 
+    public static String removeNonASCIIChars(String original){
+
+        if(original != null)
+            return original.replaceAll("[^\\p{ASCII}]", "");
+        else
+            return null;
+    }
+
     public static float dipToPixels(Context context, float dipValue) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);

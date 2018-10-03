@@ -1,5 +1,20 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.10
+
+* NPE issue for most recent session fixed
+
+## 0.1.9
+
+* Non-Ascii character in HTTP header issue fixed
+
+## 0.1.8
+
+* Emoji issue fixed
+* Removed auto reply
+* Implemented no history feature
+
+
 ## 0.1.7
 
 * Fixed all warnings and errors from string files.
