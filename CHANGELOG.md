@@ -2,6 +2,10 @@
 
 ## 0.1.11
 
+* Open chat sessions public method added
+
+## 0.1.11
+
 * Added prefix to resources for compatibility
 
 ## 0.1.10
