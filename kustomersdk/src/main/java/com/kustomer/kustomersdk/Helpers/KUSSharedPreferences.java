@@ -20,6 +20,7 @@ public class KUSSharedPreferences {
     private static final String TRACKING_TOKEN_PREFERENCE = "tracking_token_pref";
     private static final String DID_CAPTURE_EMAIL_PREFERENCE = "email_capture_pref";
     private static final String FORM_ID_PREFERENCE = "form_id_pref";
+    private static final String OPEN_CHAT_SESSIONS_COUNT = "open_chat_session_count_pref";
     private SharedPreferences sharedPref = null;
     //endregion
 
@@ -32,6 +33,16 @@ public class KUSSharedPreferences {
     //endregion
 
     //region Basic Methods
+    private void saveInt(String key, int value) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
+    private int getInt(String key) {
+        return sharedPref.getInt(key, 0);
+    }
+
     private void saveBoolean(String key, boolean check) {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(key, check);
@@ -81,6 +92,14 @@ public class KUSSharedPreferences {
 
     public void reset() {
         sharedPref.edit().clear().apply();
+    }
+
+    public int getOpenChatSessionsCount(){
+     return getInt(OPEN_CHAT_SESSIONS_COUNT);
+    }
+
+    public void setOpenChatSessionsCount(int value){
+        saveInt(OPEN_CHAT_SESSIONS_COUNT,value);
     }
 
     //endregion

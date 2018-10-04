@@ -153,8 +153,8 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     private boolean isBackToChatButton() {
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
-        int proactiveChats = userSession.getChatSessionsDataSource().openProactiveCampaignsCount();
+        int openChats = userSession.getChatSessionsDataSource().getOpenChatSessionsCount();
+        int proactiveChats = userSession.getChatSessionsDataSource().getOpenProactiveCampaignsCount();
         return (settings != null && settings.getSingleSessionChat() && (openChats - proactiveChats) >= 1);
     }
 
@@ -165,7 +165,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         didHandleFirstLoad = true;
 
         if (chatSessionsDataSource != null &&
-                (chatSessionsDataSource.getSize() == 0 || chatSessionsDataSource.openChatSessionsCount() == 0)) {
+                (chatSessionsDataSource.getSize() == 0 || chatSessionsDataSource.getOpenChatSessionsCount() == 0)) {
 
             Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, false);

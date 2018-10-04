@@ -295,7 +295,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
     //region internal methods
 
-    public int openChatSessionsCount() {
+    public int getOpenChatSessionsCount() {
         int count = 0;
         KUSChatSession chatSession;
         for (KUSModel model : getList()) {
@@ -307,7 +307,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
         return count;
     }
 
-    public int openProactiveCampaignsCount() {
+    public int getOpenProactiveCampaignsCount() {
         int count = 0;
         KUSChatSession chatSession;
         for (KUSModel model : getList()) {
@@ -457,6 +457,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         if (dataSource == this) {
+            getUserSession().getSharedPreferences().setOpenChatSessionsCount(getOpenChatSessionsCount());
             if (pendingCustomChatSessionAttributes != null) {
                 KUSChatSession mostRecentSession = getMostRecentSession();
                 String mostRecentSessionId = mostRecentSession.getId();

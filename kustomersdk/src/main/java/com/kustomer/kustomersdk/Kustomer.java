@@ -161,6 +161,10 @@ public class Kustomer {
     public static void setFormId(String formId) {
         getSharedInstance().mSetFormId(formId);
     }
+
+    public static int getOpenConversationsCount(){
+        return getSharedInstance().mGetOpenConversationsCount();
+    }
     //endregion
 
     //region Private Methods
@@ -307,6 +311,10 @@ public class Kustomer {
     private void mSetFormId(String formId) {
         userSession.getSharedPreferences().setFormId(formId);
     }
+
+    private int mGetOpenConversationsCount(){
+        return getUserSession().getSharedPreferences().getOpenChatSessionsCount();
+    }
     //endregion
 
     //region Public Methods
@@ -340,6 +348,7 @@ public class Kustomer {
 
         return userSession;
     }
+
     //endregion
 
 }

@@ -518,8 +518,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     private boolean isBackToChatButton() {
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        int openChats = userSession.getChatSessionsDataSource().openChatSessionsCount();
-        int proactiveChats = userSession.getChatSessionsDataSource().openProactiveCampaignsCount();
+        int openChats = userSession.getChatSessionsDataSource().getOpenChatSessionsCount();
+        int proactiveChats = userSession.getChatSessionsDataSource().getOpenProactiveCampaignsCount();
         return (settings != null && settings.getSingleSessionChat() && (openChats-proactiveChats) >= 1);
     }
     //endregion
