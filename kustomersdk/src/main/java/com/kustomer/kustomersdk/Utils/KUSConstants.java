@@ -30,6 +30,7 @@ public class KUSConstants {
         String CLIENT_ACTIVITY_ENDPOINT = "/c/v1/client-activity";
         String VOLUME_CONTROL_ENDPOINT = "/c/v1/chat/volume-control/responses";
         String SESSION_LOCK_ENDPOINT = "/c/v1/chat/sessions/%s";
+        String CUSTOMER_STATS_ENDPOINT = "/c/v1/chat/customers/stats";
     }
 
     public interface Keys {

@@ -4,13 +4,14 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
-import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSPusherShouldConnectListener;
+import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -51,9 +52,9 @@ import java.util.TimerTask;
 public class KUSPushClient implements Serializable, KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
 
     //region Properties
-    private static long KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD = 60000;
-    private static long LAZY_POLLING_TIMER_INTERVAL = 30000;
-    private static long ACTIVE_POLLING_TIMER_INTERVAL = 7500;
+    private static final long KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD = 60000;
+    private static final long LAZY_POLLING_TIMER_INTERVAL = 30000;
+    private static final long ACTIVE_POLLING_TIMER_INTERVAL = 7500;
     private long currentPollingTimerInterval = 0;
 
     private Pusher pusherClient;
@@ -82,8 +83,13 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     //region Public Methods
     public void onClientActivityTick() {
         // We only need to poll for client activity changes if we are not connected to the socket
-        if (!shouldBeConnectedToPusher())
-            onPollTick();
+        shouldBeConnectedToPusher(new KUSPusherShouldConnectListener() {
+            @Override
+            public void onCompletion(boolean shouldConnect) {
+                if (!shouldConnect)
+                    onPollTick();
+            }
+        });
     }
 
     public void removeAllListeners() {
@@ -136,34 +142,45 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             pusherClient = new Pusher(chatSettings.getPusherAccessKey(), options);
         }
 
-        if (pusherClient != null && shouldBeConnectedToPusher()) {
-            pusherClient.connect(new ConnectionEventListener() {
+        if (pusherClient != null) {
+            // Connect or disconnect from pusher
+            shouldBeConnectedToPusher(new KUSPusherShouldConnectListener() {
                 @Override
-                public void onConnectionStateChange(ConnectionStateChange change) {
-                    if (change.getCurrentState() == ConnectionState.CONNECTED)
-                        updatePollingTimer();
-                }
+                public void onCompletion(boolean shouldConnect) {
 
-                @Override
-                public void onError(String message, String code, Exception e) {
-                    updatePollingTimer();
+                    if(shouldConnect){
+                    pusherClient.connect(new ConnectionEventListener() {
+                        @Override
+                        public void onConnectionStateChange(ConnectionStateChange change) {
+                            if (change.getCurrentState() == ConnectionState.CONNECTED)
+                                updatePollingTimer();
+                        }
+
+                        @Override
+                        public void onError(String message, String code, Exception e) {
+                            updatePollingTimer();
+                        }
+                    });
+
+                    handler = new Handler(Looper.getMainLooper());
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            if (userSession.get() != null)
+                                connectToChannelsIfNecessary();
+                        }
+                    };
+                    handler.postDelayed(runnable, KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD);
+                    }else{
+                        if (pusherClient != null)
+                            pusherClient.disconnect();
+                    }
                 }
             });
 
-            handler = new Handler(Looper.getMainLooper());
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    if (userSession.get() != null)
-                        connectToChannelsIfNecessary();
-                }
-            };
-            handler.postDelayed(runnable, KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD);
-
-        } else {
-            if (pusherClient != null)
-                pusherClient.disconnect();
+        }else {
         }
+
 
         String pusherChannelName = getPusherChannelName();
 
@@ -283,35 +300,40 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void updatePollingTimer() {
-        if (shouldBeConnectedToPusher()) {
-            if (pusherClient != null && pusherClient.getConnection().getState() == ConnectionState.CONNECTED) {
-                //Stop Polling
-                if (pollingTimer != null) {
-                    pollingTimer.cancel();
-                    pollingTimer = null;
-                }
-            } else {
-                // We are not yet connected to pusher, setup an active polling pollingTimer
-                // (in the event that connecting to pusher fails)
-                if (pollingTimer == null || currentPollingTimerInterval != ACTIVE_POLLING_TIMER_INTERVAL) {
-                    if (pollingTimer != null)
-                        pollingTimer.cancel();
+        shouldBeConnectedToPusher(new KUSPusherShouldConnectListener() {
+            @Override
+            public void onCompletion(boolean shouldConnect) {
+                if (shouldConnect) {
+                    if (pusherClient != null && pusherClient.getConnection().getState() == ConnectionState.CONNECTED) {
+                        //Stop Polling
+                        if (pollingTimer != null) {
+                            pollingTimer.cancel();
+                            pollingTimer = null;
+                        }
+                    } else {
+                        // We are not yet connected to pusher, setup an active polling pollingTimer
+                        // (in the event that connecting to pusher fails)
+                        if (pollingTimer == null || currentPollingTimerInterval != ACTIVE_POLLING_TIMER_INTERVAL) {
+                            if (pollingTimer != null)
+                                pollingTimer.cancel();
 
-                    startTimer(ACTIVE_POLLING_TIMER_INTERVAL);
+                            startTimer(ACTIVE_POLLING_TIMER_INTERVAL);
+                        }
+                    }
+                } else {
+                    // Make sure we're polling lazily
+                    if (pollingTimer == null || currentPollingTimerInterval != LAZY_POLLING_TIMER_INTERVAL) {
+                        if (pollingTimer != null)
+                            pollingTimer.cancel();
+
+                        startTimer(LAZY_POLLING_TIMER_INTERVAL);
+
+                        // Tick immediately
+                        onPollTick();
+                    }
                 }
             }
-        } else {
-            // Make sure we're polling lazily
-            if (pollingTimer == null || currentPollingTimerInterval != LAZY_POLLING_TIMER_INTERVAL) {
-                if (pollingTimer != null)
-                    pollingTimer.cancel();
-
-                startTimer(LAZY_POLLING_TIMER_INTERVAL);
-
-                // Tick immediately
-                onPollTick();
-            }
-        }
+        });
     }
 
     private void startTimer(long time) {
@@ -334,6 +356,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             };
             pollingTimer.schedule(doAsynchronousTask, 0, time);
         } catch (Exception ignore) {
+            int i = 0;
         }
     }
 
@@ -371,21 +394,47 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
     }
 
-    private boolean shouldBeConnectedToPusher() {
-        if (isSupportScreenShown())
-            return true;
+    private void shouldBeConnectedToPusher(final KUSPusherShouldConnectListener listener) {
+        if (isSupportScreenShown()) {
+            listener.onCompletion(true);
+            return;
+        }
 
-        if (userSession.get() == null)
-            return false;
+        if (userSession.get() == null) {
+            listener.onCompletion(false);
+            return;
+        }
 
-        Date lastMessageAt = userSession.get().getChatSessionsDataSource().getLastMessageAt();
-        return lastMessageAt != null && Calendar.getInstance().getTimeInMillis() - lastMessageAt.getTime() > KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD;
+        userSession.get().getRequestManager().getEndpoint(KUSConstants.URL.CUSTOMER_STATS_ENDPOINT,
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+                        JSONObject jsonObject =
+                                JsonHelper.jsonObjectFromKeyPath(response, "data");
+                        Date lastActivity = JsonHelper.dateFromKeyPath(
+                                jsonObject, "attributes.lastActivity");
+                        final Boolean connect = lastActivity != null
+                                && Calendar.getInstance().getTimeInMillis() - lastActivity.getTime()
+                                < KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD;
+
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                listener.onCompletion(connect);
+                            }
+                        };
+                        handler.post(runnable);
+
+                    }
+                });
     }
     //endregion
 
     //region Accessors
 
-    public boolean isSupportScreenShown() {
+    private boolean isSupportScreenShown() {
         return isSupportScreenShown;
     }
 
