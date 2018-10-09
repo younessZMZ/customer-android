@@ -101,7 +101,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     }
 
     public Boolean getEnabled() {
-        return enabled;
+        return enabled != null ? enabled : false;
     }
 
     public String getCustomWaitMessage() {
@@ -116,24 +116,24 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         return promptDelay;
     }
 
-    public boolean isHideWaitOption() {
-        return hideWaitOption;
+    public Boolean isHideWaitOption() {
+        return hideWaitOption != null ? hideWaitOption : false;
     }
 
     public ArrayList<String> getFollowUpChannels() {
         return followUpChannels;
     }
 
-    public boolean isUseDynamicWaitMessage() {
-        return useDynamicWaitMessage;
+    public Boolean isUseDynamicWaitMessage() {
+        return useDynamicWaitMessage != null ? useDynamicWaitMessage : false;
     }
 
-    public boolean isMarkDoneAfterTimeout() {
-        return markDoneAfterTimeout;
+    public Boolean isMarkDoneAfterTimeout() {
+        return markDoneAfterTimeout != null ? markDoneAfterTimeout : false;
     }
 
-    public boolean isVolumeControlEnabled() {
-        return volumeControlEnabled;
+    public Boolean isVolumeControlEnabled() {
+        return volumeControlEnabled != null ? volumeControlEnabled : false;
     }
 
     public String getWaitMessage() {
@@ -141,31 +141,31 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     }
 
     public Boolean getHideWaitOption() {
-        return hideWaitOption;
+        return hideWaitOption != null ? hideWaitOption : false;
     }
 
     public Boolean getUseDynamicWaitMessage() {
-        return useDynamicWaitMessage;
+        return useDynamicWaitMessage != null ? useDynamicWaitMessage : false;
     }
 
     public Boolean getMarkDoneAfterTimeout() {
-        return markDoneAfterTimeout;
+        return markDoneAfterTimeout != null ? markDoneAfterTimeout : false;
     }
 
     public Boolean getVolumeControlEnabled() {
-        return volumeControlEnabled;
+        return volumeControlEnabled != null ? volumeControlEnabled : false;
     }
 
     public Boolean getClosableChat() {
-        return closableChat;
+        return closableChat != null ? closableChat : false;
     }
 
     public Boolean getSingleSessionChat() {
-        return singleSessionChat;
+        return singleSessionChat != null ? singleSessionChat : false;
     }
 
     public Boolean getNoHistory() {
-        return noHistory;
+        return noHistory != null ? noHistory : false;
     }
 
     //endregion

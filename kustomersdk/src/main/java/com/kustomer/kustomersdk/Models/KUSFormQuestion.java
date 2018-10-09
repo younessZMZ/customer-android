@@ -111,7 +111,7 @@ public class KUSFormQuestion extends KUSModel {
     }
 
     public Boolean getSkipIfSatisfied() {
-        return skipIfSatisfied;
+        return skipIfSatisfied != null ? skipIfSatisfied : false;
     }
 
     //endregion

@@ -56,7 +56,7 @@ public class KUSTrackingToken extends KUSModel {
     }
 
     public Boolean getVerified() {
-        return verified;
+        return verified != null ? verified : false;
     }
 
     public void setVerified(Boolean verified) {

@@ -234,7 +234,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         shouldShowBackButton = getIntent().getBooleanExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, true);
 
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        if(settings.getNoHistory())
+        if(settings != null && settings.getNoHistory())
             shouldShowBackButton = false;
 
         if (kusChatSession != null) {
