@@ -765,21 +765,22 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void optionPickerOnOptionSelected(String option) {
-        String value = null;
         KUSTeam team = null;
 
         int optionIndex = kusOptionPickerView.getOptions().indexOf(option);
         KUSFormQuestion currentQuestion = chatMessagesDataSource.currentQuestion();
-        if (optionIndex >= 0 && optionIndex < (currentQuestion != null ? currentQuestion.getValues().size() : 0)) {
-            value = currentQuestion.getValues().get(optionIndex);
-        }
-        if (optionIndex >= 0 && optionIndex < (teamOptionsDatasource != null ? teamOptionsDatasource.getSize() : 0))
+
+        if (optionIndex >= 0
+                && currentQuestion != null
+                && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM
+                && optionIndex < (teamOptionsDatasource != null ? teamOptionsDatasource.getSize() : 0))
+
             team = (KUSTeam) teamOptionsDatasource.get(optionIndex);
 
         chatMessagesDataSource.sendMessageWithText(
                 team != null && team.displayName != null ? team.displayName : option,
                 null,
-                value != null ? value : team != null ? team.getId() : null);
+                team != null ? team.getId() : null);
     }
 
     @Override
