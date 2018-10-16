@@ -41,6 +41,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
     //region Properties
     private JSONObject pendingCustomChatSessionAttributes;
+    private JSONObject pendingCustomChatSessionAttributesForNextConversation;
     private HashMap<String, Date> localLastSeenAtBySessionId;
     //endregion
 
@@ -121,6 +122,13 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                         }
 
                         if (session != null) {
+                            if(pendingCustomChatSessionAttributesForNextConversation != null){
+                                flushCustomAttributes(pendingCustomChatSessionAttributesForNextConversation
+                                        ,session.getId());
+
+                                pendingCustomChatSessionAttributesForNextConversation = null;
+                            }
+
                             ArrayList<KUSModel> sessions = new ArrayList<>();
                             sessions.add(session);
 
@@ -290,6 +298,37 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
             fetchLatest();
         }
+    }
+
+    public void describeNextConversation(JSONObject customAttributes) {
+        JSONObject pendingCustomChatSessionAttributesForNextConversation = new JSONObject();
+
+        if (this.pendingCustomChatSessionAttributesForNextConversation != null) {
+            Iterator iterator = this.pendingCustomChatSessionAttributesForNextConversation.keys();
+            while (iterator.hasNext()) {
+                String key = iterator.next().toString();
+                try {
+                    pendingCustomChatSessionAttributesForNextConversation.put(key,
+                            this.pendingCustomChatSessionAttributesForNextConversation.get(key));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Iterator iterator = customAttributes.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next().toString();
+            try {
+                pendingCustomChatSessionAttributesForNextConversation.put(key, customAttributes.get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        this.pendingCustomChatSessionAttributesForNextConversation = pendingCustomChatSessionAttributesForNextConversation;
+
     }
     //endregion
 

@@ -98,6 +98,10 @@ public class Kustomer {
         getSharedInstance().mDescribeConversation(customAttributes);
     }
 
+    public static void describeNextConversation(JSONObject customAttributes) {
+        getSharedInstance().mDescribeNextConversation(customAttributes);
+    }
+
     public static void describeCustomer(KUSCustomerDescription customerDescription) {
         getSharedInstance().mDescribeCustomer(customerDescription);
     }
@@ -201,6 +205,16 @@ public class Kustomer {
             return;
 
         userSession.getChatSessionsDataSource().describeActiveConversation(customAttributes);
+    }
+
+    private void mDescribeNextConversation(JSONObject customAttributes) {
+        if (customAttributes == null)
+            throw new AssertionError("Attempted to describe a conversation with no attributes set");
+
+        if (!customAttributes.keys().hasNext())
+            return;
+
+        userSession.getChatSessionsDataSource().describeNextConversation(customAttributes);
     }
 
     private void mDescribeCustomer(KUSCustomerDescription customerDescription) {

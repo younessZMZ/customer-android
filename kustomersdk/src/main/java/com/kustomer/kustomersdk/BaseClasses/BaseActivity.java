@@ -100,14 +100,16 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void showProgressBar(){
-        progressDialog.show();
+        if(progressDialog != null)
+            progressDialog.show();
 
         if(retryView != null && retryView.getVisibility() == View.VISIBLE)
             retryView.setVisibility(View.GONE);
     }
 
     protected void hideProgressBar(){
-        progressDialog.dismiss();
+        if(progressDialog != null)
+            progressDialog.dismiss();
 
         if(retryView != null)
             retryView.setVisibility(View.GONE);
