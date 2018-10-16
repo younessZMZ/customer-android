@@ -203,6 +203,19 @@ conversationObject.put("customAttributeStr", "value");
 // ...
 
 Kustomer.describeConversation(conversationObject);
+
+/*
+ Attach custom attributes to the user's next new conversation
+
+ NOTE:
+ These key-value pairs must be enabled on the Conversation Klass via the admin portal.
+ This can be done by an admin via Settings > Platform Settings > Klasses > Conversation
+*/
+JSONObject conversationObject = new JSONObject();
+conversationObject.put("customAttributeStr", "value");
+// ...
+
+Kustomer.describeNextConversation(conversationObject);
 ```
 
 ```java
