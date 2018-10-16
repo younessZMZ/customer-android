@@ -245,6 +245,13 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                         }
 
                         if (chatSession != null) {
+                            if(pendingCustomChatSessionAttributesForNextConversation != null){
+                                flushCustomAttributes(pendingCustomChatSessionAttributesForNextConversation
+                                        ,chatSession.getId());
+
+                                pendingCustomChatSessionAttributesForNextConversation = null;
+                            }
+
                             final KUSChatSession finalChatSession = chatSession;
                             weakReference.get().upsertAll(new ArrayList<KUSModel>() {{
                                 add(finalChatSession);
