@@ -1,6 +1,13 @@
 # Changelog for Kustomer Android SDK
 
-## 0.1.11
+## 0.1.13
+
+* Describe next conversation implemented
+* Fixed the wrong team assignment to the conversation
+* Connect to pusher if the last activity time is less than PusherConnectThreshold
+* Fixed crash due to Boolean object being null
+
+## 0.1.12
 
 * Open chat sessions public method added
 

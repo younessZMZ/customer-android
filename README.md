@@ -25,7 +25,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-compile 'com.kustomer.kustomersdk:kustomersdk:0.1.12'
+compile 'com.kustomer.kustomersdk:kustomersdk:0.1.13'
 ```
 
 #### Or through Maven
@@ -34,7 +34,7 @@ compile 'com.kustomer.kustomersdk:kustomersdk:0.1.12'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.1.12</version>
+  <version>0.1.13</version>
   <type>pom</type>
 </dependency>
 ```
