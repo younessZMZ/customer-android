@@ -157,12 +157,15 @@ public class JsonHelper {
     }
 
     public static JSONObject jsonObjectFromKeyPath(JSONObject json, String keyPath){
-
         try {
-            return json.getJSONObject(keyPath);
-        } catch (Exception ignore) {}
-
-        return null;
+            String[] keys = keyPath.split("[.]");
+            for (int i = 0; i < keys.length - 1; i++) {
+                json = json.getJSONObject(keys[i]);
+            }
+            return keys.length > 0 ? json.getJSONObject(keys[keys.length - 1]) : json.getJSONObject(keyPath);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static JSONObject stringToJson(String jsonString){

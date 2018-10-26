@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">ปิด</string>
     <string name="com_kustomer_start_a_new_conversation">เริ่มการสนทนาใหม่</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">ขอขอบคุณ! เราจะติดตามคำขอของคุณต่อ</string>
+    <string name="com_kustomer_leave_a_message">ฝากข้อความ</string>
 </resources>

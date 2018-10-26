@@ -21,9 +21,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
@@ -92,6 +95,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     TextView tvClosedChat;
     @BindView(R2.id.btnEndChat)
     Button btnEndChat;
+    @BindView(R2.id.ivNonBusinessHours)
+    ImageView ivNonBusinessHours;
 
     KUSChatSession kusChatSession;
     KUSUserSession userSession;
@@ -102,6 +107,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     KUSToolbar kusToolbar;
     boolean shouldShowBackButton = true;
     boolean backPressed = false;
+    boolean shouldShowNonBusinessHoursImage = false;
 
     String mCurrentPhotoPath;
     //endregion
@@ -123,9 +129,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         super.onResume();
         KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
 
-        if ((session == null || session.getLockedAt() == null) && tvClosedChat.getVisibility() == View.GONE
-                && kusOptionPickerView.getVisibility() == View.GONE)
+        if ((session == null || session.getLockedAt() == null)
+                && tvClosedChat.getVisibility() == View.GONE
+                && kusOptionPickerView.getVisibility() == View.GONE
+                && !shouldShowNonBusinessHoursImage) {
             kusInputBarView.requestInputFocus();
+        }
 
         if (userSession != null && chatSessionId != null)
             userSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId, null);
@@ -232,6 +241,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         userSession = Kustomer.getSharedInstance().getUserSession();
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY);
         shouldShowBackButton = getIntent().getBooleanExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, true);
+        shouldShowNonBusinessHoursImage = !userSession.getScheduleDataSource().isActiveBusinessHours();
 
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
         if(settings != null && settings.getNoHistory())
@@ -252,11 +262,39 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void initViews() {
+        kusInputBarView.initWithUserSession(userSession);
         kusInputBarView.setListener(this);
         kusInputBarView.setAllowsAttachment(chatSessionId != null);
         kusOptionPickerView.setListener(this);
         setupToolbar();
         checkShouldShowInputView();
+        showNonBusinessHoursImageIfNeeded();
+    }
+
+    private void showNonBusinessHoursImageIfNeeded(){
+
+        if(chatMessagesDataSource != null && chatMessagesDataSource.getSize() > 0){
+            shouldShowNonBusinessHoursImage = false;
+            ivNonBusinessHours.setVisibility(View.GONE);
+            return;
+        }
+
+        if(!shouldShowNonBusinessHoursImage){
+            ivNonBusinessHours.setVisibility(View.GONE);
+            return;
+        }
+
+        KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        if(chatSettings != null && chatSettings.getOffHoursImageUrl() != null
+                && !chatSettings.getOffHoursImageUrl().isEmpty()){
+            Glide.with(this)
+                    .load(chatSettings.getOffHoursImageUrl())
+                    .apply(RequestOptions.noAnimation())
+                    .into(ivNonBusinessHours);
+        }else{
+            ivNonBusinessHours.setImageDrawable(getResources().getDrawable(R.drawable.kus_away_image));
+        }
+        ivNonBusinessHours.setVisibility(View.VISIBLE);
     }
 
     private void setupToolbar() {
@@ -390,7 +428,11 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             if (isBackToChatButton()) {
                 tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);
             } else {
-                tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
+                if(userSession.getScheduleDataSource().isActiveBusinessHours()) {
+                    tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
+                }else{
+                    tvStartANewConversation.setText(R.string.com_kustomer_leave_a_message);
+                }
             }
 
             return;
@@ -558,6 +600,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
             chatSessionId = null;
             kusInputBarView.setAllowsAttachment(false);
+
+            shouldShowNonBusinessHoursImage = !userSession.getScheduleDataSource().isActiveBusinessHours();
+            ivNonBusinessHours.setVisibility(shouldShowNonBusinessHoursImage ? View.VISIBLE : View.GONE);
         }
 
         chatMessagesDataSource.addListener(this);
@@ -590,8 +635,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                     if (isBackToChatButton()) {
                         tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);
                     } else {
-                        tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
+                        if(userSession.getScheduleDataSource().isActiveBusinessHours()) {
+                            tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
+                        }else{
+                            tvStartANewConversation.setText(R.string.com_kustomer_leave_a_message);
+                        }
                     }
+
+                    shouldShowNonBusinessHoursImage = false;
+                    ivNonBusinessHours.setVisibility(View.GONE);
                 }
             }
         };
@@ -631,13 +683,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             @Override
             public void run() {
                 if (dataSource == chatMessagesDataSource) {
+                    adapter.notifyDataSetChanged();
                     checkShouldShowInputView();
                     checkShouldShowCloseChatButtonView();
 
                     if (dataSource.getSize() >= 1)
                         setupToolbar();
 
-                    adapter.notifyDataSetChanged();
+                    shouldShowNonBusinessHoursImage = false;
+                    ivNonBusinessHours.setVisibility(View.GONE);
                 } else if (dataSource == teamOptionsDatasource) {
                     checkShouldShowInputView();
                     updateOptionsPickerOptions();

@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">बन्द है</string>
     <string name="com_kustomer_start_a_new_conversation">एक नया वार्तालाप शुरू करें</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">धन्यवाद! हम आपके अनुरोध पर अनुवर्ती करेंगे।</string>
+    <string name="com_kustomer_leave_a_message">एक संदेश छोड़ें</string>
 </resources>

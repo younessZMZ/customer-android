@@ -136,7 +136,12 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             btnNewConversation.setText(R.string.com_kustomer_back_to_chat);
             btnNewConversation.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         } else {
-            btnNewConversation.setText(R.string.com_kustomer_new_conversation);
+
+            if(userSession.getScheduleDataSource().isActiveBusinessHours()) {
+                btnNewConversation.setText(R.string.com_kustomer_new_conversation);
+            }else{
+                btnNewConversation.setText(R.string.com_kustomer_leave_a_message);
+            }
 
             TypedArray a = getTheme().obtainStyledAttributes(R.style.KUSAppTheme,
                     new int[]{R.attr.kus_new_session_button_image});

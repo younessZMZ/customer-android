@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">MBYLLUR</string>
     <string name="com_kustomer_start_a_new_conversation">Filloni një bisedë të re</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Faleminderit! Ne do të ndjekim kërkesën tuaj.</string>
+    <string name="com_kustomer_leave_a_message">Lini një mesazh</string>
 </resources>

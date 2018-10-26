@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">ЗАТВОРЕНО</string>
     <string name="com_kustomer_start_a_new_conversation">Започнете нова разговор</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Благодаря ти! Ще проследим искането ви.</string>
+    <string name="com_kustomer_leave_a_message">Остави съобщение</string>
 </resources>

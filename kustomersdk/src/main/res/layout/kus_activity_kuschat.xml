@@ -43,13 +43,26 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvMessages"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:background="@color/kusChatListBackground" />
+                android:layout_weight="1">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvMessages"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:background="@color/kusChatListBackground" />
+
+                <ImageView
+                    android:id="@+id/ivNonBusinessHours"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    tools:ignore="ContentDescription"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
             <include
                 android:id="@+id/kusInputBarView"

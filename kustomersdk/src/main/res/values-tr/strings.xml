@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">KAPALI</string>
     <string name="com_kustomer_start_a_new_conversation">Yeni Bir Konuşma Başlat</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Teşekkür ederim! İsteğinizi takip edeceğiz.</string>
+    <string name="com_kustomer_leave_a_message">Mesaj bırakın</string>
 </resources>

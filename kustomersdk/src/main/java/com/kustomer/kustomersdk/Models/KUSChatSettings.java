@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Models;
 
+import com.kustomer.kustomersdk.Enums.KUSBusinessHoursAvailability;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 
@@ -22,6 +23,10 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private String activeFormId;
     private String pusherAccessKey;
     private Boolean enabled;
+
+    private KUSBusinessHoursAvailability availability;
+    private String offHoursImageUrl;
+    private String offHoursMessage;
 
     private String waitMessage;
     private String customWaitMessage;
@@ -61,6 +66,10 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         useDynamicWaitMessage = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.useDynamicWaitMessage");
         markDoneAfterTimeout = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.markDoneAfterTimeout");
         volumeControlEnabled = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.enabled");
+
+        offHoursMessage = JsonHelper.stringFromKeyPath(json,"attributes.offhoursMessage");
+        offHoursImageUrl = JsonHelper.stringFromKeyPath(json,"attributes.offhoursImageUrl");
+        availability = getKUSBusinessHoursAvailabilityFromString(JsonHelper.stringFromKeyPath(json,"attributes.offhoursDisplay"));
     }
 
     @Override
@@ -75,6 +84,20 @@ public class KUSChatSettings extends KUSModel implements Serializable {
             return autoReply.trim().length() > 0 ? autoReply.trim() : null;
         else
             return null;
+    }
+
+    private static KUSBusinessHoursAvailability getKUSBusinessHoursAvailabilityFromString(String string) {
+        if(string == null)
+            return KUSBusinessHoursAvailability.KUS_BUSINESS_HOURS_AVAILABILITY_HIDE_CHAT;
+
+        switch (string) {
+            case "online":
+                return KUSBusinessHoursAvailability.KUS_BUSINESS_HOURS_AVAILABILITY_ONLINE;
+            case "offline":
+                return KUSBusinessHoursAvailability.KUS_BUSINESS_HOURS_AVAILABILITY_OFFLINE;
+            default:
+                return KUSBusinessHoursAvailability.KUS_BUSINESS_HOURS_AVAILABILITY_HIDE_CHAT;
+        }
     }
     //endregion
 
@@ -166,6 +189,18 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public Boolean getNoHistory() {
         return noHistory != null ? noHistory : false;
+    }
+
+    public KUSBusinessHoursAvailability getAvailability() {
+        return availability;
+    }
+
+    public String getOffHoursImageUrl() {
+        return offHoursImageUrl;
+    }
+
+    public String getOffHoursMessage() {
+        return offHoursMessage;
     }
 
     //endregion

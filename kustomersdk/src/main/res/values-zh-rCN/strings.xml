@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">关闭</string>
     <string name="com_kustomer_start_a_new_conversation">开始新的对话</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">谢谢！我们会跟进您的请求。</string>
+    <string name="com_kustomer_leave_a_message">留言</string>
 </resources>

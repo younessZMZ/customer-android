@@ -82,6 +82,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private boolean isProactiveCampaign;
     private ArrayList<KUSModel> temporaryVCMessagesResponses;
 
+    private boolean nonBusinessHours;
+
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
     private HashMap<String, KUSRetry> messageRetryHashMap;
     //endregion
@@ -94,6 +96,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         vcFormQuestionIndex = 0;
         vcFormActive = false;
         vcChatClosed = false;
+        nonBusinessHours = false;
         temporaryVCMessagesResponses = new ArrayList<>();
         delayedChatMessageIds = new HashSet<>();
         messageRetryHashMap = new HashMap<>();
@@ -491,6 +494,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public boolean isChatClosed() {
+
+        //For business hours
+        if(nonBusinessHours){
+            return true;
+        }
+
         if (vcFormActive) {
             return false;
         }
@@ -1014,6 +1023,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         if (form != null && form.containsEmailQuestion())
                             getUserSession().getSharedPreferences().setDidCaptureEmail(true);
 
+                        // Set variable for business hours
+                        if(!getUserSession().getScheduleDataSource().isActiveBusinessHours()
+                                && form != null && form.getQuestions().size()>0){
+                            nonBusinessHours = true;
+                        }
+
                         // Grab the session id
                         sessionId = chatSession != null ? chatSession.getId() : null;
                         form = null;
@@ -1096,6 +1111,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
         if (!chatSettings.isVolumeControlEnabled()) {
+            return;
+        }
+
+        // Check if business hours enabled and not in business hours
+        if (!getUserSession().getScheduleDataSource().isActiveBusinessHours()) {
             return;
         }
 

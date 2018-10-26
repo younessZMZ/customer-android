@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">CLOSED</string>
     <string name="com_kustomer_start_a_new_conversation">Start a New Conversation</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Thank You! We\'ll follow up on your request.</string>
+    <string name="com_kustomer_leave_a_message">Leave a message</string>
 </resources>

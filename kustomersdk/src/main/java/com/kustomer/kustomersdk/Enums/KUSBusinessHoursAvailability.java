@@ -1,0 +1,7 @@
+package com.kustomer.kustomersdk.Enums;
+
+public enum KUSBusinessHoursAvailability {
+    KUS_BUSINESS_HOURS_AVAILABILITY_ONLINE,
+    KUS_BUSINESS_HOURS_AVAILABILITY_OFFLINE,
+    KUS_BUSINESS_HOURS_AVAILABILITY_HIDE_CHAT
+}

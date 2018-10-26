@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">LUKKET</string>
     <string name="com_kustomer_start_a_new_conversation">Start en ny samtale</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Tak skal du have! Vi følger op på din anmodning.</string>
+    <string name="com_kustomer_leave_a_message">Læg en besked</string>
 </resources>

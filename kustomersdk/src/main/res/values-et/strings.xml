@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">Suletud</string>
     <string name="com_kustomer_start_a_new_conversation">Alusta uut vestlust</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Aitäh! Järgime teie soovi.</string>
+    <string name="com_kustomer_leave_a_message">Jäta sõnum</string>
 </resources>

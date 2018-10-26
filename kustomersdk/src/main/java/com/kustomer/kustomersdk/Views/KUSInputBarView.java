@@ -22,10 +22,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.ImageAttachmentListAdapter;
+import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
@@ -41,7 +45,7 @@ import butterknife.OnClick;
  * Created by Junaid on 2/27/2018.
  */
 
-public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener, ImageAttachmentListAdapter.onItemClickListener {
+public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener, ImageAttachmentListAdapter.onItemClickListener, KUSObjectDataSourceListener {
 
     //region Properties
     private static final int MAX_BITMAP_PIXELS = 1000000;
@@ -57,6 +61,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     KUSInputBarViewListener listener;
     ImageAttachmentListAdapter adapter;
+    KUSUserSession userSession;
     //endregion
 
     //region LifeCycle
@@ -114,7 +119,24 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     }
     //endregion
 
+    //region Private Methods
+    private void updatePlaceHolder(){
+        if(userSession != null && !userSession.getScheduleDataSource().isActiveBusinessHours()){
+            etTypeMessage.setHint(String.format("%s%s",
+                    getResources().getString(R.string.com_kustomer_leave_a_message),"…"));
+        }else{
+            etTypeMessage.setHint(getResources().getString(R.string.com_kustomer_type_a_message));
+        }
+    }
+    //endregion
+
     //region Public Methods
+    public void initWithUserSession(KUSUserSession userSession){
+        this.userSession = userSession;
+        this.userSession.getChatSettingsDataSource().addListener(this);
+        this.userSession.getScheduleDataSource().addListener(this);
+        updatePlaceHolder();
+    }
     public void setListener(KUSInputBarViewListener listener) {
         this.listener = listener;
     }
@@ -269,6 +291,16 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     public void onAttachmentImageRemoved() {
         if (adapter.getItemCount() == 0)
             rvImageAttachment.setVisibility(GONE);
+    }
+
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        updatePlaceHolder();
+    }
+
+    @Override
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+
     }
     //endregion
 }

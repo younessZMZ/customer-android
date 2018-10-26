@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">مغلق</string>
     <string name="com_kustomer_start_a_new_conversation">بدء محادثة جديدة</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">شكرا! سنقوم بمتابعة طلبك.</string>
+    <string name="com_kustomer_leave_a_message">اترك رسالة</string>
 </resources>

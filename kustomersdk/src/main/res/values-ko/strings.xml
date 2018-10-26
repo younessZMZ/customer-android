@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">닫은</string>
     <string name="com_kustomer_start_a_new_conversation">새 대화 시작하기</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">고맙습니다! 귀하의 요청에 대해 후속 조치를 취하겠습니다.</string>
+    <string name="com_kustomer_leave_a_message">메시지 남기기</string>
 </resources>

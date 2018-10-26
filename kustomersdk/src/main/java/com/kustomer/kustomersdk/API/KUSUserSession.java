@@ -6,6 +6,7 @@ import com.kustomer.kustomersdk.DataSources.KUSChatSettingsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSDelegateProxy;
 import com.kustomer.kustomersdk.DataSources.KUSFormDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSScheduleDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTrackingTokenDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
@@ -43,6 +44,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
     private KUSChatSettingsDataSource chatSettingsDataSource;
     private KUSTrackingTokenDataSource trackingTokenDataSource;
     private KUSFormDataSource formDataSource;
+    private KUSScheduleDataSource scheduleDataSource;
 
     private HashMap<String, KUSUserDataSource> userDataSources;
     private HashMap<String, KUSChatMessagesDataSource> chatMessagesDataSources;
@@ -73,6 +75,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
         }
 
         getChatSettingsDataSource().fetch();
+        getScheduleDataSource().fetch();
         getPushClient();
 
         chatSessionsDataSource.addListener(this);
@@ -261,6 +264,13 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
 
         return activityManager;
     }
+
+    public KUSScheduleDataSource getScheduleDataSource() {
+        if(scheduleDataSource == null)
+            scheduleDataSource = new KUSScheduleDataSource(this);
+
+        return scheduleDataSource;
+    }
     //endregion
 
     //region Accessors
@@ -312,6 +322,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
         }
         return false;
     }
+
     //endregion
 
     //region Callback

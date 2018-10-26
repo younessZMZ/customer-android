@@ -31,6 +31,7 @@ public class KUSConstants {
         String VOLUME_CONTROL_ENDPOINT = "/c/v1/chat/volume-control/responses";
         String SESSION_LOCK_ENDPOINT = "/c/v1/chat/sessions/%s";
         String CUSTOMER_STATS_ENDPOINT = "/c/v1/chat/customers/stats";
+        String BUSINESS_SCHEDULE_ENDPOINT = "/c/v1/schedules/default?include=holidays";
     }
 
     public interface Keys {

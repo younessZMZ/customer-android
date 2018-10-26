@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">GESLUIT</string>
     <string name="com_kustomer_start_a_new_conversation">Begin \'n nuwe gesprek</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Dankie! Ons sal u versoek opvolg.</string>
+    <string name="com_kustomer_leave_a_message">Los 'n boodskap</string>
 </resources>

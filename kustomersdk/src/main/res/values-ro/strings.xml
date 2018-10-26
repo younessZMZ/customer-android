@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">ÎNCHIS</string>
     <string name="com_kustomer_start_a_new_conversation">Porniți o nouă conversație</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Mulțumesc! Vom urmări solicitarea dvs.</string>
+    <string name="com_kustomer_leave_a_message">Lăsați un mesaj</string>
 </resources>

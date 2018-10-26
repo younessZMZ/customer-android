@@ -4,10 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 
@@ -67,6 +69,10 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
 
     public int hash() {
         return this.id.hashCode();
+    }
+
+    public void addIncludedWithJSON(JSONArray jsonArray){
+        // TODO: Need to rethink how can we improve this function
     }
 
     // Helper Methods

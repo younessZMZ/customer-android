@@ -31,10 +31,6 @@ public class KUSObjectDataSource {
     //endregion
 
     //region Initializer
-    KUSObjectDataSource() {
-        // NOT REQUIRED
-    }
-
     KUSObjectDataSource(KUSUserSession userSession){
         this.userSession = new WeakReference<>(userSession);
         listeners = new ArrayList<>();
@@ -65,7 +61,8 @@ public class KUSObjectDataSource {
                 KUSModel model = null;
                 try {
                     model = objectFromJson(JsonHelper.jsonObjectFromKeyPath(response,"data"));
-                } catch (KUSInvalidJsonException ignore) {}
+                    model.addIncludedWithJSON(JsonHelper.arrayFromKeyPath(response,"included"));
+                } catch (KUSInvalidJsonException ignore) { }
 
                 fetching = false;
                 if(errorObject != null || model == null){

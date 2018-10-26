@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">ĐÃ ĐÓNG CỬA</string>
     <string name="com_kustomer_start_a_new_conversation">Bắt đầu cuộc trò chuyện mới</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Cảm ơn bạn! Chúng tôi sẽ theo dõi yêu cầu của bạn.</string>
+    <string name="com_kustomer_leave_a_message">Để lại lời nhắn</string>
 </resources>

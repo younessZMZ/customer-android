@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">ΚΛΕΙΣΤΟ</string>
     <string name="com_kustomer_start_a_new_conversation">Ξεκινήστε μια νέα συνομιλία</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Ευχαριστώ! Θα ακολουθήσουμε το αίτημά σας.</string>
+    <string name="com_kustomer_leave_a_message">Αφήστε ένα μήνυμα</string>
 </resources>

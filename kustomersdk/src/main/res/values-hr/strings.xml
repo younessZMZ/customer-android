@@ -38,4 +38,5 @@
     <string name="com_kustomer_closed">ZATVORENO</string>
     <string name="com_kustomer_start_a_new_conversation">Započnite novu razgovor</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Hvala vam! Pratit ćemo vaš zahtjev.</string>
+    <string name="com_kustomer_leave_a_message">Ostavite poruku</string>
 </resources>
