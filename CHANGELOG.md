@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.14
+
+* Added business hours feature
+
 ## 0.1.13
 
 * Describe next conversation implemented
