@@ -423,7 +423,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusInputBarView.setText("");
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
-            tvStartANewConversation.setVisibility(View.VISIBLE);
+
+
+            if(userSession.getSharedPreferences().getShouldHideConversationButton())
+                tvStartANewConversation.setVisibility(View.GONE);
+            else
+                tvStartANewConversation.setVisibility(View.VISIBLE);
 
             if (isBackToChatButton()) {
                 tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);

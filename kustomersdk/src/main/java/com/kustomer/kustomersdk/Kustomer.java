@@ -169,6 +169,10 @@ public class Kustomer {
     public static int getOpenConversationsCount(){
         return getSharedInstance().mGetOpenConversationsCount();
     }
+
+    public static void hideNewConversationButtonInClosedChat(Boolean status){
+        getSharedInstance().mHideNewConversationButtonInClosedChat(status);
+    }
     //endregion
 
     //region Private Methods
@@ -328,6 +332,10 @@ public class Kustomer {
 
     private int mGetOpenConversationsCount(){
         return getUserSession().getSharedPreferences().getOpenChatSessionsCount();
+    }
+
+    private void mHideNewConversationButtonInClosedChat(Boolean status){
+        getUserSession().getSharedPreferences().setShouldHideConversationButton(status);
     }
     //endregion
 

@@ -21,6 +21,7 @@ public class KUSSharedPreferences {
     private static final String DID_CAPTURE_EMAIL_PREFERENCE = "email_capture_pref";
     private static final String FORM_ID_PREFERENCE = "form_id_pref";
     private static final String OPEN_CHAT_SESSIONS_COUNT = "open_chat_session_count_pref";
+    private static final String SHOULD_HIDE_CONVERSATION_BUTTON = "should_hide_conversation_button_pref";
     private SharedPreferences sharedPref = null;
     //endregion
 
@@ -100,6 +101,14 @@ public class KUSSharedPreferences {
 
     public void setOpenChatSessionsCount(int value){
         saveInt(OPEN_CHAT_SESSIONS_COUNT,value);
+    }
+
+    public void setShouldHideConversationButton(boolean shouldHideNewConversationButtonInClosedChat) {
+        saveBoolean(SHOULD_HIDE_CONVERSATION_BUTTON, shouldHideNewConversationButtonInClosedChat);
+    }
+
+    public boolean getShouldHideConversationButton() {
+        return getBoolean(SHOULD_HIDE_CONVERSATION_BUTTON);
     }
 
     //endregion
