@@ -1,8 +1,12 @@
 # Changelog for Kustomer Android SDK
 
-## 0.1.14
+## 0.1.15
 
 * Added business hours feature
+
+## 0.1.14
+
+* Added hide new conversation button feature in closed chat listing
 
 ## 0.1.13
 
