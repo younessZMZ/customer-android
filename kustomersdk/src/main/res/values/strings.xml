@@ -47,5 +47,6 @@
     <string name="com_kustomer_end_chat">END CHAT</string>
     <string name="com_kustomer_back_to_chat">Back to Chat</string>
     <string name="com_kustomer_leave_a_message">Leave a message</string>
+    <string name="com_kustomer_please_select_an_item">Please select an item</string>
 
 </resources>

@@ -5,6 +5,7 @@ import com.kustomer.kustomersdk.Enums.KUSFormQuestionType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class KUSFormQuestion extends KUSModel {
     private KUSFormQuestionType type;
     private KUSFormQuestionProperty property;
     private Boolean skipIfSatisfied;
+    private KUSMLFormValue mlFormValues;
     //endregion
 
     //region LifeCycle
@@ -33,6 +35,17 @@ public class KUSFormQuestion extends KUSModel {
         skipIfSatisfied = JsonHelper.boolFromKeyPath(json, "skipIfSatisfied");
         type = KUSFormQuestionTypeFromString(JsonHelper.stringFromKeyPath(json, "type"));
         property = KUSFormQuestionPropertyFromString(JsonHelper.stringFromKeyPath(json, "property"));
+
+        if(property == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV){
+            JSONObject tempJson = null;
+
+            try {
+                tempJson = new JSONObject(json.toString());
+                tempJson.put("id",1);
+                mlFormValues = new KUSMLFormValue(tempJson);
+            } catch (JSONException ignore) { }
+        }
+
         values = JsonHelper.arrayListFromKeyPath(json, "values");
     }
     //endregion
@@ -55,6 +68,10 @@ public class KUSFormQuestion extends KUSModel {
     }
 
     private static KUSFormQuestionType KUSFormQuestionTypeFromString(String string) {
+
+        if(string == null)
+            return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN;
+
         switch (string) {
             case "message":
                 return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_MESSAGE;
@@ -69,19 +86,20 @@ public class KUSFormQuestion extends KUSModel {
 
     private static KUSFormQuestionProperty KUSFormQuestionPropertyFromString(String string) {
         if (string == null)
-            return null;
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_UNKNOWN;
 
-        switch (string) {
-            case "customer_name":
-                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_NAME;
-            case "customer_email":
-                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL;
-            case "conversation_team":
-                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM;
-            case "customer_phone":
-                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_PHONE;
-            case "followup_channel":
-                return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL;
+        if(string.equals("customer_name")) {
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_NAME;
+        } else if(string.equals("customer_email")){
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL;
+        } else if(string.equals("conversation_team")){
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM;
+        } else if(string.equals("customer_phone")){
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_PHONE;
+        } else if(string.equals("followup_channel")){
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL;
+        } else if(string.endsWith("Tree")){
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV;
         }
 
         return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_UNKNOWN;

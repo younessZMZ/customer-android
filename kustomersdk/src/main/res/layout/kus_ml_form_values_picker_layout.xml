@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kustomer.kustomersdk.Views.KUSMLFormValuesPickerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <com.kustomer.kustomersdk.Views.KUSOptionsPickerView
+        android:id="@+id/mlFormOptionPicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/kusOptionPickerSeparatorColor"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/kusColorLightGrey" />
+
+            <com.nex3z.flowlayout.FlowLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/optionsFlowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flChildSpacing="5dp"
+                app:flChildSpacingForLastRow="align"
+                app:flRowSpacing="5dp"/>
+
+        </FrameLayout>
+
+
+    </com.kustomer.kustomersdk.Views.KUSOptionsPickerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/kusInputBarSeparatorColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvMlSelectedValues"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:id="@+id/btnSendMessage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/kus_shape_circle_white"
+                android:tint="@color/kusSendButtonColor"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:src="@drawable/kus_ic_arrow_upward_white_24dp"
+                tools:ignore="ContentDescription" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</com.kustomer.kustomersdk.Views.KUSMLFormValuesPickerView>
