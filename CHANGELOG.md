@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.16
+
+* Fixed apostrophe issue in strings file
+
 ## 0.1.15
 
 * Added business hours feature
