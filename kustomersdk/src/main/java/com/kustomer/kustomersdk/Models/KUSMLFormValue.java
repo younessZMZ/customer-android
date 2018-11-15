@@ -21,7 +21,7 @@ public class KUSMLFormValue extends KUSModel {
 
         displayName = JsonHelper.stringFromKeyPath(json,"displayName");
         lastNodeRequired = JsonHelper.boolFromKeyPath(json,"lastNodeRequired");
-        mlNodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,"mlNodes.children"));
+        mlNodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,"tree.children"));
     }
     //endregion
 

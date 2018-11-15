@@ -12,28 +12,32 @@
         android:layout_height="0.5dp"
         android:background="@color/kusOptionPickerSeparatorColor"/>
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/kusColorLightGrey" />
-
-        <com.nex3z.flowlayout.FlowLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/optionsFlowLayout"
+        android:layout_height="wrap_content">
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:flChildSpacing="5dp"
-            app:flChildSpacingForLastRow="align"
-            app:flRowSpacing="5dp"/>
+            android:padding="5dp">
 
-    </FrameLayout>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/kusColorLightGrey" />
+    
+            <com.nex3z.flowlayout.FlowLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/optionsFlowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flChildSpacing="5dp"
+                app:flChildSpacingForLastRow="align"
+                app:flRowSpacing="5dp"/>
+
+        </FrameLayout>
+    </ScrollView>
 
 
 </com.kustomer.kustomersdk.Views.KUSOptionsPickerView>

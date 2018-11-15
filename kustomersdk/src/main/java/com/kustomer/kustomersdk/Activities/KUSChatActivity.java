@@ -41,6 +41,7 @@ import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
+import com.kustomer.kustomersdk.Interfaces.KUSMLFormValuesPickerViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSOptionPickerViewListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
@@ -56,6 +57,7 @@ import com.kustomer.kustomersdk.Utils.KUSUtils;
 import com.kustomer.kustomersdk.Views.KUSEmailInputView;
 import com.kustomer.kustomersdk.Views.KUSInputBarView;
 import com.kustomer.kustomersdk.Views.KUSLargeImageViewer;
+import com.kustomer.kustomersdk.Views.KUSMLFormValuesPickerView;
 import com.kustomer.kustomersdk.Views.KUSOptionsPickerView;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 
@@ -71,7 +73,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener, MessageListAdapter.ChatMessageItemListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener, MessageListAdapter.ChatMessageItemListener, KUSMLFormValuesPickerViewListener {
 
     //region Properties
     private static final int REQUEST_IMAGE_CAPTURE = 1122;
@@ -97,6 +99,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     Button btnEndChat;
     @BindView(R2.id.ivNonBusinessHours)
     ImageView ivNonBusinessHours;
+    @BindView(R2.id.mlFormValuesPicker)
+    KUSMLFormValuesPickerView mlFormValuesPickerView;
 
     KUSChatSession kusChatSession;
     KUSUserSession userSession;
@@ -187,6 +191,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         checkShouldShowEmailInput();
         checkShouldShowInputView();
         checkShouldShowCloseChatButtonView();
+
+        updateOptionPickerHeight();
     }
 
     @Override
@@ -266,9 +272,16 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusInputBarView.setListener(this);
         kusInputBarView.setAllowsAttachment(chatSessionId != null);
         kusOptionPickerView.setListener(this);
+        mlFormValuesPickerView.setListener(this);
+        updateOptionPickerHeight();
         setupToolbar();
         checkShouldShowInputView();
         showNonBusinessHoursImageIfNeeded();
+    }
+
+    private void updateOptionPickerHeight(){
+        kusOptionPickerView.setMaxHeight(KUSUtils.getWindowHeight(this)/2);
+        mlFormValuesPickerView.setOptionPickerMaxHeight(KUSUtils.getWindowHeight(this)/3);
     }
 
     private void showNonBusinessHoursImageIfNeeded(){
@@ -368,6 +381,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         }
 
         KUSFormQuestion vcCurrentQuestion = chatMessagesDataSource.volumeControlCurrentQuestion();
+
         boolean wantsOptionPicker = (vcCurrentQuestion != null &&
                 vcCurrentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL);
 
@@ -384,6 +398,28 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         }
 
         KUSFormQuestion currentQuestion = chatMessagesDataSource.currentQuestion();
+
+        boolean wantMultiLevelValuesPicker = (currentQuestion != null
+                && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV);
+
+        if(wantMultiLevelValuesPicker){
+            kusInputBarView.setVisibility(View.GONE);
+            KUSUtils.hideKeyboard(kusInputBarView);
+
+            if(currentQuestion.getMlFormValues() != null
+                    && currentQuestion.getMlFormValues().getMlNodes() != null){
+                if(currentQuestion.getMlFormValues().getMlNodes().size() > 0
+                        && mlFormValuesPickerView.getVisibility() == View.GONE){
+
+                    mlFormValuesPickerView.setMlFormValues(currentQuestion.getMlFormValues().getMlNodes(),
+                            currentQuestion.getMlFormValues().getLastNodeRequired());
+                    mlFormValuesPickerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            return;
+        }
+
         wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM
                 && currentQuestion.getValues().size() > 0);
@@ -411,6 +447,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
             tvStartANewConversation.setVisibility(View.GONE);
+            mlFormValuesPickerView.setVisibility(View.GONE);
         }
     }
 
@@ -863,6 +900,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     @Override
     public void onChatMessageErrorClicked(KUSChatMessage chatMessage) {
         chatMessagesDataSource.resendMessage(chatMessage);
+    }
+
+    @Override
+    public void mlFormValueSelected(String option, String optionId) {
+        chatMessagesDataSource.sendMessageWithText(option,null,optionId);
+        kusInputBarView.setText("");
+        kusInputBarView.removeAllAttachments();
     }
     //endregion
 }

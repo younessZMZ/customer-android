@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -43,6 +44,8 @@ public class KUSOptionsPickerView extends LinearLayout implements View.OnClickLi
     List<String> options;
     List<TextView> optionButtons;
     KUSOptionPickerViewListener listener;
+
+    private int maxHeight = -1;
     //endregion
 
     //region LifeCycle
@@ -70,9 +73,23 @@ public class KUSOptionsPickerView extends LinearLayout implements View.OnClickLi
         ButterKnife.bind(this);
         progressBar.setVisibility(VISIBLE);
     }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if(maxHeight != -1) {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);
+        }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
     //endregion
 
     //region Public Methods
+    public void setMaxHeight(int px){
+        maxHeight = px;
+    }
+
     public void setOptions(List<String> options){
         this.options = options;
         if(options.size() > 0)
@@ -121,6 +138,8 @@ public class KUSOptionsPickerView extends LinearLayout implements View.OnClickLi
         }
 
         this.optionButtons = optionButtons;
+
+
     }
 
     @Override

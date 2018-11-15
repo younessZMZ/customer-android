@@ -38,5 +38,10 @@
     <string name="com_kustomer_closed">Lokað</string>
     <string name="com_kustomer_start_a_new_conversation">Byrja nýtt samtal</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Þakka þér fyrir! Við munum fylgja eftir beiðni þinni.</string>
+    <string name="com_kustomer_chat_has_ended">Spjallið er lokið</string>
+    <string name="com_kustomer_end_chat">Lokaðu spjalli</string>
+    <string name="com_kustomer_back_to_chat">Aftur í spjall</string>
     <string name="com_kustomer_leave_a_message">Skildu eftir skilaboð</string>
+    <string name="com_kustomer_home">Heim</string>
+    <string name="com_kustomer_please_select_an_item">Vinsamlegast veldu hlut</string>
 </resources>

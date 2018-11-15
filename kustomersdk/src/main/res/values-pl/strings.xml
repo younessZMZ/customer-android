@@ -38,5 +38,10 @@
     <string name="com_kustomer_closed">ZAMKNIĘTE</string>
     <string name="com_kustomer_start_a_new_conversation">Rozpocznij nową rozmowę</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Dziękuję Ci! Sprawdzimy Twoją prośbę.</string>
+    <string name="com_kustomer_chat_has_ended">Czat się zakończył</string>
+    <string name="com_kustomer_end_chat">Zakończ czat</string>
+    <string name="com_kustomer_back_to_chat">Powrót do czatu</string>
     <string name="com_kustomer_leave_a_message">Zostaw wiadomość</string>
+    <string name="com_kustomer_home">Dom</string>
+    <string name="com_kustomer_please_select_an_item">Wybierz pozycję</string>
 </resources>

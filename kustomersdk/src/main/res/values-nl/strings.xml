@@ -38,5 +38,10 @@
     <string name="com_kustomer_closed">GESLOTEN</string>
     <string name="com_kustomer_start_a_new_conversation">Start een nieuw gesprek</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Dank je! We zullen uw verzoek opvolgen.</string>
+    <string name="com_kustomer_chat_has_ended">Chat is beëindigd</string>
+    <string name="com_kustomer_end_chat">Einde gesprek</string>
+    <string name="com_kustomer_back_to_chat">Terug naar chat</string>
     <string name="com_kustomer_leave_a_message">Laat een bericht achter</string>
+    <string name="com_kustomer_home">Huis</string>
+    <string name="com_kustomer_please_select_an_item">Selecteer een item</string>
 </resources>

@@ -40,9 +40,13 @@ public class KUSFormQuestion extends KUSModel {
             JSONObject tempJson = null;
 
             try {
-                tempJson = new JSONObject(json.toString());
-                tempJson.put("id",1);
-                mlFormValues = new KUSMLFormValue(tempJson);
+                JSONObject valueMeta = JsonHelper.jsonObjectFromKeyPath(json,"valueMeta");
+
+                if(valueMeta != null) {
+                    tempJson = new JSONObject(valueMeta.toString());
+                    tempJson.put("id", 1);
+                    mlFormValues = new KUSMLFormValue(tempJson);
+                }
             } catch (JSONException ignore) { }
         }
 
@@ -130,6 +134,10 @@ public class KUSFormQuestion extends KUSModel {
 
     public Boolean getSkipIfSatisfied() {
         return skipIfSatisfied != null ? skipIfSatisfied : false;
+    }
+
+    public KUSMLFormValue getMlFormValues() {
+        return mlFormValues;
     }
 
     //endregion

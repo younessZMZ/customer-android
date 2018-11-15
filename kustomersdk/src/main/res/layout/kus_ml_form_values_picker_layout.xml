@@ -1,48 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.kustomer.kustomersdk.Views.KUSMLFormValuesPickerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kustomer.kustomersdk.Views.KUSMLFormValuesPickerView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <com.kustomer.kustomersdk.Views.KUSOptionsPickerView
-        android:id="@+id/mlFormOptionPicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/kusOptionPickerSeparatorColor"/>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/kusColorLightGrey" />
-
-            <com.nex3z.flowlayout.FlowLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/optionsFlowLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:flChildSpacing="5dp"
-                app:flChildSpacingForLastRow="align"
-                app:flRowSpacing="5dp"/>
-
-        </FrameLayout>
-
-
-    </com.kustomer.kustomersdk.Views.KUSOptionsPickerView>
+    <include layout="@layout/kus_options_picker_layout"
+        android:id="@+id/mlFormOptionPicker"/>
 
     <View
         android:layout_width="match_parent"
@@ -58,7 +23,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:orientation="horizontal"/>
 
         <FrameLayout
             android:id="@+id/btnSendMessage"
