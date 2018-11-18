@@ -1,5 +1,10 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.17
+
+* Added 'swahili' language support
+* Updated documentation
+
 ## 0.1.16
 
 * Fixed apostrophe issue in strings file
