@@ -18,7 +18,7 @@
     <string name="com_kustomer_new_conversation">Nueva conversación</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">¡No te pierdas una respuesta! Recibe notificaciones por correo electrónico:</string>
     <string name="com_kustomer_email_example">ejemplo@dominio.com</string>
-    <string name="com_kustomer_type_a_message">Escriba un mensaje …</string>
+    <string name="com_kustomer_type_a_message...">Escriba un mensaje …</string>
     <string name="com_kustomer_Loading...">Cargando…</string>
     <string name="com_kustomer_ago">hace</string>
     <string name="com_kustomer_chat_with">Chatear con</string>

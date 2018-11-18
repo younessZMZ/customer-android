@@ -43,7 +43,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:hint="@string/com_kustomer_type_a_message"
+            android:hint="@string/com_kustomer_type_a_message..."
             android:inputType="textMultiLine"
             android:maxLines="5"
             android:textColor="@color/kusInputBarTextColor"

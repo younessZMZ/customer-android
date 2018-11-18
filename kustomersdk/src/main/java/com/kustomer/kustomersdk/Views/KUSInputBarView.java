@@ -125,7 +125,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
             etTypeMessage.setHint(String.format("%s%s",
                     getResources().getString(R.string.com_kustomer_leave_a_message),"…"));
         }else{
-            etTypeMessage.setHint(getResources().getString(R.string.com_kustomer_type_a_message));
+            etTypeMessage.setHint(getResources().getString(R.string.com_kustomer_type_a_message___));
         }
     }
     //endregion

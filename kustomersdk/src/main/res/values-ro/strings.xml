@@ -18,7 +18,7 @@
     <string name="com_kustomer_new_conversation">Conversație nouă</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nu ratați un răspuns! Obțineți notificarea prin e-mail:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Scrie un mesaj…</string>
+    <string name="com_kustomer_type_a_message...">Scrie un mesaj…</string>
     <string name="com_kustomer_Loading...">Se incarca…</string>
     <string name="com_kustomer_ago">în urmă</string>
     <string name="com_kustomer_chat_with">Chat cu</string>
