@@ -269,7 +269,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                     if (response.body() != null) {
                         String body = response.body().string();
 
-                        if(response.code() >= 300) {
+                        if(response.code() >= 400) {
                             safeComplete(completionListener, new Error(body), null);
                             return;
                         }
