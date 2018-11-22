@@ -194,7 +194,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK && mCurrentPhotoPath != null) {
                 String photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath)).toString();
 
                 kusInputBarView.attachImage(photoUri);
