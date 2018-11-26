@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.19
+
+* Added multi-level form messaging support
+
 ## 0.1.18
 
 * Fixed few crashes
