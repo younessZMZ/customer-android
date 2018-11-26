@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -59,7 +60,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private Pusher pusherClient;
     private PresenceChannel pusherChannel;
-    private HashMap<String, KUSChatSession> previousChatSessions;
+    private ConcurrentHashMap<String, KUSChatSession> previousChatSessions;
 
     private WeakReference<KUSUserSession> userSession;
     private boolean isSupportScreenShown = false;
@@ -178,7 +179,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 }
             });
 
-        }else {
         }
 
 
@@ -355,9 +355,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 }
             };
             pollingTimer.schedule(doAsynchronousTask, 0, time);
-        } catch (Exception ignore) {
-            int i = 0;
-        }
+        } catch (Exception ignore) { }
     }
 
     private void onPollTick() {
@@ -372,6 +370,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         } else {
             KUSChatMessagesDataSource chatMessagesDataSource = userSession.get().chatMessageDataSourceForSessionId(sessionId);
 
+            if(chatMessagesDataSource == null)
+                return;
 
             KUSChatMessage latestMessage = chatMessagesDataSource.getLatestMessage();
             KUSChatSession chatSession = (KUSChatSession) userSession.get().getChatSessionsDataSource().findById(sessionId);
@@ -467,7 +467,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void updatePreviousChatSessions() {
-        previousChatSessions = new HashMap<>();
+        previousChatSessions = new ConcurrentHashMap<>();
         for (KUSModel model : userSession.get().getChatSessionsDataSource().getList()) {
             KUSChatSession chatSession = (KUSChatSession) model;
             previousChatSessions.put(chatSession.getId(), chatSession);
@@ -480,7 +480,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         if (dataSource instanceof KUSChatMessagesDataSource) {
             KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
-            if (pendingNotificationSessionId != null && chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)) {
+            if (pendingNotificationSessionId != null && !pendingNotificationSessionId.isEmpty()
+                    && chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)) {
                 Handler handler = new Handler(Looper.getMainLooper());
                 Runnable runnable = new Runnable() {
                     @Override

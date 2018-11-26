@@ -79,7 +79,10 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
 
     @Override
     public int compareTo(@NonNull KUSModel kusModel) {
-        return kusModel.id.compareTo(this.id);
+        if(kusModel.id != null)
+            return kusModel.id.compareTo(this.id);
+        else
+            return -1;
     }
 
     @Override

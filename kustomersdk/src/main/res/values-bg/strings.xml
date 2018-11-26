@@ -18,7 +18,7 @@
     <string name="com_kustomer_new_conversation">Ново разговор</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Не пропускайте отговор! Получаване на известие по имейл:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Въведете съобщение …</string>
+    <string name="com_kustomer_type_a_message...">Въведете съобщение …</string>
     <string name="com_kustomer_Loading...">Зареждане…</string>
     <string name="com_kustomer_ago">преди</string>
     <string name="com_kustomer_chat_with">Чатя с</string>

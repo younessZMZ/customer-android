@@ -18,7 +18,7 @@
     <string name="com_kustomer_new_conversation">Ny samtale</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Gå ikke glip af et svar! Få besked via e-mail:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Skriv en besked …</string>
+    <string name="com_kustomer_type_a_message...">Skriv en besked …</string>
     <string name="com_kustomer_Loading...">Indlæser…</string>
     <string name="com_kustomer_ago">siden</string>
     <string name="com_kustomer_chat_with">Chatte med</string>

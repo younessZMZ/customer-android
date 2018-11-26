@@ -25,7 +25,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-compile 'com.kustomer.kustomersdk:kustomersdk:0.1.16'
+compile 'com.kustomer.kustomersdk:kustomersdk:0.1.18'
 ```
 
 #### Or through Maven
@@ -34,7 +34,7 @@ compile 'com.kustomer.kustomersdk:kustomersdk:0.1.16'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.1.16</version>
+  <version>0.1.18</version>
   <type>pom</type>
 </dependency>
 ```
@@ -268,6 +268,27 @@ Kustomer.isChatAvailable(new KUSChatAvailableListener(){
 Kustomer.hideNewConversationButtonInClosedChat(true);
 ```
 
+```java
+/*
+ Return the total number of open conversations.
+*/
+Kustomer.getOpenConversationsCount();
+```
+
+```java
+/*
+ Return the current count of un-read messages. It might not be immediately available.
+*/
+Kustomer.getUnreadMessageCount();
+```
+
+```java
+/*
+ Override the conversation form directly from the sdk by setting the form id. 
+*/
+Kustomer.setFormId(FORM_ID);
+```
+
 ### Styling
 
 ##### Theme Customization:
@@ -467,14 +488,15 @@ Kustomer SDK support both <b>Right-to-left (RTL)</b> and <b>Left-to-right (LTR)<
      <string name="com_kustomer_new_conversation">New Conversation</string>
      <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Don\'t miss a response! Get notified by email:</string>
      <string name="com_kustomer_email_example">example@domain.com</string>
-     <string name="com_kustomer_type_a_message">Type a message...</string>
-     <string name="com_kustomer_Loading...">Loading...</string>
+     <string name="com_kustomer_type_a_message...">Type a message…</string>
+     <string name="com_kustomer_Loading...">Loading…</string>
  
      <string name="com_kustomer_chat_with">Chat with</string>
      <string name="com_kustomer_processing">Processing…</string>
      <string name="com_kustomer_no_internet_connection">No Internet Connection</string>
      <string name="com_kustomer_chat_screen">Chat Screen</string>
      <string name="com_kustomer_we_re_here_let_us_know_if_we_can_help">We\'re here, Let us know if we can help.</string>
+ 
      <string name="com_kustomer_example">Example</string>
      <string name="com_kustomer_please_provide_a_message_body">Please provide a message body</string>
      <string name="com_kustomer_no_internet_message">The Internet connection appears to be offline.</string>
@@ -487,6 +509,10 @@ Kustomer SDK support both <b>Right-to-left (RTL)</b> and <b>Left-to-right (LTR)<
      <string name="com_kustomer_closed">CLOSED</string>
      <string name="com_kustomer_start_a_new_conversation">Start a New Conversation</string>
      <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Thank You! We\'ll follow up on your request.</string>
+     <string name="com_kustomer_chat_has_ended">CHAT HAS ENDED</string>
+     <string name="com_kustomer_end_chat">END CHAT</string>
+     <string name="com_kustomer_back_to_chat">Back to Chat</string>
+     <string name="com_kustomer_leave_a_message">Leave a message</string>
 ```
 
 #### Customize existing strings

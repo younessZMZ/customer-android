@@ -105,7 +105,7 @@
                 android:background="@color/kusClosedBackgroundColor"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/com_kustomer_thank_you_we_ll_follow_up_on_your_request"
+                android:text="@string/com_kustomer_thank_you_we_will_follow_up_on_your_request"
                 android:textColor="@color/kusClosedChatTextColor"
                 android:textSize="14sp"
                 android:visibility="gone" />

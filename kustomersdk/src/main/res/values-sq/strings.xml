@@ -18,7 +18,7 @@
     <string name="com_kustomer_new_conversation">Biseda e re</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Mos humbisni një përgjigje! Merrni njoftimin me email:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Shkruaj një mesazh …</string>
+    <string name="com_kustomer_type_a_message...">Shkruaj një mesazh …</string>
     <string name="com_kustomer_Loading...">Loading …</string>
     <string name="com_kustomer_ago">më parë</string>
     <string name="com_kustomer_chat_with">Bisedo me</string>

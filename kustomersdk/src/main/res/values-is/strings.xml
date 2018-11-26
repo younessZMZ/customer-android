@@ -18,7 +18,7 @@
     <string name="com_kustomer_new_conversation">Nýtt samtal</string>
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ekki missa af svari! Fáðu tilkynningu í tölvupósti:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
-    <string name="com_kustomer_type_a_message">Skrifaðu skilaboð …</string>
+    <string name="com_kustomer_type_a_message...">Skrifaðu skilaboð …</string>
     <string name="com_kustomer_Loading...">Hleð inn …</string>
     <string name="com_kustomer_ago">síðan</string>
     <string name="com_kustomer_chat_with">Spjalla við</string>
