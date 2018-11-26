@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.18
+
+* Fixed few crashes
+
 ## 0.1.17
 
 * Added 'swahili' language support
