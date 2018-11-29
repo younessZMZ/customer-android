@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Helpers;
 
+import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 
 import com.kustomer.kustomersdk.Kustomer;
@@ -40,6 +41,24 @@ public class KUSDate {
             return Kustomer.getContext().getString(R.string.com_kustomer_just_now);
 
         return (String) DateUtils.getRelativeTimeSpanString(date.getTime(), Calendar.getInstance().getTimeInMillis(), 0);
+    }
+
+
+    public static String humanReadableTextFromSeconds(int seconds){
+        if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR){
+            int minutes = (int) Math.ceil(seconds/SECONDS_PER_MINUTE);
+            return String.format(Locale.getDefault(),"%d minute%s", minutes, minutes > 1 ? "s" : "");
+        }else if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY){
+            int hours = (int) Math.ceil(seconds/(SECONDS_PER_MINUTE * MINUTES_PER_HOUR));
+            return String.format(Locale.getDefault(),"%d hour%s", hours, hours > 1 ? "s" : "");
+        }else if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK){
+            int days = (int) Math.ceil(seconds/(SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY));
+            return String.format(Locale.getDefault(),"%d day%s", days, days > 1 ? "s" : "");
+        }else{
+            int weeks = (int) Math.ceil(seconds/
+                    (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK));
+            return String.format(Locale.getDefault(),"%d week%s", weeks, weeks > 1 ? "s" : "");
+        }
     }
 
     private static String agoWithTextCountAndUnit(long count, String unit){

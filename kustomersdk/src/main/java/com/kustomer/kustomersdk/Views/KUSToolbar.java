@@ -13,31 +13,37 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kustomer.kustomersdk.API.KUSSessionQueuePollingManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
+import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.Interfaces.KUSSessionQueuePollingListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
+import com.kustomer.kustomersdk.Models.KUSSessionQueue;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by Junaid on 1/30/2018.
  */
 
-public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, KUSChatMessagesDataSourceListener {
+public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, KUSChatMessagesDataSourceListener, KUSSessionQueuePollingListener {
     //region Properties
     private String sessionId;
     private boolean showLabel;
     private boolean showBackButton;
     private boolean showDismissButton;
     private boolean extraLargeSize;
+    private String waitingMessage;
 
     KUSUserSession userSession;
     KUSChatMessagesDataSource chatMessagesDataSource;
@@ -256,8 +262,16 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         }
         tvName.setText(responderName);
 
-        String waitMessage = chatSettings.isUseDynamicWaitMessage()
-                ? chatSettings.getWaitMessage() : chatSettings.getCustomWaitMessage();
+
+        String waitMessage;
+
+        if(waitingMessage != null){
+            waitMessage = waitingMessage;
+        }else if(chatSettings.getUseDynamicWaitMessage()){
+            waitMessage = chatSettings.getWaitMessage();
+        }else {
+            waitMessage = chatSettings.getCustomWaitMessage();
+        }
 
         if(extraLargeSize){
             if(userSession.getScheduleDataSource().isActiveBusinessHours()){
@@ -267,6 +281,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             }
 
             tvWaiting.setText(waitMessage);
+
         }else{
             if(!userSession.getScheduleDataSource().isActiveBusinessHours()){
                 tvGreetingMessage.setText(chatSettings.getOffHoursMessage());
@@ -277,12 +292,15 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             }
         }
 
+    }
 
-
-
-
-
-
+    private String getMessageFromSeconds(int seconds){
+        if(seconds < 60){
+            return "Someone should be with you momentarily";
+        }else{
+            String waitTime = KUSDate.humanReadableTextFromSeconds(seconds);
+            return String.format(Locale.getDefault(),"Your expected wait time is %s", waitTime);
+        }
     }
 
     private void updateBackButtonBadge() {
@@ -310,13 +328,33 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
         this.sessionId = sessionId;
 
-        if (chatMessagesDataSource != null)
+
+        if (chatMessagesDataSource != null) {
+
+            if(chatMessagesDataSource.getSessionQueuePollingManager() != null)
+                chatMessagesDataSource.getSessionQueuePollingManager().removeListener(this);
+
             chatMessagesDataSource.removeListener(this);
+        }
 
         chatMessagesDataSource = userSession.getChatMessagesDataSources().get(sessionId);
         chatMessagesDataSource.addListener(this);
 
-        kusMultipleAvatarsView.setUserIds((ArrayList<String>) chatMessagesDataSource.getOtherUserIds());
+        if(chatMessagesDataSource.getSessionQueuePollingManager() != null)
+            chatMessagesDataSource.getSessionQueuePollingManager().addListener(this);
+
+        kusMultipleAvatarsView.setUserIds(chatMessagesDataSource.getOtherUserIds());
+
+        boolean isVolumeControlPollingActive = chatMessagesDataSource.getSessionQueuePollingManager() != null
+                && chatMessagesDataSource.getSessionQueuePollingManager().getPollingStarted()
+                && !chatMessagesDataSource.getSessionQueuePollingManager().getPollingCanceled();
+
+        if(isVolumeControlPollingActive){
+            KUSSessionQueue sessionQueue = chatMessagesDataSource.getSessionQueuePollingManager().getSessionQueue();
+
+            if(sessionQueue != null)
+                waitingMessage = getMessageFromSeconds(sessionQueue.getEstimatedWaitTimeSeconds());
+        }
 
         updateTextLabel();
         updateBackButtonBadge();
@@ -438,6 +476,49 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         };
         handler.post(runnable);
 
+
+    }
+
+    @Override
+    public void onPollingStarted(KUSSessionQueuePollingManager manager) {
+
+    }
+
+    @Override
+    public void onSessionQueueUpdated(KUSSessionQueuePollingManager manager, KUSSessionQueue sessionQueue) {
+        waitingMessage = getMessageFromSeconds(sessionQueue.getEstimatedWaitTimeSeconds());
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateTextLabel();
+
+            }
+        };
+        handler.post(runnable);
+    }
+
+    @Override
+    public void onPollingEnd(KUSSessionQueuePollingManager manager) {
+    }
+
+    @Override
+    public void onPollingCanceled(KUSSessionQueuePollingManager manager) {
+        waitingMessage = null;
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateTextLabel();
+
+            }
+        };
+        handler.post(runnable);
+    }
+
+    @Override
+    public void onFailure(Error error, KUSSessionQueuePollingManager manager) {
 
     }
     //endregion

@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.Enums.KUSBusinessHoursAvailability;
+import com.kustomer.kustomersdk.Enums.KUSVolumeControlMode;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 
@@ -40,6 +41,9 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private Boolean closableChat;
     private Boolean singleSessionChat;
     private Boolean noHistory;
+
+    private KUSVolumeControlMode volumeControlMode;
+    private int upfrontWaitThreshold;
     //endregion
 
     //region Initializer
@@ -70,6 +74,9 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         offHoursMessage = JsonHelper.stringFromKeyPath(json,"attributes.offhoursMessage");
         offHoursImageUrl = JsonHelper.stringFromKeyPath(json,"attributes.offhoursImageUrl");
         availability = getKUSBusinessHoursAvailabilityFromString(JsonHelper.stringFromKeyPath(json,"attributes.offhoursDisplay"));
+
+        volumeControlMode = KUSVolumeControlModeFromString(JsonHelper.stringFromKeyPath(json,"attributes.volumeControl.mode"));
+        upfrontWaitThreshold = JsonHelper.integerFromKeyPath(json,"attributes.volumeControl.upfrontWaitThreshold");
     }
 
     @Override
@@ -79,6 +86,20 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     //endregion
 
     //region Private Methods
+    private KUSVolumeControlMode KUSVolumeControlModeFromString(String string){
+
+        if(string == null)
+            return KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UNKNOWN;
+
+        if(string.equals("upfront")){
+            return KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UPFRONT;
+        }else if (string.equals("delayed")){
+            return KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_DELAYED;
+        }
+
+        return KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UNKNOWN;
+    }
+
     private String stringSanitizedReply(String autoReply) {
         if (autoReply != null)
             return autoReply.trim().length() > 0 ? autoReply.trim() : null;
@@ -201,6 +222,14 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public String getOffHoursMessage() {
         return offHoursMessage;
+    }
+
+    public KUSVolumeControlMode getVolumeControlMode() {
+        return volumeControlMode;
+    }
+
+    public int getUpfrontWaitThreshold() {
+        return upfrontWaitThreshold;
     }
 
     //endregion
