@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -33,7 +34,7 @@ public class KUSObjectDataSource {
     //region Initializer
     KUSObjectDataSource(KUSUserSession userSession){
         this.userSession = new WeakReference<>(userSession);
-        listeners = new ArrayList<>();
+        listeners = new CopyOnWriteArrayList<>();
     }
     //endregion
 
@@ -103,13 +104,13 @@ public class KUSObjectDataSource {
 
     //region Private Methods
     private void notifyAnnouncersOnError(Error error){
-        for(KUSObjectDataSourceListener listener : new ArrayList<>(listeners)){
+        for(KUSObjectDataSourceListener listener : listeners){
             listener.objectDataSourceOnError(this,error);
         }
     }
 
     private void notifyAnnouncersOnLoad(){
-        for(KUSObjectDataSourceListener listener : new ArrayList<>(listeners)){
+        for(KUSObjectDataSourceListener listener : listeners){
             listener.objectDataSourceOnLoad(this);
         }
     }

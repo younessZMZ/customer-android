@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -31,7 +32,6 @@ public class KUSPaginatedDataSource {
 
     //region Properties
     private List<KUSModel> fetchedModels;
-    private List<KUSModel> tempFetchModels;
 
     private HashMap<String, KUSModel> fetchedModelsById;
 
@@ -53,9 +53,8 @@ public class KUSPaginatedDataSource {
     //region LifeCycle
     public KUSPaginatedDataSource(KUSUserSession userSession) {
         this.userSession = new WeakReference<>(userSession);
-        listeners = new ArrayList<>();
-        fetchedModels = new ArrayList<>();
-        tempFetchModels = new ArrayList<>();
+        listeners = new CopyOnWriteArrayList<>();
+        fetchedModels = new CopyOnWriteArrayList<>();
         fetchedModelsById = new HashMap<>();
     }
     //endregion
@@ -66,7 +65,7 @@ public class KUSPaginatedDataSource {
     }
 
     public List<KUSModel> getList() {
-        return tempFetchModels;
+        return fetchedModels;
     }
 
     public KUSModel findById(String oid) {
@@ -259,9 +258,7 @@ public class KUSPaginatedDataSource {
     }
 
     public void sort() {
-        ArrayList tempFetchModels = new ArrayList<>(fetchedModels);
-        Collections.sort(tempFetchModels);
-        fetchedModels = tempFetchModels;
+        Collections.sort(fetchedModels);
     }
 
     public boolean isFetched(){
@@ -295,7 +292,6 @@ public class KUSPaginatedDataSource {
             }
         }
 
-        tempFetchModels = new ArrayList<>(fetchedModels);
         if (didChange) {
             notifyAnnouncersOnContentChange();
         }
@@ -330,7 +326,6 @@ public class KUSPaginatedDataSource {
         }
 
         sort();
-        tempFetchModels = new ArrayList<>(fetchedModels);
 
         if (didChange) {
             notifyAnnouncersOnContentChange();
@@ -371,21 +366,21 @@ public class KUSPaginatedDataSource {
 
     // region Notifier
     void notifyAnnouncersOnContentChange() {
-        for (KUSPaginatedDataSourceListener listener : new ArrayList<>(listeners)) {
+        for (KUSPaginatedDataSourceListener listener : listeners) {
             if(listener != null)
                 listener.onContentChange(this);
         }
     }
 
     void notifyAnnouncersOnError(Error error) {
-        for (KUSPaginatedDataSourceListener listener :  new ArrayList<>(listeners)) {
+        for (KUSPaginatedDataSourceListener listener :  listeners) {
             if(listener != null)
                 listener.onError(this, error);
         }
     }
 
     private void notifyAnnouncersOnLoad() {
-        for (KUSPaginatedDataSourceListener listener :  new ArrayList<>(listeners)) {
+        for (KUSPaginatedDataSourceListener listener :  listeners) {
             if(listener != null)
                 listener.onLoad(this);
         }
