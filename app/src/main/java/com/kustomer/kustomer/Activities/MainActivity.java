@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         initViews();
         setListeners();
-        Kustomer.setCurrentPageName("Home");
+//        Kustomer.setCurrentPageName("Home");
 
 //        // Describing Customer
 //        KUSCustomerDescription customerDescription = new KUSCustomerDescription();
