@@ -262,7 +262,11 @@ public class KUSPaginatedDataSource {
     }
 
     public void sort() {
-        Collections.sort(fetchedModels);
+        ArrayList<KUSModel> temp = new ArrayList<>(fetchedModels);
+        Collections.sort(temp);
+
+        fetchedModels.clear();
+        fetchedModels.addAll(temp);
     }
 
     public boolean isFetched(){
