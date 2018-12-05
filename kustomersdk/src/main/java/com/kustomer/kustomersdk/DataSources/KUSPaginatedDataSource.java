@@ -95,10 +95,14 @@ public class KUSPaginatedDataSource {
         KUSModel internalObj = findById(objectId);
         if (internalObj == null)
             return -1;
-        for (int i = 0; i < fetchedModels.size(); i++) {
-            if (fetchedModels.get(i).getId().equals(internalObj.getId())) {
+
+        int i = 0;
+        for (KUSModel model : fetchedModels) {
+            if (model.getId().equals(internalObj.getId())) {
                 return i;
             }
+
+            i++;
         }
         return -1;
     }
