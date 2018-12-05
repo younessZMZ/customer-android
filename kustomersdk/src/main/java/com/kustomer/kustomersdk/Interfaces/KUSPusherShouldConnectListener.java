@@ -1,5 +1,5 @@
 package com.kustomer.kustomersdk.Interfaces;
 
 public interface KUSPusherShouldConnectListener {
-    void onCompletion(boolean shouldConnect);
+    void onCompletion();
 }
