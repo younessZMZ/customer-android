@@ -103,8 +103,10 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             pusherClient.disconnect();
         }
 
-        if (pollingTimer != null)
+        if (pollingTimer != null) {
             pollingTimer.cancel();
+            pollingTimer = null;
+        }
 
         if (handler != null) {
             handler.removeCallbacks(null);
