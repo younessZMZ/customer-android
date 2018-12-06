@@ -3,7 +3,6 @@ package com.kustomer.kustomersdk.Helpers;
 import android.content.Context;
 import android.text.format.DateUtils;
 
-import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
 
 import java.text.DateFormat;
@@ -57,7 +56,7 @@ public class KUSDate {
             int stringId = seconds > 1 ? R.string.com_kustomer_hour : R.string.com_kustomer_hours;
             return textWithCountAndUnit(context, hours, stringId);
         }else{
-            return context.getString(R.string.greater_than_one_day);
+            return context.getString(R.string.com_kustomer_greater_than_one_day);
         }
     }
 

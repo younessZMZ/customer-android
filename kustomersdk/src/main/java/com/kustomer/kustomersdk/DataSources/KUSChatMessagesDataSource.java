@@ -36,6 +36,7 @@ import com.kustomer.kustomersdk.Models.KUSMessageRetry;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSRetry;
 import com.kustomer.kustomersdk.Models.KUSSessionQueue;
+import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -124,11 +125,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public KUSChatMessagesDataSource(KUSUserSession userSession, String sessionId) {
         this(userSession);
 
-        if (sessionId == null || sessionId.length() < 0)
+        if (sessionId == null || sessionId.isEmpty())
             throw new AssertionError("Cannot create messages datasource without valid sessionId");
 
-        if (sessionId.length() > 0)
-            this.sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
 
@@ -836,6 +836,45 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         vcFormQuestionIndex++;
     }
 
+    private void startVolumeControlFormTrackingAfterDelay(long delay){
+        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+
+        Handler delayHandler = new Handler(Looper.getMainLooper());
+        Runnable delayRunnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSChatMessagesDataSource strongReference = weakReference.get();
+                if (strongReference == null) {
+                    return;
+                }
+                strongReference.vcTrackingDelayCompleted = true;
+                strongReference.insertVolumeControlFormMessageIfNecessary();
+            }
+        };
+        delayHandler.postDelayed(delayRunnable, delay);
+    }
+
+    private void endVolumeControlFormAfterDelayIfNecessary(long delay){
+        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+
+        Handler timeOutHandler = new Handler(Looper.getMainLooper());
+        Runnable timeOutRunnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSChatMessagesDataSource strongReference = weakReference.get();
+                if (strongReference == null) {
+                    return;
+                }
+
+                // End Control Tracking and Automatically marked it Closed, if form not end
+                if (!strongReference.vcFormEnd) {
+                    strongReference.endVolumeControlTracking();
+                    strongReference.endChat("timed_out", null);
+                }
+            }
+        };
+        timeOutHandler.postDelayed(timeOutRunnable, delay);
+    }
 
     private void submitVCFormResponses() {
         if (this.getSize() <= 5) {
@@ -1144,48 +1183,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         vcTrackingStarted = true;
 
         if(chatSettings.getVolumeControlMode() == KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_DELAYED) {
-            final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
-
             long delay = chatSettings.getPromptDelay() * 1000;
-
-            Handler delayHandler = new Handler(Looper.getMainLooper());
-            Runnable delayRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    KUSChatMessagesDataSource strongReference = weakReference.get();
-                    if (strongReference == null) {
-                        return;
-                    }
-                    strongReference.vcTrackingDelayCompleted = true;
-                    strongReference.insertVolumeControlFormMessageIfNecessary();
-                }
-            };
-            delayHandler.postDelayed(delayRunnable, delay);
+            startVolumeControlFormTrackingAfterDelay(delay);
 
             // Automatically end chat
             if (chatSettings.isMarkDoneAfterTimeout()) {
-
                 long timeOutDelay = (chatSettings.getTimeOut() + chatSettings.getPromptDelay()) * 1000;
-                Handler timeOutHandler = new Handler(Looper.getMainLooper());
-                Runnable timeOutRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        KUSChatMessagesDataSource strongReference = weakReference.get();
-                        if (strongReference == null) {
-                            return;
-                        }
-
-                        // End Control Tracking and Automatically marked it Closed, if form not end
-                        if (!strongReference.vcFormEnd) {
-                            strongReference.endVolumeControlTracking();
-                            strongReference.endChat("timed_out", null);
-                        }
-                    }
-                };
-                timeOutHandler.postDelayed(timeOutRunnable, timeOutDelay);
+                endVolumeControlFormAfterDelayIfNecessary(timeOutDelay);
             }
-        } else if (sessionQueuePollingManager != null
-                && chatSettings.getVolumeControlMode() ==
+        } else if (sessionQueuePollingManager != null && chatSettings.getVolumeControlMode() ==
                 KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UPFRONT){
 
             sessionQueuePollingManager.addListener(this);
@@ -1201,7 +1207,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private KUSFormQuestion getNextVCFormQuestion(int index, String previousChannel) {
 
         if (index == 0) {
-            KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+            KUSChatSettings chatSettings = (KUSChatSettings) getUserSession()
+                    .getChatSettingsDataSource().getObject();
+
             List<String> options = new ArrayList<>();
             for (String option : chatSettings.getFollowUpChannels()) {
                 options.add(option.substring(0, 1).toUpperCase() + option.substring(1).toLowerCase());
@@ -1212,15 +1220,23 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
             }
 
-            String prompt = "Sorry, it looks like no one has become available in the time we expected. Please select an alternate contact method for us to followup with you…";
+            //volume_control_alternative_method_question
+            String prompt = Kustomer.getContext()
+                    .getString(R.string.com_kustomer_volume_control_alternative_method_question);
             KUSSessionQueue sessionQueue = sessionQueuePollingManager.getSessionQueue();
 
             if(chatSettings.getVolumeControlMode() == KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UPFRONT
                     && sessionQueue.getEstimatedWaitTimeSeconds() != 0){
+
+                String currentWaitTime = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_our_current_wait_time_is_approximately);
+                String upfrontAlternatePrompt = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_upfront_volume_control_alternative_method_question);
+
                 String humanReadableTextFromSeconds = KUSDate.humanReadableTextFromSeconds(
                         Kustomer.getContext(),sessionQueue.getEstimatedWaitTimeSeconds());
-                prompt = String.format("Our current wait time is approximately %s. You can choose to wait for the next available agent or select an alternative contact method for us to follow up with you.",
-                        humanReadableTextFromSeconds);
+                prompt = String.format("%s %s. %s", currentWaitTime, humanReadableTextFromSeconds,
+                        upfrontAlternatePrompt);
             }
 
 
@@ -1243,20 +1259,22 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         } else if (index == 1) {
             String property;
-            String channel;
+            String prompt;
             if (previousChannel.toLowerCase().equals("email")) {
                 property = "customer_email";
-                channel = "email";
+                prompt = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_volume_control_email_question);
             } else {
                 property = "customer_phone";
-                channel = "phone number";
+                prompt = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_volume_control_phone_question);
             }
             JSONObject formMessage = new JSONObject();
 
             try {
                 formMessage.put("id", "vc_question_1");
                 formMessage.put("name", "Volume Form 1");
-                formMessage.put("prompt", String.format("Great, what's the best %s to reach you at?", channel));
+                formMessage.put("prompt", prompt);
                 formMessage.put("type", "response");
                 formMessage.put("property", property);
             } catch (JSONException ignore) {
@@ -1270,11 +1288,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         } else if (index == 2) {
             JSONObject formMessage = new JSONObject();
+            String message = Kustomer.getContext()
+                    .getString(R.string.com_kustomer_volume_control_thankyou_response);
 
             try {
                 formMessage.put("id", "vc_question_2");
                 formMessage.put("name", "Volume Form 2");
-                formMessage.put("prompt", "Thank you. We'll get back to you shortly.");
+                formMessage.put("prompt", message);
                 formMessage.put("type", "message");
             } catch (JSONException ignore) {
             }
@@ -1470,32 +1490,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 && sessionQueue.getEstimatedWaitTimeSeconds() > chatSettings.getUpfrontWaitThreshold();
 
         if(!vcTrackingDelayCompleted && estimatedWaitTimeIsOverThreshold){
-            vcTrackingDelayCompleted = true;
-            insertVolumeControlFormMessageIfNecessary();
-
-            // Start tracking to automatically done conversation
-            final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+            startVolumeControlFormTrackingAfterDelay(0);
 
             if(chatSettings.getMarkDoneAfterTimeout()){
                 long delay = chatSettings.getTimeOut() * 1000;
-
-                Handler timeOutHandler = new Handler(Looper.getMainLooper());
-                Runnable timeOutRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        KUSChatMessagesDataSource strongReference = weakReference.get();
-                        if (strongReference == null) {
-                            return;
-                        }
-
-                        // End Control Tracking and Automatically marked it Closed, if form not end
-                        if (!strongReference.vcFormEnd) {
-                            strongReference.endVolumeControlTracking();
-                            strongReference.endChat("timed_out", null);
-                        }
-                    }
-                };
-                timeOutHandler.postDelayed(timeOutRunnable, delay);
+                endVolumeControlFormAfterDelayIfNecessary(delay);
             }
         }
     }
