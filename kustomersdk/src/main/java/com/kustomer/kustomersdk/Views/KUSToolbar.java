@@ -294,15 +294,6 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
     }
 
-    private String getMessageFromSeconds(int seconds){
-        if(seconds < 60){
-            return "Someone should be with you momentarily";
-        }else{
-            String waitTime = KUSDate.humanReadableTextFromSeconds(seconds);
-            return String.format(Locale.getDefault(),"Your expected wait time is %s", waitTime);
-        }
-    }
-
     private void updateBackButtonBadge() {
         int unreadCount = userSession.getChatSessionsDataSource().totalUnreadCountExcludingSessionId(sessionId);
         if (unreadCount > 0) {
@@ -353,7 +344,8 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
             KUSSessionQueue sessionQueue = chatMessagesDataSource.getSessionQueuePollingManager().getSessionQueue();
 
             if(sessionQueue != null)
-                waitingMessage = getMessageFromSeconds(sessionQueue.getEstimatedWaitTimeSeconds());
+                waitingMessage = KUSDate.humanReadableUpfrontVolumeControlWaitingTimeFromSeconds(
+                        getContext(),sessionQueue.getEstimatedWaitTimeSeconds());
         }
 
         updateTextLabel();
@@ -486,7 +478,9 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
     @Override
     public void onSessionQueueUpdated(KUSSessionQueuePollingManager manager, KUSSessionQueue sessionQueue) {
-        waitingMessage = getMessageFromSeconds(sessionQueue.getEstimatedWaitTimeSeconds());
+        waitingMessage = KUSDate.humanReadableUpfrontVolumeControlWaitingTimeFromSeconds(
+                getContext(),sessionQueue.getEstimatedWaitTimeSeconds());
+
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override

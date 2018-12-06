@@ -1217,7 +1217,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
             if(chatSettings.getVolumeControlMode() == KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UPFRONT
                     && sessionQueue.getEstimatedWaitTimeSeconds() != 0){
-                String humanReadableTextFromSeconds = KUSDate.humanReadableTextFromSeconds(sessionQueue.getEstimatedWaitTimeSeconds());
+                String humanReadableTextFromSeconds = KUSDate.humanReadableTextFromSeconds(
+                        Kustomer.getContext(),sessionQueue.getEstimatedWaitTimeSeconds());
                 prompt = String.format("Our current wait time is approximately %s. You can choose to wait for the next available agent or select an alternative contact method for us to follow up with you.",
                         humanReadableTextFromSeconds);
             }
@@ -1452,43 +1453,50 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     @Override
     public void onPollingStarted(KUSSessionQueuePollingManager manager) {
 
+    }
+
+    @Override
+    public void onSessionQueueUpdated(KUSSessionQueuePollingManager manager, KUSSessionQueue sessionQueue) {
+        if(getUserSession() == null)
+            return;
+
         // Automatically end chat
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
 
         if(chatSettings == null)
             return;
 
-        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+        boolean estimatedWaitTimeIsOverThreshold = sessionQueue.getEstimatedWaitTimeSeconds() != 0
+                && sessionQueue.getEstimatedWaitTimeSeconds() > chatSettings.getUpfrontWaitThreshold();
 
-        if(chatSettings.getMarkDoneAfterTimeout()){
-            long delay = chatSettings.getTimeOut() * 1000;
-            long timeOutDelay = (chatSettings.getTimeOut() + chatSettings.getPromptDelay()) * 1000;
-
-            Handler timeOutHandler = new Handler(Looper.getMainLooper());
-            Runnable timeOutRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    KUSChatMessagesDataSource strongReference = weakReference.get();
-                    if (strongReference == null) {
-                        return;
-                    }
-
-                    // End Control Tracking and Automatically marked it Closed, if form not end
-                    if (!strongReference.vcFormEnd) {
-                        strongReference.endVolumeControlTracking();
-                        strongReference.endChat("timed_out", null);
-                    }
-                }
-            };
-            timeOutHandler.postDelayed(timeOutRunnable, timeOutDelay);
-        }
-    }
-
-    @Override
-    public void onSessionQueueUpdated(KUSSessionQueuePollingManager manager, KUSSessionQueue sessionQueue) {
-        if(!vcTrackingDelayCompleted && sessionQueue.getEstimatedWaitTimeSeconds() != 0){
+        if(!vcTrackingDelayCompleted && estimatedWaitTimeIsOverThreshold){
             vcTrackingDelayCompleted = true;
             insertVolumeControlFormMessageIfNecessary();
+
+            // Start tracking to automatically done conversation
+            final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+
+            if(chatSettings.getMarkDoneAfterTimeout()){
+                long delay = chatSettings.getTimeOut() * 1000;
+
+                Handler timeOutHandler = new Handler(Looper.getMainLooper());
+                Runnable timeOutRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        KUSChatMessagesDataSource strongReference = weakReference.get();
+                        if (strongReference == null) {
+                            return;
+                        }
+
+                        // End Control Tracking and Automatically marked it Closed, if form not end
+                        if (!strongReference.vcFormEnd) {
+                            strongReference.endVolumeControlTracking();
+                            strongReference.endChat("timed_out", null);
+                        }
+                    }
+                };
+                timeOutHandler.postDelayed(timeOutRunnable, delay);
+            }
         }
     }
 

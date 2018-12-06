@@ -332,7 +332,8 @@ public class KUSNotificationWindow {
         contentView.setImageViewBitmap(R.id.avatarImage, image);
         contentView.setTextViewText(R.id.tvNotificationTitle, title);
         contentView.setTextViewText(R.id.tvNotificationSubtitle, subtitle);
-        contentView.setTextViewText(R.id.tvNotificationDate, KUSDate.humanReadableTextFromDate(date));
+        contentView.setTextViewText(R.id.tvNotificationDate,
+                KUSDate.humanReadableTextFromDate(Kustomer.getContext(), date));
         contentView.setTextViewText(R.id.tvUnreadCount,String.valueOf(unreadCount));
 
         return contentView;
@@ -354,7 +355,8 @@ public class KUSNotificationWindow {
         contentView.setImageViewBitmap(R.id.avatarImage, image);
         contentView.setTextViewText(R.id.tvNotificationTitle, title);
         contentView.setTextViewText(R.id.tvNotificationSubtitle, subtitle);
-        contentView.setTextViewText(R.id.tvNotificationDate, KUSDate.humanReadableTextFromDate(date));
+        contentView.setTextViewText(R.id.tvNotificationDate,
+                KUSDate.humanReadableTextFromDate(Kustomer.getContext(), date));
         contentView.setTextViewText(R.id.tvUnreadCount,String.valueOf(unreadCount));
         contentView.setTextViewText(R.id.closeButton,mContext.getResources().getString(R.string.com_kustomer_dismiss));
 

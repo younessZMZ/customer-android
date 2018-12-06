@@ -144,10 +144,15 @@ public class KUSSessionQueuePollingManager implements KUSObjectDataSourceListene
 
         if(sessionQueue == null) return;
 
+        // Notify all announcers for the updated session queue object
         notifyAnnouncersOnPollingUpdated(sessionQueue);
 
+        // Fetch queue object after specific delay if necessary
         int waitTime = sessionQueue.getEstimatedWaitTimeSeconds() / 60;
-        if(waitTime == 0) return;
+        if(waitTime == 0){
+            notifyAnnouncersOnPollingEnd();
+            return;
+        }
 
         long interval = getPollingIntervalFromEstimatedWaitTime(sessionQueue.getEstimatedWaitTimeSeconds());
         fetchQueueAfterInterval(interval);

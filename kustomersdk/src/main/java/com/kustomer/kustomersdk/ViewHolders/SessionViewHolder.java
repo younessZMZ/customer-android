@@ -19,6 +19,7 @@ import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
@@ -171,7 +172,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
             sessionDate = latestTextMessage.getCreatedAt() != null ?
                     latestTextMessage.getCreatedAt() : mChatSession.getCreatedAt();
         }
-        tvSessionDate.setText(KUSDate.humanReadableTextFromDate(sessionDate));
+        tvSessionDate.setText(KUSDate.humanReadableTextFromDate(Kustomer.getContext(),sessionDate));
 
         //Unread count (number of messages > the lastSeenAt)
         Date sessionLastSeenAt = mUserSession.getChatSessionsDataSource().lastSeenAtForSessionId(mChatSession.getId());

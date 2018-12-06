@@ -1,6 +1,6 @@
 package com.kustomer.kustomersdk.Helpers;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.format.DateUtils;
 
 import com.kustomer.kustomersdk.Kustomer;
@@ -32,41 +32,44 @@ public class KUSDate {
     //endregion
 
     //region Static Methods
-    public static String humanReadableTextFromDate(Date date){
+    public static String humanReadableTextFromDate(Context context, Date date){
         if (date == null)
             return null;
 
         long timeAgo = (Calendar.getInstance().getTimeInMillis() - date.getTime()) / 1000;
         if (timeAgo < SECONDS_PER_MINUTE)
-            return Kustomer.getContext().getString(R.string.com_kustomer_just_now);
+            return context.getString(R.string.com_kustomer_just_now);
 
         return (String) DateUtils.getRelativeTimeSpanString(date.getTime(), Calendar.getInstance().getTimeInMillis(), 0);
     }
 
 
-    public static String humanReadableTextFromSeconds(int seconds){
-        if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR){
+    public static String humanReadableTextFromSeconds(Context context, int seconds){
+        if(seconds < SECONDS_PER_MINUTE){
+            int stringId = seconds > 1 ? R.string.com_kustomer_second : R.string.com_kustomer_seconds;
+            return textWithCountAndUnit(context, seconds,stringId);
+        }else if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR){
             int minutes = (int) Math.ceil(seconds/SECONDS_PER_MINUTE);
-            return String.format(Locale.getDefault(),"%d minute%s", minutes, minutes > 1 ? "s" : "");
+            int stringId = minutes > 1 ? R.string.com_kustomer_minute : R.string.com_kustomer_minutes;
+            return textWithCountAndUnit(context, minutes, stringId);
         }else if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY){
             int hours = (int) Math.ceil(seconds/(SECONDS_PER_MINUTE * MINUTES_PER_HOUR));
-            return String.format(Locale.getDefault(),"%d hour%s", hours, hours > 1 ? "s" : "");
-        }else if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK){
-            int days = (int) Math.ceil(seconds/(SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY));
-            return String.format(Locale.getDefault(),"%d day%s", days, days > 1 ? "s" : "");
+            int stringId = seconds > 1 ? R.string.com_kustomer_hour : R.string.com_kustomer_hours;
+            return textWithCountAndUnit(context, hours, stringId);
         }else{
-            int weeks = (int) Math.ceil(seconds/
-                    (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK));
-            return String.format(Locale.getDefault(),"%d week%s", weeks, weeks > 1 ? "s" : "");
+            return context.getString(R.string.greater_than_one_day);
         }
     }
 
-    private static String agoWithTextCountAndUnit(long count, String unit){
-        int mCount = (int) count;
-        if(mCount > 1)
-            return String.format(Locale.getDefault(),"%d %ss ago",mCount,unit);
-        else
-            return String.format(Locale.getDefault(),"%d %s ago",mCount,unit);
+    public static String humanReadableUpfrontVolumeControlWaitingTimeFromSeconds(Context context,
+                                                                                 int seconds){
+        if(seconds == 0)
+            return context.getString(R.string.com_kustomer_someone_should_be_with_you_momentarily);
+        else{
+            String waitTime = humanReadableTextFromSeconds(context, seconds);
+            return  String.format(Locale.getDefault(), "%s %s",
+                    context.getString(R.string.com_kustomer_your_expected_wait_time_is), waitTime);
+        }
     }
 
     public static String messageTimeStampTextFromDate(Date date){
@@ -108,6 +111,19 @@ public class KUSDate {
     //endregion
 
     //region Private Methods
+    private static String textWithCountAndUnit(Context context, int unitCount, int unitString){
+        return String.format(Locale.getDefault(), "%d %s", unitCount,
+                context.getString(unitString));
+    }
+
+    private static String agoWithTextCountAndUnit(long count, String unit){
+        int mCount = (int) count;
+        if(mCount > 1)
+            return String.format(Locale.getDefault(),"%d %ss ago",mCount,unit);
+        else
+            return String.format(Locale.getDefault(),"%d %s ago",mCount,unit);
+    }
+
     private static DateFormat shortRelativeDateFormatter(){
         if(shortDateFormat == null) {
             shortDateFormat = new SimpleDateFormat("dd/MM/yyyy h:mm a", Locale.getDefault());
