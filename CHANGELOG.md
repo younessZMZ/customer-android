@@ -2,6 +2,12 @@
 
 ## 0.1.19
 
+* Fixed pusher logic
+* Fixed 'End Chat' button translation in Spanish
+* Fixed concurrency issues
+
+## 0.1.19
+
 * Added multi-level form messaging support
 
 ## 0.1.18
