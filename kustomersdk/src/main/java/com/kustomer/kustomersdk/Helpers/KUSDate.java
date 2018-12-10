@@ -20,10 +20,10 @@ import java.util.TimeZone;
 public class KUSDate {
 
     //region properties
-    private static int TWO_DAYS_MILLIS = 48 * 60 * 60 *1000;
-    private static int SECONDS_PER_MINUTE = 60;
-    private static int MINUTES_PER_HOUR = 60;
-    private static int HOURS_PER_DAY = 24;
+    private static float TWO_DAYS_MILLIS = 48 * 60 * 60 * 1000f;
+    private static float SECONDS_PER_MINUTE = 60f;
+    private static float MINUTES_PER_HOUR = 60f;
+    private static float HOURS_PER_DAY = 24f;
     private static int DAYS_PER_WEEK = 7;
 
     private static DateFormat shortDateFormat;
@@ -45,15 +45,15 @@ public class KUSDate {
 
     public static String humanReadableTextFromSeconds(Context context, int seconds){
         if(seconds < SECONDS_PER_MINUTE){
-            int stringId = seconds > 1 ? R.string.com_kustomer_second : R.string.com_kustomer_seconds;
+            int stringId = seconds <= 1 ? R.string.com_kustomer_second : R.string.com_kustomer_seconds;
             return textWithCountAndUnit(context, seconds,stringId);
         }else if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR){
             int minutes = (int) Math.ceil(seconds/SECONDS_PER_MINUTE);
-            int stringId = minutes > 1 ? R.string.com_kustomer_minute : R.string.com_kustomer_minutes;
+            int stringId = minutes <= 1 ? R.string.com_kustomer_minute : R.string.com_kustomer_minutes;
             return textWithCountAndUnit(context, minutes, stringId);
         }else if(seconds < SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY){
             int hours = (int) Math.ceil(seconds/(SECONDS_PER_MINUTE * MINUTES_PER_HOUR));
-            int stringId = seconds > 1 ? R.string.com_kustomer_hour : R.string.com_kustomer_hours;
+            int stringId = hours <= 1 ? R.string.com_kustomer_hour : R.string.com_kustomer_hours;
             return textWithCountAndUnit(context, hours, stringId);
         }else{
             return context.getString(R.string.com_kustomer_greater_than_one_day);

@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk.DataSources;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.kustomer.kustomersdk.API.KUSSessionQueuePollingManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -792,7 +793,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         // Ask next question
         Date createdAt = new Date(lastMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
         if (!vcFormActive) {
-            createdAt = new Date((new Date()).getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
+            long currentDate = (new Date()).getTime();
+            if(currentDate + KUS_CHAT_AUTO_REPLY_DELAY > lastMessage.getCreatedAt().getTime()) {
+                createdAt = new Date(currentDate + KUS_CHAT_AUTO_REPLY_DELAY);
+            }
         }
 
         vcFormActive = true;
