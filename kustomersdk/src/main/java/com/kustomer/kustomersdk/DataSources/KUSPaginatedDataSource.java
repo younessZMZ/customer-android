@@ -1,8 +1,5 @@
 package com.kustomer.kustomersdk.DataSources;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
@@ -11,7 +8,6 @@ import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSPaginatedResponse;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

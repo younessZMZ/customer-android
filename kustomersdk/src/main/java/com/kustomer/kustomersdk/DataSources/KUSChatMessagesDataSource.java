@@ -3,10 +3,13 @@ package com.kustomer.kustomersdk.DataSources;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
+import com.kustomer.kustomersdk.API.KUSSessionQueuePollingManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Enums.KUSVolumeControlMode;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
@@ -21,6 +24,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSImageUploadListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
+import com.kustomer.kustomersdk.Interfaces.KUSSessionQueuePollingListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatAttachment;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
@@ -32,6 +36,8 @@ import com.kustomer.kustomersdk.Models.KUSFormRetry;
 import com.kustomer.kustomersdk.Models.KUSMessageRetry;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSRetry;
+import com.kustomer.kustomersdk.Models.KUSSessionQueue;
+import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -58,7 +64,7 @@ import static com.kustomer.kustomersdk.Models.KUSChatMessage.KUSChatMessageSentB
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener, KUSObjectDataSourceListener {
+public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener, KUSObjectDataSourceListener, KUSSessionQueuePollingListener {
 
     //region Properties
     private static final int KUS_CHAT_AUTO_REPLY_DELAY = 2 * 1000;
@@ -83,6 +89,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private ArrayList<KUSModel> temporaryVCMessagesResponses;
 
     private boolean nonBusinessHours;
+    private KUSSessionQueuePollingManager sessionQueuePollingManager;
 
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
     private HashMap<String, KUSRetry> messageRetryHashMap;
@@ -119,11 +126,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public KUSChatMessagesDataSource(KUSUserSession userSession, String sessionId) {
         this(userSession);
 
-        if (sessionId == null || sessionId.length() < 0)
+        if (sessionId == null || sessionId.isEmpty())
             throw new AssertionError("Cannot create messages datasource without valid sessionId");
 
-        if (sessionId.length() > 0)
-            this.sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
 
@@ -272,6 +278,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         sessionId = session.getId();
                         creatingSession = false;
 
+                        // Create queue polling manager for volume control form
+                        sessionQueuePollingManager = new KUSSessionQueuePollingManager(getUserSession(),sessionId);
+
                         //Insert the current messages data source into the userSession's lookup table
                         getUserSession().getChatMessagesDataSources().put(session.getId(), KUSChatMessagesDataSource.this);
 
@@ -403,6 +412,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
                         if (session != null)
                             session.setLockedAt(new Date());
+
+                        // Cancel Volume Control Polling if necessary
+                        if(sessionQueuePollingManager != null)
+                            sessionQueuePollingManager.cancelPolling();
+
                         notifyAnnouncersOnContentChange();
                         if (onEndChatListener != null)
                             onEndChatListener.onComplete(true);
@@ -779,7 +793,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         // Ask next question
         Date createdAt = new Date(lastMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
         if (!vcFormActive) {
-            createdAt = new Date((new Date()).getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
+            long currentDate = (new Date()).getTime();
+            if(currentDate + KUS_CHAT_AUTO_REPLY_DELAY > lastMessage.getCreatedAt().getTime()) {
+                createdAt = new Date(currentDate + KUS_CHAT_AUTO_REPLY_DELAY);
+            }
         }
 
         vcFormActive = true;
@@ -823,6 +840,45 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         vcFormQuestionIndex++;
     }
 
+    private void startVolumeControlFormTrackingAfterDelay(long delay){
+        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+
+        Handler delayHandler = new Handler(Looper.getMainLooper());
+        Runnable delayRunnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSChatMessagesDataSource strongReference = weakReference.get();
+                if (strongReference == null) {
+                    return;
+                }
+                strongReference.vcTrackingDelayCompleted = true;
+                strongReference.insertVolumeControlFormMessageIfNecessary();
+            }
+        };
+        delayHandler.postDelayed(delayRunnable, delay);
+    }
+
+    private void endVolumeControlFormAfterDelayIfNecessary(long delay){
+        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
+
+        Handler timeOutHandler = new Handler(Looper.getMainLooper());
+        Runnable timeOutRunnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSChatMessagesDataSource strongReference = weakReference.get();
+                if (strongReference == null) {
+                    return;
+                }
+
+                // End Control Tracking and Automatically marked it Closed, if form not end
+                if (!strongReference.vcFormEnd) {
+                    strongReference.endVolumeControlTracking();
+                    strongReference.endChat("timed_out", null);
+                }
+            }
+        };
+        timeOutHandler.postDelayed(timeOutRunnable, delay);
+    }
 
     private void submitVCFormResponses() {
         if (this.getSize() <= 5) {
@@ -918,7 +974,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         }
                         vcChatClosed = true;
                         submittingForm = false;
-                        notifyAnnouncersOnContentChange();
+
+                        // Cancel Volume Control Polling if necessary
+                        if(sessionQueuePollingManager != null)
+                            sessionQueuePollingManager.cancelPolling();
                     }
                 });
     }
@@ -1041,6 +1100,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         upsertNewMessages(chatMessages);
                         messageRetryHashMap.remove(lastUserChatMessage.getId());
 
+                        // Create queue polling manager for volume control form
+                        sessionQueuePollingManager = new  KUSSessionQueuePollingManager(getUserSession(),sessionId);
+
                         // Insert the current messages data source into the userSession's lookup table
                         getUserSession().getChatMessagesDataSources().put(sessionId, KUSChatMessagesDataSource.this);
 
@@ -1123,45 +1185,21 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             return;
         }
         vcTrackingStarted = true;
-        final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
 
-        long delay = chatSettings.getPromptDelay() * 1000;
+        if(chatSettings.getVolumeControlMode() == KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_DELAYED) {
+            long delay = chatSettings.getPromptDelay() * 1000;
+            startVolumeControlFormTrackingAfterDelay(delay);
 
-        Handler delayHandler = new Handler(Looper.getMainLooper());
-        Runnable delayRunnable = new Runnable() {
-            @Override
-            public void run() {
-                KUSChatMessagesDataSource strongReference = weakReference.get();
-                if (strongReference == null) {
-                    return;
-                }
-                strongReference.vcTrackingDelayCompleted = true;
-                strongReference.insertVolumeControlFormMessageIfNecessary();
+            // Automatically end chat
+            if (chatSettings.isMarkDoneAfterTimeout()) {
+                long timeOutDelay = (chatSettings.getTimeOut() + chatSettings.getPromptDelay()) * 1000;
+                endVolumeControlFormAfterDelayIfNecessary(timeOutDelay);
             }
-        };
-        delayHandler.postDelayed(delayRunnable, delay);
+        } else if (sessionQueuePollingManager != null && chatSettings.getVolumeControlMode() ==
+                KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UPFRONT){
 
-        // Automatically end chat
-        if (chatSettings.isMarkDoneAfterTimeout()) {
-
-            long timeOutDelay = (chatSettings.getTimeOut() + chatSettings.getPromptDelay()) * 1000;
-            Handler timeOutHandler = new Handler(Looper.getMainLooper());
-            Runnable timeOutRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    KUSChatMessagesDataSource strongReference = weakReference.get();
-                    if (strongReference == null) {
-                        return;
-                    }
-
-                    // End Control Tracking and Automatically marked it Closed, if form not end
-                    if (!strongReference.vcFormEnd) {
-                        strongReference.endVolumeControlTracking();
-                        strongReference.endChat("timed_out", null);
-                    }
-                }
-            };
-            timeOutHandler.postDelayed(timeOutRunnable, timeOutDelay);
+            sessionQueuePollingManager.addListener(this);
+            sessionQueuePollingManager.startPolling();
         }
     }
 
@@ -1173,7 +1211,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private KUSFormQuestion getNextVCFormQuestion(int index, String previousChannel) {
 
         if (index == 0) {
-            KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+            KUSChatSettings chatSettings = (KUSChatSettings) getUserSession()
+                    .getChatSettingsDataSource().getObject();
+
             List<String> options = new ArrayList<>();
             for (String option : chatSettings.getFollowUpChannels()) {
                 options.add(option.substring(0, 1).toUpperCase() + option.substring(1).toLowerCase());
@@ -1183,11 +1223,32 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 options.add("I'll wait");
 
             }
+
+            //volume_control_alternative_method_question
+            String prompt = Kustomer.getContext()
+                    .getString(R.string.com_kustomer_volume_control_alternative_method_question);
+            KUSSessionQueue sessionQueue = sessionQueuePollingManager.getSessionQueue();
+
+            if(chatSettings.getVolumeControlMode() == KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UPFRONT
+                    && sessionQueue.getEstimatedWaitTimeSeconds() != 0){
+
+                String currentWaitTime = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_our_current_wait_time_is_approximately);
+                String upfrontAlternatePrompt = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_upfront_volume_control_alternative_method_question);
+
+                String humanReadableTextFromSeconds = KUSDate.humanReadableTextFromSeconds(
+                        Kustomer.getContext(),sessionQueue.getEstimatedWaitTimeSeconds());
+                prompt = String.format("%s %s. %s", currentWaitTime, humanReadableTextFromSeconds,
+                        upfrontAlternatePrompt);
+            }
+
+
             JSONObject formMessage = new JSONObject();
             try {
                 formMessage.put("id", "vc_question_0");
                 formMessage.put("name", "Volume Form 0");
-                formMessage.put("prompt", "Sorry, it looks like no one has become available in the time we expected. Please select an alternate contact method for us to followup with you…");
+                formMessage.put("prompt", prompt);
                 formMessage.put("type", "property");
                 formMessage.put("property", "followup_channel");
                 formMessage.put("values", new JSONArray(options));
@@ -1202,20 +1263,22 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         } else if (index == 1) {
             String property;
-            String channel;
+            String prompt;
             if (previousChannel.toLowerCase().equals("email")) {
                 property = "customer_email";
-                channel = "email";
+                prompt = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_volume_control_email_question);
             } else {
                 property = "customer_phone";
-                channel = "phone number";
+                prompt = Kustomer.getContext()
+                        .getString(R.string.com_kustomer_volume_control_phone_question);
             }
             JSONObject formMessage = new JSONObject();
 
             try {
                 formMessage.put("id", "vc_question_1");
                 formMessage.put("name", "Volume Form 1");
-                formMessage.put("prompt", String.format("Great, what's the best %s to reach you at?", channel));
+                formMessage.put("prompt", prompt);
                 formMessage.put("type", "response");
                 formMessage.put("property", property);
             } catch (JSONException ignore) {
@@ -1229,11 +1292,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         } else if (index == 2) {
             JSONObject formMessage = new JSONObject();
+            String message = Kustomer.getContext()
+                    .getString(R.string.com_kustomer_volume_control_thankyou_response);
 
             try {
                 formMessage.put("id", "vc_question_2");
                 formMessage.put("name", "Volume Form 2");
-                formMessage.put("prompt", "Thank you. We'll get back to you shortly.");
+                formMessage.put("prompt", message);
                 formMessage.put("type", "message");
             } catch (JSONException ignore) {
             }
@@ -1358,6 +1423,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public String getSessionId() {
         return sessionId;
     }
+
+    public KUSSessionQueuePollingManager getSessionQueuePollingManager() {
+        return sessionQueuePollingManager;
+    }
+
     //endregion
 
     //region Listener
@@ -1402,6 +1472,50 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         insertFormMessageIfNecessary();
         insertVolumeControlFormMessageIfNecessary();
+    }
+
+    @Override
+    public void onPollingStarted(KUSSessionQueuePollingManager manager) {
+
+    }
+
+    @Override
+    public void onSessionQueueUpdated(KUSSessionQueuePollingManager manager, KUSSessionQueue sessionQueue) {
+        if(getUserSession() == null)
+            return;
+
+        // Automatically end chat
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+
+        if(chatSettings == null)
+            return;
+
+        boolean estimatedWaitTimeIsOverThreshold = sessionQueue.getEstimatedWaitTimeSeconds() != 0
+                && sessionQueue.getEstimatedWaitTimeSeconds() > chatSettings.getUpfrontWaitThreshold();
+
+        if(!vcTrackingDelayCompleted && estimatedWaitTimeIsOverThreshold){
+            startVolumeControlFormTrackingAfterDelay(0);
+
+            if(chatSettings.getMarkDoneAfterTimeout()){
+                long delay = chatSettings.getTimeOut() * 1000;
+                endVolumeControlFormAfterDelayIfNecessary(delay);
+            }
+        }
+    }
+
+    @Override
+    public void onPollingEnd(KUSSessionQueuePollingManager manager) {
+
+    }
+
+    @Override
+    public void onPollingCanceled(KUSSessionQueuePollingManager manager) {
+
+    }
+
+    @Override
+    public void onFailure(Error error, KUSSessionQueuePollingManager manager) {
+
     }
 
     //endregion
