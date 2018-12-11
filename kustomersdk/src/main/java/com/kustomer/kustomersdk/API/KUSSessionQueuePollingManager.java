@@ -24,6 +24,8 @@ public class KUSSessionQueuePollingManager implements KUSObjectDataSourceListene
     private List<KUSSessionQueuePollingListener> listeners;
     private WeakReference<KUSUserSession> userSession;
     private KUSSessionQueueDataSource sessionQueueDataSource;
+
+    private Timer timer;
     //endregion
 
     //region Initializer
@@ -41,8 +43,18 @@ public class KUSSessionQueuePollingManager implements KUSObjectDataSourceListene
     //endregion
 
     //region Private Methods
+    private void endTimer(){
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     private void fetchQueueAfterInterval(long interval){
-        Timer timer = new Timer();
+
+        endTimer();
+
+        timer = new Timer();
         TimerTask doAsyncTask = new TimerTask() {
             @Override
             public void run() {
@@ -111,7 +123,8 @@ public class KUSSessionQueuePollingManager implements KUSObjectDataSourceListene
 
     //region Public Methods
     public void addListener(KUSSessionQueuePollingListener listener){
-        listeners.add(listener);
+        if(!listeners.contains(listener))
+            listeners.add(listener);
     }
 
     public void removeListener(KUSSessionQueuePollingListener listener){
@@ -127,6 +140,8 @@ public class KUSSessionQueuePollingManager implements KUSObjectDataSourceListene
         if(isPollingStarted){
             isPollingCanceled = true;
             notifyAnnouncersOnPollingCanceled();
+
+            endTimer();
         }
     }
 
@@ -150,6 +165,7 @@ public class KUSSessionQueuePollingManager implements KUSObjectDataSourceListene
         // Fetch queue object after specific delay if necessary
         if(sessionQueue.getEstimatedWaitTimeSeconds() == 0){
             notifyAnnouncersOnPollingEnd();
+            endTimer();
             return;
         }
 

@@ -194,6 +194,11 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
 
     private void startTimer(long time) {
         try {
+            if(sendingFadingTimer != null) {
+                sendingFadingTimer.cancel();
+                sendingFadingTimer = null;
+            }
+
             final Handler handler = new Handler();
             sendingFadingTimer = new Timer();
             TimerTask doAsynchronousTask = new TimerTask() {
@@ -206,7 +211,7 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
                     });
                 }
             };
-            sendingFadingTimer.schedule(doAsynchronousTask, 0, time);
+            sendingFadingTimer.schedule(doAsynchronousTask, time);
         }catch (Exception ignore){}
     }
     //endregion
