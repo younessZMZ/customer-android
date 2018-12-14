@@ -1,6 +1,12 @@
 # Changelog for Kustomer Android SDK
 
-## 0.1.19
+## 0.1.21
+
+* Implemented upfront volume control tracking
+* Fixed portugese translation issue
+* Fixed repeated timer issue
+
+## 0.1.20
 
 * Fixed pusher logic
 * Fixed 'End Chat' button translation in Spanish
