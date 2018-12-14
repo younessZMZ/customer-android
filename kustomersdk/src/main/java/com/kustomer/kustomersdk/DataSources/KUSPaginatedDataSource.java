@@ -68,7 +68,7 @@ public class KUSPaginatedDataSource {
         return fetchedModelsById.get(oid);
     }
 
-    public KUSModel get(int index) {
+    public synchronized KUSModel get(int index) {
         return fetchedModels.get(index);
     }
 
@@ -76,7 +76,7 @@ public class KUSPaginatedDataSource {
         return indexOfObjectId(obj.getId());
     }
 
-    public KUSModel getFirst() {
+    synchronized KUSModel getFirst() {
         if (getSize() > 0) {
             return fetchedModels.get(0);
         }
@@ -257,7 +257,7 @@ public class KUSPaginatedDataSource {
         notifyAnnouncersOnLoad();
     }
 
-    public void sort() {
+    synchronized void sort() {
         ArrayList<KUSModel> temp = new ArrayList<>(fetchedModels);
         Collections.sort(temp);
 
@@ -281,7 +281,7 @@ public class KUSPaginatedDataSource {
         return error;
     }
 
-    public void removeAll(List<KUSModel> objects) {
+    public synchronized void removeAll(List<KUSModel> objects) {
         if (objects == null || objects.size() == 0) {
             return;
         }
@@ -291,7 +291,10 @@ public class KUSPaginatedDataSource {
             int index = indexOf(obj);
             if (index != -1) {
                 didChange = true;
-                fetchedModels.remove(index);
+
+                try {
+                    fetchedModels.remove(index);
+                }catch (IndexOutOfBoundsException ignore){}
                 fetchedModelsById.remove(obj.getId());
             }
         }
@@ -301,7 +304,7 @@ public class KUSPaginatedDataSource {
         }
     }
 
-    public void upsertAll(List<KUSModel> objects) {
+    public synchronized void upsertAll(List<KUSModel> objects) {
         if (objects == null || objects.size() == 0) {
             return;
         }
@@ -315,10 +318,13 @@ public class KUSPaginatedDataSource {
                     didChange = true;
                 }
 
-                int existingIndex = indexOf(curObj);
-                if (existingIndex != -1) {
-                    fetchedModels.remove(existingIndex);
-                }
+                try {
+                    int existingIndex = indexOf(curObj);
+                    if (existingIndex != -1) {
+                        fetchedModels.remove(existingIndex);
+                    }
+                }catch (IndexOutOfBoundsException ignore){}
+
                 fetchedModels.add(obj);
                 fetchedModelsById.put(obj.getId(), obj);
             }

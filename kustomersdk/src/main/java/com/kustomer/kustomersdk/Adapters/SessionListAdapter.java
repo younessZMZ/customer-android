@@ -96,10 +96,6 @@ public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         float rowCountThatFitsHeight = visibleRecyclerViewHeight / KUSUtils.dipToPixels(recyclerViewWeakReference.get().getContext(),75);
         minimumRowCount = (int)Math.floor(rowCountThatFitsHeight);
     }
-
-    public void setData(KUSChatSessionsDataSource sessionsDataSource){
-        mChatSessionsDataSource = sessionsDataSource;
-    }
     //endregion
 
     //region Listener
