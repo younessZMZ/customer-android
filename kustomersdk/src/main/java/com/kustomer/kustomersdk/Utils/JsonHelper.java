@@ -148,7 +148,7 @@ public class JsonHelper {
                 jsonObject = jsonObject.getJSONObject(keys[i]);
             }
             String value = keys.length > 0 ? jsonObject.getString(keys[keys.length - 1]) : jsonObject.getString(keyPath);
-            if (value != null)
+            if (value != null && !value.equals("null"))
                 return KUSDate.dateFromString(value);
             return null;
         } catch (Exception e) {

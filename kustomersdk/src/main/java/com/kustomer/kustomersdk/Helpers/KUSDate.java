@@ -94,9 +94,7 @@ public class KUSDate {
         if(string != null && string.length() > 0)
             try {
                 return ISO8601DateFormatterFromString().parse(string);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            } catch (ParseException ignore) { }
 
         return null;
     }
@@ -139,15 +137,17 @@ public class KUSDate {
         return shortTimeFormat;
     }
 
-    private static DateFormat ISO8601DateFormatterFromString(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", new Locale("en_US_POSIX"));
+    private static DateFormat ISO8601DateFormatterFromString() throws ParseException{
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                new Locale("en_US_POSIX"));
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         return dateFormat;
     }
 
     private static DateFormat ISO8601DateFormatterFromDate(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", new Locale("en_US_POSIX"));
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                new Locale("en_US_POSIX"));
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         return dateFormat;
