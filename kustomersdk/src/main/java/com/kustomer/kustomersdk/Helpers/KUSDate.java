@@ -137,7 +137,7 @@ public class KUSDate {
         return shortTimeFormat;
     }
 
-    private static DateFormat ISO8601DateFormatterFromString() throws ParseException{
+    private static DateFormat ISO8601DateFormatterFromString(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                 new Locale("en_US_POSIX"));
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
