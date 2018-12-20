@@ -258,7 +258,6 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                adapter.setData((KUSChatSessionsDataSource) dataSource);
                 adapter.notifyDataSetChanged();
                 setCreateSessionBackToChatButton();
             }

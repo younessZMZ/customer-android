@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -295,7 +297,14 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
-        updatePlaceHolder();
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updatePlaceHolder();
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
