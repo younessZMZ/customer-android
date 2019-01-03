@@ -37,7 +37,8 @@ import java.util.List;
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener, KUSObjectDataSourceListener {
+public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
+        implements KUSChatMessagesDataSourceListener, KUSObjectDataSourceListener {
 
     //region Properties
     private JSONObject pendingCustomChatSessionAttributes;
@@ -77,6 +78,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
     //region KUSPaginatedDataSource methods
     public void fetchLatest() {
+        if (getUserSession() == null)
+            return;
+
         if (!getUserSession().getChatSettingsDataSource().isFetched()) {
             getUserSession().getChatSettingsDataSource().fetch();
             return;
@@ -85,6 +89,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public URL getFirstUrl() {
+        if (getUserSession() == null)
+            return null;
+
         return getUserSession().getRequestManager().urlForEndpoint(KUSConstants.URL.CHAT_SESSIONS_ENDPOINT);
     }
     //endregion
@@ -98,6 +105,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public void createSessionWithTitle(String title, final KUSChatSessionCompletionListener listener) {
+        if (getUserSession() == null)
+            return;
+
         HashMap<String, Object> params = new HashMap<>();
         params.put("title", title);
 
@@ -107,6 +117,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                 params, true, new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
+                        if(getUserSession()==null)
+                            return;
+
                         if (error != null) {
                             if (listener != null)
                                 listener.onComplete(error, null);
@@ -122,9 +135,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                         }
 
                         if (session != null) {
-                            if(pendingCustomChatSessionAttributesForNextConversation != null){
+                            if (pendingCustomChatSessionAttributesForNextConversation != null) {
                                 flushCustomAttributes(pendingCustomChatSessionAttributesForNextConversation
-                                        ,session.getId());
+                                        , session.getId());
 
                                 pendingCustomChatSessionAttributesForNextConversation = null;
                             }
@@ -143,6 +156,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public void updateLastSeenAtForSessionId(String sessionId, final KUSChatSessionCompletionListener listener) {
+        if (getUserSession() == null)
+            return;
+
         if (sessionId.length() == 0) {
             if (listener != null) {
                 Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -174,6 +190,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
+                        if(getUserSession()==null)
+                            return;
+
                         if (error != null && listener != null) {
                             listener.onComplete(error, null);
                             return;
@@ -202,6 +221,8 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public void submitFormMessages(final JSONArray messages, String formId, final KUSFormCompletionListener listener) {
+        if (getUserSession() == null)
+            return;
 
         final WeakReference<KUSChatSessionsDataSource> weakReference = new WeakReference<>(this);
         getUserSession().getRequestManager().performRequestType(
@@ -214,6 +235,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
+                        if(getUserSession()==null)
+                            return;
+
                         if (error != null) {
                             if (listener != null)
                                 listener.onComplete(error, null, null);
@@ -245,9 +269,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                         }
 
                         if (chatSession != null) {
-                            if(pendingCustomChatSessionAttributesForNextConversation != null){
+                            if (pendingCustomChatSessionAttributesForNextConversation != null) {
                                 flushCustomAttributes(pendingCustomChatSessionAttributesForNextConversation
-                                        ,chatSession.getId());
+                                        , chatSession.getId());
 
                                 pendingCustomChatSessionAttributesForNextConversation = null;
                             }
@@ -354,6 +378,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public int getOpenProactiveCampaignsCount() {
+        if (getUserSession() == null)
+            return 0;
+
         int count = 0;
         KUSChatSession chatSession;
         for (KUSModel model : getList()) {
@@ -369,6 +396,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
     //region Private Methods
     private void flushCustomAttributes(final JSONObject customAttributes, String chatSessionId) {
+        if (getUserSession() == null)
+            return;
+
         HashMap<String, Object> formData = new HashMap<String, Object>() {{
             put("custom", customAttributes);
         }};
@@ -382,6 +412,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
+                        if(getUserSession()==null)
+                            return;
+
                         if (error != null) {
                             KUSLog.KUSLogError(String.format("Error updating chat attributes: %s", error));
                         }
@@ -403,7 +436,8 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
                 if (mostRecentMessageAt == null) {
                     mostRecentMessageAt = chatSession.getLastMessageAt();
                     mostRecentSession = chatSession;
-                } else if (chatSession.getLastMessageAt() != null && mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
+                } else if (chatSession.getLastMessageAt() != null
+                        && mostRecentMessageAt.before(chatSession.getLastMessageAt())) {
                     mostRecentMessageAt = chatSession.getLastMessageAt();
                     mostRecentSession = chatSession;
                 }
@@ -414,6 +448,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public KUSChatSession mostRecentNonProactiveCampaignOpenSession() {
+        if (getUserSession() == null)
+            return (KUSChatSession) getFirst();
+
         Date mostRecentMessageAt = null;
         KUSChatSession mostRecentSession = null;
 
@@ -470,6 +507,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
     }
 
     public int totalUnreadCountExcludingSessionId(String excludedSessionId) {
+        if (getUserSession() == null)
+            return 0;
+
         int count = 0;
         for (KUSModel model : getList()) {
             KUSChatSession session = (KUSChatSession) model;
@@ -502,7 +542,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource implements
 
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
-        if (dataSource == this) {
+        if (getUserSession() != null && dataSource == this) {
             getUserSession().getSharedPreferences().setOpenChatSessionsCount(getOpenChatSessionsCount());
             if (pendingCustomChatSessionAttributes != null) {
                 KUSChatSession mostRecentSession = getMostRecentSession();
