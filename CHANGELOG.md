@@ -1,5 +1,11 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.22
+
+* Fixed few crashes
+* Made methods synchronized to avoid concurrency crashes
+* Changed SDK's dependencies from compile to implementation
+
 ## 0.1.21
 
 * Implemented upfront volume control tracking
