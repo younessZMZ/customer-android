@@ -43,7 +43,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private Boolean noHistory;
 
     private KUSVolumeControlMode volumeControlMode;
-    private int upfrontWaitThreshold;
+    private Integer upfrontWaitThreshold;
     //endregion
 
     //region Initializer

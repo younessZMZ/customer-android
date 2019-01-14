@@ -124,7 +124,7 @@ public class JsonHelper {
             }
             return keys.length > 0 ? jsonObject.getInt(keys[keys.length - 1]) : jsonObject.getInt(keyPath);
         } catch (Exception e) {
-            return null;
+            return 0;
         }
     }
 

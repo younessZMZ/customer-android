@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.23
+
+* Fixed null to int casting crash
+
 ## 0.1.22
 
 * Fixed few crashes
