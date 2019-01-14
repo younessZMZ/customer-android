@@ -165,9 +165,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        if(userSession.get()==null)
-                            return;
-
                         isPusherTrackingStarted = false;
 
                         updateStats(new KUSPusherShouldConnectListener() {

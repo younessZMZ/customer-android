@@ -886,7 +886,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             @Override
             public void run() {
                 KUSChatMessagesDataSource strongReference = weakReference.get();
-                if (getUserSession() == null || strongReference == null) {
+                if (strongReference == null) {
                     return;
                 }
                 strongReference.vcTrackingDelayCompleted = true;
@@ -904,7 +904,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             @Override
             public void run() {
                 KUSChatMessagesDataSource strongReference = weakReference.get();
-                if (getUserSession() == null || strongReference == null) {
+                if (strongReference == null) {
                     return;
                 }
 
@@ -1203,9 +1203,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                if (getUserSession() == null)
-                    return;
-
                 delayedChatMessageIds.remove(chatMessage.getId());
                 boolean doesNotAlreadyContainMessage = findById(chatMessage.getId()) == null;
                 upsertAll(new ArrayList<KUSModel>() {{
