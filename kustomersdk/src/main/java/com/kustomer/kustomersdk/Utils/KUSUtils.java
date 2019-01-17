@@ -25,20 +25,21 @@ import java.util.List;
 public class KUSUtils {
 
     public static final double MIN_TABLET_SIZE_IN_INCH = 6.5;
+    public static final String providerAuthority = "com.kustomer.kustomersdk";
 
-    public static int getWindowHeight(Activity activity){
+    public static int getWindowHeight(Activity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
 
-    public static String KUSUnescapeBackslashesFromString (String string){
+    public static String KUSUnescapeBackslashesFromString(String string) {
         String updatedString = "";
 
         int startingIndex = 0;
-        for(int i = 0; i<string.length(); i++){
-            String character = string.substring(i,i+1);
-            if(character.equals("\\")){
+        for (int i = 0; i < string.length(); i++) {
+            String character = string.substring(i, i + 1);
+            if (character.equals("\\")) {
                 String lastString = string.substring(startingIndex, i);
                 updatedString = updatedString.concat(lastString);
 
@@ -53,9 +54,9 @@ public class KUSUtils {
         return updatedString;
     }
 
-    public static String removeNonASCIIChars(String original){
+    public static String removeNonASCIIChars(String original) {
 
-        if(original != null)
+        if (original != null)
             return original.replaceAll("[^\\p{ASCII}]", "");
         else
             return null;
@@ -66,12 +67,12 @@ public class KUSUtils {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 
-    public static String listJoinedByString(List<String> list, String join){
+    public static String listJoinedByString(List<String> list, String join) {
         StringBuilder joinedString = new StringBuilder();
 
-        for(int i = 0; i<list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
 
-            if(i<list.size()-1)
+            if (i < list.size() - 1)
                 joinedString.append(list.get(i)).append(join);
             else
                 joinedString.append(list.get(i));
@@ -80,33 +81,33 @@ public class KUSUtils {
         return joinedString.toString();
     }
 
-    public static boolean isPhone(Activity activity){
+    public static boolean isPhone(Activity activity) {
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        float yInches= metrics.heightPixels/metrics.ydpi;
-        float xInches= metrics.widthPixels/metrics.xdpi;
-        double diagonalInches = Math.sqrt(xInches*xInches + yInches*yInches);
+        float yInches = metrics.heightPixels / metrics.ydpi;
+        float xInches = metrics.widthPixels / metrics.xdpi;
+        double diagonalInches = Math.sqrt(xInches * xInches + yInches * yInches);
 
         return diagonalInches < MIN_TABLET_SIZE_IN_INCH;
     }
 
-    public static void showKeyboard(final View view, long delay){
+    public static void showKeyboard(final View view, long delay) {
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.showSoftInput(view, 0);
                 }
             }
         };
-        handler.postDelayed(runnable,delay);
+        handler.postDelayed(runnable, delay);
     }
 
-    public static void hideKeyboard (final View view){
-        InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    public static void hideKeyboard(final View view) {
+        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
@@ -117,7 +118,7 @@ public class KUSUtils {
             return Uri.fromFile(file);
         } else {
             return FileProvider.getUriForFile(context,
-                    context.getPackageName(),
+                    providerAuthority,
                     file);
         }
     }
