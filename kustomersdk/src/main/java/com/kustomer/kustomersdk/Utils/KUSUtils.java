@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.kustomer.kustomersdk.Activities.KUSChatActivity;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.R;
 
 import java.io.File;
@@ -113,13 +115,19 @@ public class KUSUtils {
         }
     }
 
+    @Nullable
     public static Uri getUriFromFile(Context context, File file) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return Uri.fromFile(file);
-        } else {
-            return FileProvider.getUriForFile(context,
-                    providerAuthority,
-                    file);
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                return Uri.fromFile(file);
+            } else {
+                return FileProvider.getUriForFile(context,
+                        providerAuthority,
+                        file);
+            }
+        } catch (Exception e) {
+            KUSLog.KUSLogError(e.getMessage());
+            return null;
         }
     }
 }

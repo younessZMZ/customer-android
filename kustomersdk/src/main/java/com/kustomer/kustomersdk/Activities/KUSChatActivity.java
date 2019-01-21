@@ -201,9 +201,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK && mCurrentPhotoPath != null) {
-                String photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath)).toString();
+                Uri photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath));
 
-                kusInputBarView.attachImage(photoUri);
+                if (photoUri != null) {
+                    String photoPath = photoUri.toString();
+                    kusInputBarView.attachImage(photoPath);
+                }
                 mCurrentPhotoPath = null;
             } else {
                 mCurrentPhotoPath = null;
@@ -250,7 +253,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         shouldShowNonBusinessHoursImage = !userSession.getScheduleDataSource().isActiveBusinessHours();
 
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        if(settings != null && settings.getNoHistory())
+        if (settings != null && settings.getNoHistory())
             shouldShowBackButton = false;
 
         if (kusChatSession != null) {
@@ -279,32 +282,32 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         showNonBusinessHoursImageIfNeeded();
     }
 
-    private void updateOptionPickerHeight(){
-        kusOptionPickerView.setMaxHeight(KUSUtils.getWindowHeight(this)/2);
-        mlFormValuesPickerView.setOptionPickerMaxHeight(KUSUtils.getWindowHeight(this)/3);
+    private void updateOptionPickerHeight() {
+        kusOptionPickerView.setMaxHeight(KUSUtils.getWindowHeight(this) / 2);
+        mlFormValuesPickerView.setOptionPickerMaxHeight(KUSUtils.getWindowHeight(this) / 3);
     }
 
-    private void showNonBusinessHoursImageIfNeeded(){
+    private void showNonBusinessHoursImageIfNeeded() {
 
-        if(chatMessagesDataSource != null && chatMessagesDataSource.getSize() > 0){
+        if (chatMessagesDataSource != null && chatMessagesDataSource.getSize() > 0) {
             shouldShowNonBusinessHoursImage = false;
             ivNonBusinessHours.setVisibility(View.GONE);
             return;
         }
 
-        if(!shouldShowNonBusinessHoursImage){
+        if (!shouldShowNonBusinessHoursImage) {
             ivNonBusinessHours.setVisibility(View.GONE);
             return;
         }
 
         KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        if(chatSettings != null && chatSettings.getOffHoursImageUrl() != null
-                && !chatSettings.getOffHoursImageUrl().isEmpty()){
+        if (chatSettings != null && chatSettings.getOffHoursImageUrl() != null
+                && !chatSettings.getOffHoursImageUrl().isEmpty()) {
             Glide.with(this)
                     .load(chatSettings.getOffHoursImageUrl())
                     .apply(RequestOptions.noAnimation())
                     .into(ivNonBusinessHours);
-        }else{
+        } else {
             ivNonBusinessHours.setImageDrawable(getResources().getDrawable(R.drawable.kus_away_image));
         }
         ivNonBusinessHours.setVisibility(View.VISIBLE);
@@ -402,14 +405,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         boolean wantMultiLevelValuesPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV);
 
-        if(wantMultiLevelValuesPicker){
+        if (wantMultiLevelValuesPicker) {
             kusInputBarView.setVisibility(View.GONE);
             KUSUtils.hideKeyboard(kusInputBarView);
 
-            if(currentQuestion.getMlFormValues() != null
-                    && currentQuestion.getMlFormValues().getMlNodes() != null){
-                if(currentQuestion.getMlFormValues().getMlNodes().size() > 0
-                        && mlFormValuesPickerView.getVisibility() == View.GONE){
+            if (currentQuestion.getMlFormValues() != null
+                    && currentQuestion.getMlFormValues().getMlNodes() != null) {
+                if (currentQuestion.getMlFormValues().getMlNodes().size() > 0
+                        && mlFormValuesPickerView.getVisibility() == View.GONE) {
 
                     mlFormValuesPickerView.setMlFormValues(currentQuestion.getMlFormValues().getMlNodes(),
                             currentQuestion.getMlFormValues().getLastNodeRequired());
@@ -462,7 +465,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             tvClosedChat.setVisibility(View.GONE);
 
 
-            if(userSession.getSharedPreferences().getShouldHideConversationButton())
+            if (userSession.getSharedPreferences().getShouldHideConversationButton())
                 tvStartANewConversation.setVisibility(View.GONE);
             else
                 tvStartANewConversation.setVisibility(View.VISIBLE);
@@ -470,9 +473,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             if (isBackToChatButton()) {
                 tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);
             } else {
-                if(userSession.getScheduleDataSource().isActiveBusinessHours()) {
+                if (userSession.getScheduleDataSource().isActiveBusinessHours()) {
                     tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
-                }else{
+                } else {
                     tvStartANewConversation.setText(R.string.com_kustomer_leave_a_message);
                 }
             }
@@ -553,8 +556,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
             if (photoFile != null) {
                 Uri photoURI = KUSUtils.getUriFromFile(this, photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+                if (photoURI != null) {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(this, getString(R.string.com_kustomer_unable_to_open_camera),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -604,7 +613,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
         int openChats = userSession.getChatSessionsDataSource().getOpenChatSessionsCount();
         int proactiveChats = userSession.getChatSessionsDataSource().getOpenProactiveCampaignsCount();
-        return (settings != null && settings.getSingleSessionChat() && (openChats-proactiveChats) >= 1);
+        return (settings != null && settings.getSingleSessionChat() && (openChats - proactiveChats) >= 1);
     }
     //endregion
 
@@ -677,9 +686,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                     if (isBackToChatButton()) {
                         tvStartANewConversation.setText(R.string.com_kustomer_back_to_chat);
                     } else {
-                        if(userSession.getScheduleDataSource().isActiveBusinessHours()) {
+                        if (userSession.getScheduleDataSource().isActiveBusinessHours()) {
                             tvStartANewConversation.setText(R.string.com_kustomer_start_a_new_conversation);
-                        }else{
+                        } else {
                             tvStartANewConversation.setText(R.string.com_kustomer_leave_a_message);
                         }
                     }
@@ -904,7 +913,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void mlFormValueSelected(String option, String optionId) {
-        chatMessagesDataSource.sendMessageWithText(option,null,optionId);
+        chatMessagesDataSource.sendMessageWithText(option, null, optionId);
         kusInputBarView.setText("");
         kusInputBarView.removeAllAttachments();
     }
