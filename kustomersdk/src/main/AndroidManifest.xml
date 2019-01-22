@@ -6,7 +6,7 @@
 
         <provider
             android:name=".Providers.KUSFileProvider"
-            android:authorities="com.kustomer.kustomersdk"
+            android:authorities="${applicationId}.kustomersdk"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

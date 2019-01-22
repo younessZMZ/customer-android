@@ -27,7 +27,7 @@ import java.util.List;
 public class KUSUtils {
 
     public static final double MIN_TABLET_SIZE_IN_INCH = 6.5;
-    public static final String providerAuthority = "com.kustomer.kustomersdk";
+    private static final String AUTHORITY_SUFFIX = ".kustomersdk";
 
     public static int getWindowHeight(Activity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -122,7 +122,7 @@ public class KUSUtils {
                 return Uri.fromFile(file);
             } else {
                 return FileProvider.getUriForFile(context,
-                        providerAuthority,
+                        context.getPackageName() + AUTHORITY_SUFFIX,
                         file);
             }
         } catch (Exception e) {
