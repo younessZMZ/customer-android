@@ -1,5 +1,10 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.25
+Release Date: 01/22/2019
+* Kustomer SDK no longer requires file provider declaration in manifest
+* Kustomer SDK no longer requires file_paths.xml
+
 ## 0.1.23
 
 * Fixed null to int casting crash
