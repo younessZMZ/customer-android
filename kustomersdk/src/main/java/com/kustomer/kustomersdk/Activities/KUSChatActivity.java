@@ -201,9 +201,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK && mCurrentPhotoPath != null) {
-                String photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath)).toString();
+                Uri photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath));
 
-                kusInputBarView.attachImage(photoUri);
+                if (photoUri != null) {
+                    String photoPath = photoUri.toString();
+                    kusInputBarView.attachImage(photoPath);
+                }
                 mCurrentPhotoPath = null;
             } else {
                 mCurrentPhotoPath = null;
@@ -574,8 +577,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
             if (photoFile != null) {
                 Uri photoURI = KUSUtils.getUriFromFile(this, photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+                if (photoURI != null) {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(this, getString(R.string.com_kustomer_unable_to_open_camera),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
