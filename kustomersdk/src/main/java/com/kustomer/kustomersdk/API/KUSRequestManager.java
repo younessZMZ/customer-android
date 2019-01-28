@@ -50,6 +50,8 @@ import static com.kustomer.kustomersdk.Utils.KUSUtils.removeNonASCIIChars;
 
 public class KUSRequestManager implements Serializable, KUSObjectDataSourceListener {
 
+    private static OkHttpClient requestClient;
+    private static OkHttpClient uploadClient;
 
     //region Properties
     private String baseUrlString;
@@ -168,6 +170,31 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     //endregion
 
     //region Private Methods
+    private OkHttpClient provideRequestClient() {
+        if (requestClient == null) {
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            requestClient = new OkHttpClient.Builder()
+//                .addInterceptor(logging)
+                    .build();
+        }
+        return requestClient;
+    }
+
+    private OkHttpClient provideUploadClient() {
+        if(uploadClient == null) {
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            uploadClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(180, TimeUnit.SECONDS)
+                    .readTimeout(180, TimeUnit.SECONDS)
+//                .addInterceptor(logging)
+                    .build();
+        }
+        return uploadClient;
+    }
+
     private void performRequestWithTrackingToken(KUSRequestType type,
                                                  String trackingToken,
                                                  URL url,
@@ -178,11 +205,8 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                                  final KUSRequestCompletionListener completionListener) {
 
 
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-//                .addInterceptor(logging)
-                .build();
+
+        OkHttpClient client = provideRequestClient();
 
         HttpUrl httpUrl = HttpUrl.parse(url.toString());
         HttpUrl.Builder httpBuilder = null;
@@ -294,14 +318,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                 HashMap<String, String> uploadFields,
                                 final KUSRequestCompletionListener completionListener) {
 
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(180, TimeUnit.SECONDS)
-                .readTimeout(180, TimeUnit.SECONDS)
-//                .addInterceptor(logging)
-                .build();
+        OkHttpClient client = provideUploadClient();
 
         String[] fieldArrays = new String[uploadFields.keySet().size()];
         fieldArrays = uploadFields.keySet().toArray(fieldArrays);
